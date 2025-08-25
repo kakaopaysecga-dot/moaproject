@@ -17,7 +17,7 @@ import { useAuthStore } from '@/store/authStore';
 const serviceCards = [
   {
     title: '예약 서비스',
-    description: '스마트오피스 좌석 및 회의실 예약',
+    description: '좌석 및 회의실 예약',
     icon: Calendar,
     path: '/booking',
     color: 'bg-corporate-blue'
