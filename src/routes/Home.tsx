@@ -77,40 +77,45 @@ export default function Home() {
   }
 
   return (
-    <div className="py-8 space-y-8">
+    <div className="space-y-6">
       {/* Welcome Section */}
-      <section className="text-center space-y-4">
-        <h1 className="text-3xl font-bold">
+      <section className="text-center space-y-4 py-4">
+        <div className="mx-auto w-16 h-16 bg-gradient-to-br from-corporate-blue to-accent rounded-2xl flex items-center justify-center shadow-lg">
+          <span className="text-white font-bold text-2xl">M</span>
+        </div>
+        <h1 className="text-2xl font-bold">
           안녕하세요, {user.name}님
         </h1>
         <p className="text-muted-foreground">
           {user.dept} · {user.building}
         </p>
-        <div className="inline-flex items-center space-x-2 px-3 py-1 bg-primary/10 rounded-full">
-          <div className="w-2 h-2 bg-success rounded-full"></div>
-          <span className="text-sm font-medium">온라인</span>
+        <div className="inline-flex items-center space-x-2 px-3 py-1 bg-success/10 rounded-full">
+          <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+          <span className="text-sm font-medium text-success">온라인</span>
         </div>
       </section>
 
       {/* Quick Actions */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">빠른 서비스</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <h2 className="text-xl font-semibold px-1">빠른 서비스</h2>
+        <div className="grid grid-cols-1 gap-4">
           {serviceCards.map((service) => (
-            <Card key={service.path} variant="elevated" className="hover:shadow-xl transition-shadow">
+            <Card key={service.path} variant="elevated" className="hover:shadow-lg transition-all duration-200 active:scale-[0.98] border-0 bg-gradient-to-br from-card to-card/80">
               <CardHeader className="pb-3">
                 <div className="flex items-center space-x-3">
-                  <div className={`p-2 rounded-lg ${service.color} text-white`}>
-                    <service.icon className="h-5 w-5" />
+                  <div className={`p-3 rounded-xl ${service.color} text-white shadow-md`}>
+                    <service.icon className="h-6 w-6" />
                   </div>
-                  <CardTitle className="text-lg">{service.title}</CardTitle>
+                  <div className="flex-1">
+                    <CardTitle className="text-lg">{service.title}</CardTitle>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {service.description}
+                    </p>
+                  </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-muted-foreground">
-                  {service.description}
-                </p>
-                <Button asChild variant="outline" className="w-full">
+              <CardContent className="pt-0">
+                <Button asChild variant="outline" className="w-full h-11 font-medium">
                   <Link to={service.path}>
                     이용하기
                   </Link>
@@ -123,8 +128,8 @@ export default function Home() {
 
       {/* Temperature Request Quick Access */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">실내 온도 조절</h2>
-        <Card>
+        <h2 className="text-xl font-semibold px-1">실내 온도 조절</h2>
+        <Card className="border-0 bg-gradient-to-br from-card to-card/80">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -138,15 +143,15 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="flex space-x-2">
-                <Button variant="outline" size="sm" asChild>
+              <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+                <Button variant="outline" size="default" asChild className="flex-1 h-11">
                   <Link to="/requests/environment?temp=cold">
-                    추워요
+                    🥶 추워요
                   </Link>
                 </Button>
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="default" asChild className="flex-1 h-11">
                   <Link to="/requests/environment?temp=hot">
-                    더워요
+                    🔥 더워요
                   </Link>
                 </Button>
               </div>
@@ -158,8 +163,8 @@ export default function Home() {
       {/* Admin Quick Access */}
       {user.isAdmin && (
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold">관리자 도구</h2>
-          <Card variant="bordered">
+          <h2 className="text-xl font-semibold px-1">관리자 도구</h2>
+          <Card variant="bordered" className="border-0 bg-gradient-to-br from-destructive/5 to-destructive/10">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
@@ -173,7 +178,7 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
-                <Button variant="destructive" asChild>
+                <Button variant="destructive" asChild className="h-11 font-medium">
                   <Link to="/admin">
                     관리자 페이지
                   </Link>
@@ -185,7 +190,7 @@ export default function Home() {
       )}
 
       {/* Footer Space for Mobile Navigation */}
-      <div className="h-4 md:hidden" />
+      <div className="h-6" />
     </div>
   );
 }

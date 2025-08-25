@@ -16,7 +16,7 @@ export const FooterNav: React.FC = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border z-40 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border z-40 safe-bottom md:hidden">
       <div className={`grid ${user?.isAdmin ? 'grid-cols-4' : 'grid-cols-3'} h-16`}>
         {navItems.map(({ icon: Icon, label, path }) => {
           const isActive = location.pathname === path || 
@@ -27,10 +27,10 @@ export const FooterNav: React.FC = () => {
               key={path}
               to={path}
               className={cn(
-                'flex flex-col items-center justify-center space-y-1 text-xs transition-colors',
+                'flex flex-col items-center justify-center space-y-1 text-xs transition-all duration-200 active:scale-95',
                 isActive 
                   ? 'text-primary bg-primary/10' 
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-muted-foreground hover:text-foreground active:bg-muted/20'
               )}
             >
               <Icon 

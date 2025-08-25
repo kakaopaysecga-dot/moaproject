@@ -11,12 +11,12 @@ export const Header: React.FC = () => {
   if (!user) return null;
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-      <div className="container mx-auto px-4">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border safe-top">
+      <div className="px-4">
         <div className="flex h-14 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-corporate-blue to-accent rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-corporate-blue to-accent rounded-lg flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-sm">M</span>
             </div>
             <span className="font-bold text-lg text-foreground">MOA</span>
@@ -33,7 +33,7 @@ export const Header: React.FC = () => {
               variant="ghost" 
               size="sm"
               onClick={logout}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 hover:bg-muted/50"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">로그아웃</span>
