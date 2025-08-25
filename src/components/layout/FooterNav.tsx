@@ -1,21 +1,23 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Calendar, FileText, Settings } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
-
-const navItems = [
-  { icon: Home, label: '홈', path: '/' },
-  { icon: Calendar, label: '예약', path: '/booking' },
-  { icon: FileText, label: '요청', path: '/requests' },
-  { icon: Settings, label: '설정', path: '/settings' },
-];
 
 export const FooterNav: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuthStore();
+
+  const navItems = [
+    { icon: Home, label: '홈', path: '/' },
+    { icon: Calendar, label: '예약', path: '/booking' },
+    { icon: FileText, label: '요청', path: '/requests' },
+    ...(user?.isAdmin ? [{ icon: Settings, label: '관리', path: '/admin' }] : []),
+  ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border md:hidden">
-      <div className="grid grid-cols-4 h-16">
+    <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border z-40 md:hidden">
+      <div className={`grid ${user?.isAdmin ? 'grid-cols-4' : 'grid-cols-3'} h-16`}>
         {navItems.map(({ icon: Icon, label, path }) => {
           const isActive = location.pathname === path || 
             (path !== '/' && location.pathname.startsWith(path));
@@ -27,7 +29,7 @@ export const FooterNav: React.FC = () => {
               className={cn(
                 'flex flex-col items-center justify-center space-y-1 text-xs transition-colors',
                 isActive 
-                  ? 'text-primary bg-primary/5' 
+                  ? 'text-primary bg-primary/10' 
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
@@ -37,7 +39,10 @@ export const FooterNav: React.FC = () => {
                   isActive && 'text-primary'
                 )} 
               />
-              <span className={cn(isActive && 'font-medium')}>
+              <span className={cn(
+                'font-medium',
+                isActive ? 'text-primary' : ''
+              )}>
                 {label}
               </span>
             </Link>
