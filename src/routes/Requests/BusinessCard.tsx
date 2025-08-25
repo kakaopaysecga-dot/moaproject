@@ -178,22 +178,33 @@ export default function BusinessCard() {
           </CardHeader>
           <CardContent className="px-8 pb-8">
             <div className="space-y-6">
-              <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 p-10 rounded-3xl border-2 border-dashed border-muted aspect-[1.6/1] flex flex-col justify-center space-y-6 shadow-inner relative overflow-hidden">
+              <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 p-8 rounded-3xl border-2 border-dashed border-muted aspect-[0.6/1] flex flex-col justify-between space-y-4 shadow-inner relative overflow-hidden max-w-xs mx-auto">
                 {/* 배경 장식 */}
-                <div className="absolute top-4 right-4 w-20 h-20 bg-primary/5 rounded-full"></div>
-                <div className="absolute bottom-4 left-4 w-16 h-16 bg-accent/5 rounded-full"></div>
+                <div className="absolute top-3 right-3 w-12 h-12 bg-primary/5 rounded-full"></div>
+                <div className="absolute bottom-3 left-3 w-10 h-10 bg-accent/5 rounded-full"></div>
                 
-                <div className="text-center space-y-4 relative z-10">
-                  <h3 className="font-bold text-2xl text-foreground leading-tight">{user.name}</h3>
-                  <div className="space-y-2">
-                    <p className="text-lg text-muted-foreground font-semibold">{user.dept}</p>
-                    <p className="text-base text-muted-foreground leading-relaxed">{user.phone}</p>
-                    <p className="text-base text-muted-foreground font-semibold">카카오페이증권</p>
+                {/* 상단 - 회사 로고 영역 */}
+                <div className="text-center relative z-10">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl mx-auto mb-3 flex items-center justify-center shadow-md">
+                    <span className="text-white font-bold text-lg">M</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-bold tracking-wide">카카오페이증권</p>
+                </div>
+                
+                {/* 중앙 - 개인 정보 */}
+                <div className="text-center space-y-2 relative z-10 flex-1 flex flex-col justify-center">
+                  <h3 className="font-bold text-xl text-foreground leading-tight">{user.name}</h3>
+                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">{user.dept}</p>
+                  <div className="pt-2 space-y-1">
+                    <p className="text-xs text-muted-foreground leading-relaxed">{user.phone}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{user.email}</p>
                   </div>
                 </div>
-                <div className="text-center pt-4 border-t border-muted/40">
-                  <span className="text-sm text-muted-foreground bg-white/80 px-4 py-2 rounded-full shadow-sm">
-                    {formData.design === 'character' ? '🎨 캐릭터 디자인' : '📄 일반 디자인'}
+                
+                {/* 하단 - 디자인 타입 */}
+                <div className="text-center pt-2 border-t border-muted/40">
+                  <span className="text-xs text-muted-foreground bg-white/80 px-3 py-1 rounded-full shadow-sm">
+                    {formData.design === 'character' ? '🎨 캐릭터' : '📄 일반'}
                   </span>
                 </div>
               </div>

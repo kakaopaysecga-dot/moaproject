@@ -27,6 +27,9 @@ import Environment from "./routes/Requests/Environment";
 // Admin routes
 import AdminPage from "./routes/Admin/AdminPage";
 
+// Settings route
+import Settings from "./routes/Settings";
+
 const queryClient = new QueryClient();
 
 // Protected Route Component
@@ -106,6 +109,13 @@ const AppRoutes = () => {
         <Route path="/requests/environment" element={
           <ProtectedRoute>
             <Environment />
+          </ProtectedRoute>
+        } />
+
+        {/* Settings Route */}
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         } />
 

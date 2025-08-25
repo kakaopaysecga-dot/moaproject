@@ -17,7 +17,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       <main className={cn(
         'px-4',
-        user ? 'pb-24 pt-4 md:pb-8' : 'py-8'
+        user ? 'pb-28 pt-4 md:pb-8' : 'py-8'
       )}>
         {children}
       </main>
