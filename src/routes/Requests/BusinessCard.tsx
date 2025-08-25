@@ -44,78 +44,106 @@ export default function BusinessCard() {
   if (!user) return null;
 
   return (
-    <div className="py-8 space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold">명함 신청</h1>
-        <p className="text-muted-foreground">개인 명함을 신청하세요</p>
+    <div className="py-6 space-y-8">
+      <div className="text-center space-y-3">
+        <h1 className="text-3xl font-bold tracking-tight">명함 신청</h1>
+        <p className="text-muted-foreground text-lg leading-relaxed">개인 명함을 신청하세요</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-8 lg:grid-cols-2">
         {/* 신청 폼 */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="h-5 w-5" />
+        <Card className="shadow-lg border-0">
+          <CardHeader className="pb-6">
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <CreditCard className="h-5 w-5 text-primary" />
+              </div>
               명함 신청 정보
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">이름</Label>
-                  <Input id="name" value={user.name} disabled />
+          <CardContent className="space-y-6">
+            <form onSubmit={handleSubmit} className="form-section">
+              {/* 개인정보 섹션 */}
+              <div className="form-group">
+                <h3 className="font-semibold text-foreground mb-4">개인 정보</h3>
+                <div className="form-row-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-sm font-medium text-foreground">이름</Label>
+                    <Input 
+                      id="name" 
+                      value={user.name} 
+                      disabled 
+                      className="bg-muted/50 h-11 text-base"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dept" className="text-sm font-medium text-foreground">부서</Label>
+                    <Input 
+                      id="dept" 
+                      value={user.dept} 
+                      disabled 
+                      className="bg-muted/50 h-11 text-base"
+                    />
+                  </div>
                 </div>
+                
                 <div className="space-y-2">
-                  <Label htmlFor="dept">부서</Label>
-                  <Input id="dept" value={user.dept} disabled />
+                  <Label htmlFor="phone" className="text-sm font-medium text-foreground">연락처</Label>
+                  <Input 
+                    id="phone" 
+                    value={user.phone} 
+                    disabled 
+                    className="bg-muted/50 h-11 text-base"
+                  />
                 </div>
               </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="phone">연락처</Label>
-                <Input id="phone" value={user.phone} disabled />
+
+              {/* 명함 옵션 섹션 */}
+              <div className="form-group">
+                <h3 className="font-semibold text-foreground mb-4">명함 옵션</h3>
+                <div className="form-row-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="design" className="text-sm font-medium text-foreground">디자인</Label>
+                    <Select value={formData.design} onValueChange={(value) => setFormData(prev => ({ ...prev, design: value }))}>
+                      <SelectTrigger className="h-11 text-base">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="character">캐릭터</SelectItem>
+                        <SelectItem value="normal">일반</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="quantity" className="text-sm font-medium text-foreground">수량</Label>
+                    <Select value={formData.quantity} onValueChange={(value) => setFormData(prev => ({ ...prev, quantity: value }))}>
+                      <SelectTrigger className="h-11 text-base">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="50">50매</SelectItem>
+                        <SelectItem value="100">100매</SelectItem>
+                        <SelectItem value="200">200매</SelectItem>
+                        <SelectItem value="500">500매</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="memo" className="text-sm font-medium text-foreground">메모 (선택사항)</Label>
+                  <Textarea 
+                    id="memo" 
+                    value={formData.memo}
+                    onChange={(e) => setFormData(prev => ({ ...prev, memo: e.target.value }))}
+                    placeholder="추가 요청사항이 있으시면 입력해주세요"
+                    className="min-h-[100px] text-base leading-relaxed resize-none"
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="design">디자인</Label>
-                <Select value={formData.design} onValueChange={(value) => setFormData(prev => ({ ...prev, design: value }))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="character">캐릭터</SelectItem>
-                    <SelectItem value="normal">일반</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="quantity">수량</Label>
-                <Select value={formData.quantity} onValueChange={(value) => setFormData(prev => ({ ...prev, quantity: value }))}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="50">50매</SelectItem>
-                    <SelectItem value="100">100매</SelectItem>
-                    <SelectItem value="200">200매</SelectItem>
-                    <SelectItem value="500">500매</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="memo">메모 (선택사항)</Label>
-                <Textarea 
-                  id="memo" 
-                  value={formData.memo}
-                  onChange={(e) => setFormData(prev => ({ ...prev, memo: e.target.value }))}
-                  placeholder="추가 요청사항이 있으시면 입력해주세요"
-                />
-              </div>
-
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full h-12 text-base font-semibold">
                 신청하기
               </Button>
             </form>
@@ -123,20 +151,24 @@ export default function BusinessCard() {
         </Card>
 
         {/* 미리보기 */}
-        <Card>
-          <CardHeader>
-            <CardTitle>명함 미리보기</CardTitle>
+        <Card className="shadow-lg border-0">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-xl">명함 미리보기</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="bg-card-background p-6 rounded-lg border-2 border-dashed border-muted aspect-[1.6/1] flex flex-col justify-center space-y-2">
-              <div className="text-center space-y-1">
-                <h3 className="font-bold text-lg">{user.name}</h3>
-                <p className="text-sm text-muted-foreground">{user.dept}</p>
-                <p className="text-xs text-muted-foreground">{user.phone}</p>
-                <p className="text-xs text-muted-foreground">카카오페이증권</p>
+            <div className="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl border-2 border-dashed border-muted aspect-[1.6/1] flex flex-col justify-center space-y-4 shadow-inner">
+              <div className="text-center space-y-3">
+                <h3 className="font-bold text-xl text-foreground leading-tight">{user.name}</h3>
+                <div className="space-y-1">
+                  <p className="text-base text-muted-foreground font-medium">{user.dept}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{user.phone}</p>
+                  <p className="text-sm text-muted-foreground font-medium">카카오페이증권</p>
+                </div>
               </div>
-              <div className="text-center text-xs text-muted-foreground mt-4">
-                {formData.design === 'character' ? '캐릭터 디자인' : '일반 디자인'}
+              <div className="text-center pt-3 border-t border-muted/30">
+                <span className="text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
+                  {formData.design === 'character' ? '캐릭터 디자인' : '일반 디자인'}
+                </span>
               </div>
             </div>
           </CardContent>
