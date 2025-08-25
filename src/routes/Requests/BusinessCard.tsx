@@ -44,131 +44,173 @@ export default function BusinessCard() {
   if (!user) return null;
 
   return (
-    <div className="py-6 space-y-8">
-      <div className="text-center space-y-3">
+    <div className="py-8 space-y-10">
+      <div className="text-center space-y-4 px-4">
         <h1 className="text-3xl font-bold tracking-tight">명함 신청</h1>
-        <p className="text-muted-foreground text-lg leading-relaxed">개인 명함을 신청하세요</p>
+        <p className="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto">
+          개인 명함을 신청하세요
+        </p>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-10 xl:grid-cols-2 max-w-7xl mx-auto">
         {/* 신청 폼 */}
         <Card className="shadow-lg border-0">
-          <CardHeader className="pb-6">
-            <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <CreditCard className="h-5 w-5 text-primary" />
+          <CardHeader className="pb-8">
+            <CardTitle className="flex items-center gap-4 text-2xl">
+              <div className="p-3 bg-primary/10 rounded-xl">
+                <CreditCard className="h-6 w-6 text-primary" />
               </div>
               명함 신청 정보
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit} className="form-section">
+          <CardContent className="px-8 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-10">
               {/* 개인정보 섹션 */}
-              <div className="form-group">
-                <h3 className="font-semibold text-foreground mb-4">개인 정보</h3>
-                <div className="form-row-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-sm font-medium text-foreground">이름</Label>
+              <div className="space-y-6">
+                <div className="border-l-4 border-primary pl-4">
+                  <h3 className="font-semibold text-lg text-foreground">개인 정보</h3>
+                  <p className="text-sm text-muted-foreground mt-1">회사에서 등록된 정보입니다</p>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <Label htmlFor="name" className="text-sm font-semibold text-foreground">이름</Label>
                     <Input 
                       id="name" 
                       value={user.name} 
                       disabled 
-                      className="bg-muted/50 h-11 text-base"
+                      className="bg-muted/50 h-12 text-base font-medium"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="dept" className="text-sm font-medium text-foreground">부서</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="dept" className="text-sm font-semibold text-foreground">부서</Label>
                     <Input 
                       id="dept" 
                       value={user.dept} 
                       disabled 
-                      className="bg-muted/50 h-11 text-base"
+                      className="bg-muted/50 h-12 text-base font-medium"
                     />
                   </div>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-sm font-medium text-foreground">연락처</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="phone" className="text-sm font-semibold text-foreground">연락처</Label>
                   <Input 
                     id="phone" 
                     value={user.phone} 
                     disabled 
-                    className="bg-muted/50 h-11 text-base"
+                    className="bg-muted/50 h-12 text-base font-medium"
                   />
                 </div>
               </div>
 
               {/* 명함 옵션 섹션 */}
-              <div className="form-group">
-                <h3 className="font-semibold text-foreground mb-4">명함 옵션</h3>
-                <div className="form-row-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="design" className="text-sm font-medium text-foreground">디자인</Label>
+              <div className="space-y-6">
+                <div className="border-l-4 border-accent pl-4">
+                  <h3 className="font-semibold text-lg text-foreground">명함 옵션</h3>
+                  <p className="text-sm text-muted-foreground mt-1">원하는 디자인과 수량을 선택하세요</p>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <Label htmlFor="design" className="text-sm font-semibold text-foreground">디자인 타입</Label>
                     <Select value={formData.design} onValueChange={(value) => setFormData(prev => ({ ...prev, design: value }))}>
-                      <SelectTrigger className="h-11 text-base">
-                        <SelectValue />
+                      <SelectTrigger className="h-12 text-base">
+                        <SelectValue placeholder="디자인을 선택하세요" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="character">캐릭터</SelectItem>
-                        <SelectItem value="normal">일반</SelectItem>
+                        <SelectItem value="character">🎨 캐릭터 디자인</SelectItem>
+                        <SelectItem value="normal">📄 일반 디자인</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="quantity" className="text-sm font-medium text-foreground">수량</Label>
+                  <div className="space-y-3">
+                    <Label htmlFor="quantity" className="text-sm font-semibold text-foreground">제작 수량</Label>
                     <Select value={formData.quantity} onValueChange={(value) => setFormData(prev => ({ ...prev, quantity: value }))}>
-                      <SelectTrigger className="h-11 text-base">
-                        <SelectValue />
+                      <SelectTrigger className="h-12 text-base">
+                        <SelectValue placeholder="수량을 선택하세요" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="50">50매</SelectItem>
-                        <SelectItem value="100">100매</SelectItem>
+                        <SelectItem value="50">50매 (기본)</SelectItem>
+                        <SelectItem value="100">100매 (추천)</SelectItem>
                         <SelectItem value="200">200매</SelectItem>
-                        <SelectItem value="500">500매</SelectItem>
+                        <SelectItem value="500">500매 (대량)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="memo" className="text-sm font-medium text-foreground">메모 (선택사항)</Label>
+              {/* 추가 요청사항 섹션 */}
+              <div className="space-y-6">
+                <div className="border-l-4 border-muted pl-4">
+                  <h3 className="font-semibold text-lg text-foreground">추가 요청사항</h3>
+                  <p className="text-sm text-muted-foreground mt-1">특별한 요청이 있으시면 자세히 적어주세요</p>
+                </div>
+                <div className="space-y-3">
+                  <Label htmlFor="memo" className="text-sm font-semibold text-foreground">메모 (선택사항)</Label>
                   <Textarea 
                     id="memo" 
                     value={formData.memo}
                     onChange={(e) => setFormData(prev => ({ ...prev, memo: e.target.value }))}
-                    placeholder="추가 요청사항이 있으시면 입력해주세요"
-                    className="min-h-[100px] text-base leading-relaxed resize-none"
+                    placeholder="예: 로고 크기 조정, 특정 색상 요청, 글꼴 변경 등"
+                    className="min-h-[120px] text-base leading-relaxed resize-none"
+                    rows={5}
                   />
                 </div>
               </div>
 
-              <Button type="submit" className="w-full h-12 text-base font-semibold">
-                신청하기
-              </Button>
+              <div className="pt-4">
+                <Button type="submit" className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg">
+                  명함 신청하기
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>
 
         {/* 미리보기 */}
-        <Card className="shadow-lg border-0">
-          <CardHeader className="pb-6">
-            <CardTitle className="text-xl">명함 미리보기</CardTitle>
+        <Card className="shadow-lg border-0 xl:sticky xl:top-8">
+          <CardHeader className="pb-8">
+            <CardTitle className="text-2xl flex items-center gap-3">
+              <span>📋</span>
+              명함 미리보기
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="bg-gradient-to-br from-white to-gray-50 p-8 rounded-2xl border-2 border-dashed border-muted aspect-[1.6/1] flex flex-col justify-center space-y-4 shadow-inner">
-              <div className="text-center space-y-3">
-                <h3 className="font-bold text-xl text-foreground leading-tight">{user.name}</h3>
-                <div className="space-y-1">
-                  <p className="text-base text-muted-foreground font-medium">{user.dept}</p>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{user.phone}</p>
-                  <p className="text-sm text-muted-foreground font-medium">카카오페이증권</p>
+          <CardContent className="px-8 pb-8">
+            <div className="space-y-6">
+              <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 p-10 rounded-3xl border-2 border-dashed border-muted aspect-[1.6/1] flex flex-col justify-center space-y-6 shadow-inner relative overflow-hidden">
+                {/* 배경 장식 */}
+                <div className="absolute top-4 right-4 w-20 h-20 bg-primary/5 rounded-full"></div>
+                <div className="absolute bottom-4 left-4 w-16 h-16 bg-accent/5 rounded-full"></div>
+                
+                <div className="text-center space-y-4 relative z-10">
+                  <h3 className="font-bold text-2xl text-foreground leading-tight">{user.name}</h3>
+                  <div className="space-y-2">
+                    <p className="text-lg text-muted-foreground font-semibold">{user.dept}</p>
+                    <p className="text-base text-muted-foreground leading-relaxed">{user.phone}</p>
+                    <p className="text-base text-muted-foreground font-semibold">카카오페이증권</p>
+                  </div>
+                </div>
+                <div className="text-center pt-4 border-t border-muted/40">
+                  <span className="text-sm text-muted-foreground bg-white/80 px-4 py-2 rounded-full shadow-sm">
+                    {formData.design === 'character' ? '🎨 캐릭터 디자인' : '📄 일반 디자인'}
+                  </span>
                 </div>
               </div>
-              <div className="text-center pt-3 border-t border-muted/30">
-                <span className="text-xs text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
-                  {formData.design === 'character' ? '캐릭터 디자인' : '일반 디자인'}
-                </span>
+              
+              {/* 제작 정보 */}
+              <div className="bg-muted/30 p-6 rounded-2xl space-y-3">
+                <h4 className="font-semibold text-foreground">제작 정보</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">수량:</span>
+                    <span className="ml-2 font-medium">{formData.quantity}매</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">예상 완료:</span>
+                    <span className="ml-2 font-medium">3-5일</span>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
