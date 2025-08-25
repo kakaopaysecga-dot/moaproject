@@ -45,7 +45,7 @@ export default function BookingSelect() {
               </div>
             </div>
             <Button asChild className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg">
-              <Link to="/booking/reserve">
+              <Link to="/booking/smart-office">
                 스마트오피스 예약하기
               </Link>
             </Button>
@@ -82,7 +82,7 @@ export default function BookingSelect() {
               </div>
             </div>
             <Button asChild className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-accent to-corporate-blue hover:from-accent/90 hover:to-corporate-blue/90 shadow-lg">
-              <Link to="/booking/reserve">
+              <Link to="/booking/meeting-room">
                 회의실 예약하기
               </Link>
             </Button>

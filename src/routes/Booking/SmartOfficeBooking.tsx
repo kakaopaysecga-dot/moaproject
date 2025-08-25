@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar as CalendarIcon, Clock, MapPin } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, MapPin, ChevronLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function SmartOfficeBooking() {
@@ -16,7 +17,7 @@ export default function SmartOfficeBooking() {
   const timeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
     '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
-    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
+    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'
   ];
   const blockedSlots = new Set(['12:00', '12:30', '15:00']);
 
@@ -34,7 +35,7 @@ export default function SmartOfficeBooking() {
   const handleReservation = () => {
     if (!selectedDate || !selectedSeat || !selectedTime) {
       toast({
-        title: "예약 정보 부족",
+        title: "예약 정보가 부족합니다",
         description: "날짜, 좌석, 시간을 모두 선택해주세요.",
         variant: "destructive"
       });
@@ -42,8 +43,8 @@ export default function SmartOfficeBooking() {
     }
 
     toast({
-      title: "예약 완료",
-      description: `${selectedDate} ${selectedTime} ${selectedSeat}번 좌석이 예약되었습니다.`
+      title: "예약이 완료되었습니다",
+      description: `${selectedDate} ${selectedTime} ${selectedSeat}번 좌석 예약이 완료되었습니다.`
     });
 
     // Reset form
@@ -53,62 +54,81 @@ export default function SmartOfficeBooking() {
   };
 
   return (
-    <div className="py-8 space-y-10">
-      <div className="text-center space-y-4 px-4">
-        <h1 className="text-3xl font-bold tracking-tight">스마트오피스 예약</h1>
-        <p className="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto">
-          개인 업무용 좌석을 예약하세요
-        </p>
+    <div className="py-6 space-y-8">
+      {/* 헤더 */}
+      <div className="flex items-center gap-4 px-2">
+        <Link to="/booking">
+          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted/50">
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">스마트오피스 예약</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            개인 업무용 좌석을 예약하세요
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-3 max-w-6xl mx-auto">
-        {/* 날짜 선택 */}
-        <Card className="shadow-lg border-0">
+      {/* 예약 단계 */}
+      <div className="space-y-8">
+        {/* 1단계: 날짜 선택 */}
+        <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-primary/10 rounded-lg">
+              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
                 <CalendarIcon className="h-5 w-5 text-primary" />
               </div>
-              날짜 선택
+              <div>
+                <div className="text-lg font-semibold">1단계: 날짜 선택</div>
+                <div className="text-sm text-muted-foreground font-normal">예약할 날짜를 선택해주세요</div>
+              </div>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {getAvailableDates().map((date) => (
-              <Button
-                key={date}
-                variant={selectedDate === date ? "default" : "outline"}
-                className="w-full justify-start h-12 text-base"
-                onClick={() => setSelectedDate(date)}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <span>
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {getAvailableDates().map((date) => (
+                <Button
+                  key={date}
+                  variant={selectedDate === date ? "default" : "outline"}
+                  className="h-16 flex-col gap-1 p-4"
+                  onClick={() => setSelectedDate(date)}
+                >
+                  <div className="font-semibold">
                     {new Date(date).toLocaleDateString('ko-KR', {
-                      month: 'long',
-                      day: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </div>
+                  <div className="text-xs opacity-80">
+                    {new Date(date).toLocaleDateString('ko-KR', {
                       weekday: 'short'
                     })}
-                  </span>
+                  </div>
                   {date === new Date().toISOString().split('T')[0] && (
-                    <Badge variant="secondary" className="ml-2">오늘</Badge>
+                    <Badge variant="secondary" className="text-xs mt-1">오늘</Badge>
                   )}
-                </div>
-              </Button>
-            ))}
+                </Button>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
-        {/* 좌석 선택 */}
-        <Card className="shadow-lg border-0">
+        {/* 2단계: 좌석 선택 */}
+        <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-accent/10 rounded-lg">
+              <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
                 <MapPin className="h-5 w-5 text-accent" />
               </div>
-              좌석 선택
+              <div>
+                <div className="text-lg font-semibold">2단계: 좌석 선택</div>
+                <div className="text-sm text-muted-foreground font-normal">원하는 좌석을 선택해주세요</div>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-5 gap-3">
+            <div className="grid grid-cols-5 gap-4 max-w-md mx-auto">
               {Array.from({ length: 10 }, (_, i) => i + 1).map((seatNum) => {
                 const isOccupied = occupiedSeats.has(seatNum);
                 const isSelected = selectedSeat === seatNum;
@@ -117,7 +137,7 @@ export default function SmartOfficeBooking() {
                   <Button
                     key={seatNum}
                     variant={isSelected ? "default" : isOccupied ? "secondary" : "outline"}
-                    className="aspect-square p-0 text-lg font-semibold"
+                    className="aspect-square text-lg font-bold"
                     disabled={isOccupied}
                     onClick={() => setSelectedSeat(isSelected ? null : seatNum)}
                   >
@@ -126,9 +146,10 @@ export default function SmartOfficeBooking() {
                 );
               })}
             </div>
-            <div className="bg-muted/30 p-4 rounded-xl space-y-3">
-              <h4 className="font-semibold text-sm">좌석 상태</h4>
-              <div className="grid grid-cols-1 gap-3 text-xs">
+            
+            <div className="bg-muted/30 p-6 rounded-xl">
+              <h4 className="font-semibold mb-4">좌석 상태 안내</h4>
+              <div className="grid grid-cols-3 gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-input rounded"></div>
                   <span>이용 가능</span>
@@ -146,18 +167,21 @@ export default function SmartOfficeBooking() {
           </CardContent>
         </Card>
 
-        {/* 시간 선택 */}
-        <Card className="shadow-lg border-0">
+        {/* 3단계: 시간 선택 */}
+        <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-corporate-blue/10 rounded-lg">
+              <div className="w-8 h-8 bg-corporate-blue/10 rounded-lg flex items-center justify-center">
                 <Clock className="h-5 w-5 text-corporate-blue" />
               </div>
-              시간 선택
+              <div>
+                <div className="text-lg font-semibold">3단계: 시간 선택</div>
+                <div className="text-sm text-muted-foreground font-normal">이용할 시간을 선택해주세요</div>
+              </div>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
               {timeSlots.map((time) => {
                 const isBlocked = blockedSlots.has(time);
                 const isSelected = selectedTime === time;
@@ -169,45 +193,75 @@ export default function SmartOfficeBooking() {
                     size="sm"
                     disabled={isBlocked}
                     onClick={() => setSelectedTime(isSelected ? '' : time)}
-                    className="h-10 text-sm"
+                    className="h-12 text-sm font-medium"
                   >
                     {time}
                   </Button>
                 );
               })}
             </div>
+            
+            {blockedSlots.size > 0 && (
+              <div className="mt-4 p-4 bg-muted/30 rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium">알림:</span> 점심시간(12:00-13:00)과 일부 시간대는 예약이 제한됩니다.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* 예약 확인 및 완료 */}
+        <Card className="shadow-md border-0">
+          <CardContent className="p-8">
+            <div className="space-y-6">
+              <div className="text-center space-y-2">
+                <h3 className="text-xl font-semibold">예약 정보 확인</h3>
+                <p className="text-muted-foreground">선택하신 정보를 확인하고 예약을 완료해주세요</p>
+              </div>
+              
+              <div className="bg-muted/30 p-6 rounded-xl space-y-3">
+                {selectedDate && selectedSeat && selectedTime ? (
+                  <div className="space-y-3 text-center">
+                    <div className="text-lg">
+                      <span className="font-medium text-muted-foreground">예약 날짜:</span>
+                      <span className="ml-2 font-semibold">
+                        {new Date(selectedDate).toLocaleDateString('ko-KR', { 
+                          year: 'numeric',
+                          month: 'long', 
+                          day: 'numeric', 
+                          weekday: 'long' 
+                        })}
+                      </span>
+                    </div>
+                    <div className="text-lg">
+                      <span className="font-medium text-muted-foreground">예약 시간:</span>
+                      <span className="ml-2 font-semibold">{selectedTime}</span>
+                    </div>
+                    <div className="text-lg">
+                      <span className="font-medium text-muted-foreground">선택 좌석:</span>
+                      <span className="ml-2 font-semibold">{selectedSeat}번 좌석</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center text-muted-foreground">
+                    위의 단계를 모두 완료해주세요
+                  </div>
+                )}
+              </div>
+              
+              <Button 
+                onClick={handleReservation}
+                disabled={!selectedDate || !selectedSeat || !selectedTime}
+                className="w-full h-14 text-lg font-semibold"
+                size="lg"
+              >
+                좌석 예약 완료하기
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* 예약 정보 및 버튼 */}
-      <Card className="shadow-lg border-0 max-w-6xl mx-auto">
-        <CardContent className="p-8">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-3">
-              <h3 className="font-semibold text-xl">선택된 예약 정보</h3>
-              <div className="text-base text-muted-foreground">
-                {selectedDate && selectedSeat && selectedTime ? (
-                  <div className="space-y-1">
-                    <div><strong>날짜:</strong> {new Date(selectedDate).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })}</div>
-                    <div><strong>시간:</strong> {selectedTime}</div>
-                    <div><strong>좌석:</strong> {selectedSeat}번 좌석</div>
-                  </div>
-                ) : (
-                  '날짜, 좌석, 시간을 모두 선택해주세요'
-                )}
-              </div>
-            </div>
-            <Button 
-              onClick={handleReservation}
-              disabled={!selectedDate || !selectedSeat || !selectedTime}
-              className="h-14 px-8 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg lg:min-w-[200px]"
-            >
-              좌석 예약하기
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* 하단 여백 */}
       <div className="h-6" />
