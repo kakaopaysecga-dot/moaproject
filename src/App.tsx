@@ -13,6 +13,20 @@ import Signup from "./routes/auth/Signup";
 import Home from "./routes/Home";
 import NotFound from "./pages/NotFound";
 
+// Booking routes
+import BookingSelect from "./routes/Booking/BookingSelect";
+import SmartOfficeBooking from "./routes/Booking/SmartOfficeBooking";
+
+// Request routes
+import RequestStatus from "./routes/Requests/RequestStatus";
+import BusinessCard from "./routes/Requests/BusinessCard";
+import Parking from "./routes/Requests/Parking";
+import Events from "./routes/Requests/Events";
+import Environment from "./routes/Requests/Environment";
+
+// Admin routes
+import AdminPage from "./routes/Admin/AdminPage";
+
 const queryClient = new QueryClient();
 
 // Protected Route Component
@@ -53,6 +67,52 @@ const AppRoutes = () => {
         <Route path="/" element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        } />
+
+        {/* Booking Routes */}
+        <Route path="/booking" element={
+          <ProtectedRoute>
+            <BookingSelect />
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/smart-office" element={
+          <ProtectedRoute>
+            <SmartOfficeBooking />
+          </ProtectedRoute>
+        } />
+
+        {/* Request Routes */}
+        <Route path="/requests" element={
+          <ProtectedRoute>
+            <RequestStatus />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/business-card" element={
+          <ProtectedRoute>
+            <BusinessCard />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/parking" element={
+          <ProtectedRoute>
+            <Parking />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/events" element={
+          <ProtectedRoute>
+            <Events />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/environment" element={
+          <ProtectedRoute>
+            <Environment />
+          </ProtectedRoute>
+        } />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={
+          <ProtectedRoute>
+            <AdminPage />
           </ProtectedRoute>
         } />
 
