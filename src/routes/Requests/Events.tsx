@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
-import { Heart } from 'lucide-react';
+import { Heart, ChevronLeft } from 'lucide-react';
 
 export default function Events() {
   const { createEventsRequest } = useRequestsStore();
@@ -44,8 +45,8 @@ export default function Events() {
     });
 
     toast({
-      title: "신청 완료",
-      description: "결혼 경조사 지원이 신청되었습니다."
+      title: "신청이 완료되었습니다",
+      description: "결혼 경조사 지원 신청이 성공적으로 접수되었습니다."
     });
 
     setMarriageForm({ date: '', time: '', location: '', address: '', memo: '' });
@@ -66,32 +67,44 @@ export default function Events() {
     });
 
     toast({
-      title: "신청 완료",
-      description: "장례 경조사 지원이 신청되었습니다."
+      title: "신청이 완료되었습니다",
+      description: "장례 경조사 지원 신청이 성공적으로 접수되었습니다."
     });
 
     setFuneralForm({ relationship: '', deceased: '', deathDate: '', funeralDate: '', location: '', address: '', contact: '' });
   };
 
   return (
-    <div className="py-8 space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold">경조사 지원</h1>
-        <p className="text-muted-foreground">결혼, 장례 등 경조사 지원을 신청하세요</p>
+    <div className="py-6 space-y-8">
+      {/* 헤더 */}
+      <div className="flex items-center gap-4 px-2">
+        <Link to="/">
+          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted/50">
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">경조사 지원 신청</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            결혼, 장례 등 경조사 지원을 신청하세요
+          </p>
+        </div>
       </div>
 
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5" />
-            경조사 지원 신청
+      <Card className="shadow-md border-0 max-w-2xl mx-auto">
+        <CardHeader className="pb-6">
+          <CardTitle className="flex items-center gap-3 text-xl">
+            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Heart className="h-5 w-5 text-primary" />
+            </div>
+            경조사 종류 선택
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="marriage" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="marriage">결혼</TabsTrigger>
-              <TabsTrigger value="funeral">장례</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 h-12">
+              <TabsTrigger value="marriage" className="text-base font-semibold">결혼식</TabsTrigger>
+              <TabsTrigger value="funeral" className="text-base font-semibold">장례식</TabsTrigger>
             </TabsList>
             
             <TabsContent value="marriage" className="space-y-4">

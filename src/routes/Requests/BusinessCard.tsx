@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAuthStore } from '@/store/authStore';
 import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
-import { CreditCard } from 'lucide-react';
+import { CreditCard, ChevronLeft } from 'lucide-react';
 
 export default function BusinessCard() {
   const { user } = useAuthStore();
@@ -34,8 +35,8 @@ export default function BusinessCard() {
     });
 
     toast({
-      title: "신청 완료",
-      description: "명함 신청이 접수되었습니다."
+      title: "신청이 완료되었습니다",
+      description: "명함 제작 신청이 성공적으로 접수되었습니다."
     });
 
     setFormData({ design: 'character', quantity: '100', memo: '' });
@@ -44,12 +45,20 @@ export default function BusinessCard() {
   if (!user) return null;
 
   return (
-    <div className="py-8 space-y-10">
-      <div className="text-center space-y-4 px-4">
-        <h1 className="text-3xl font-bold tracking-tight">명함 신청</h1>
-        <p className="text-muted-foreground text-lg leading-relaxed max-w-md mx-auto">
-          개인 명함을 신청하세요
-        </p>
+    <div className="py-6 space-y-8">
+      {/* 헤더 */}
+      <div className="flex items-center gap-4 px-2">
+        <Link to="/">
+          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted/50">
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">명함 제작 신청</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            개인 명함을 신청하세요
+          </p>
+        </div>
       </div>
 
       <div className="grid gap-10 xl:grid-cols-2 max-w-7xl mx-auto">

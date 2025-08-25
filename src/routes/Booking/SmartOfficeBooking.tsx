@@ -86,27 +86,29 @@ export default function SmartOfficeBooking() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="space-y-4">
               {getAvailableDates().map((date) => (
                 <Button
                   key={date}
                   variant={selectedDate === date ? "default" : "outline"}
-                  className="h-16 flex-col gap-1 p-4"
+                  className="w-full h-14 justify-between text-left"
                   onClick={() => setSelectedDate(date)}
                 >
-                  <div className="font-semibold">
-                    {new Date(date).toLocaleDateString('ko-KR', {
-                      month: 'short',
-                      day: 'numeric'
-                    })}
-                  </div>
-                  <div className="text-xs opacity-80">
-                    {new Date(date).toLocaleDateString('ko-KR', {
-                      weekday: 'short'
-                    })}
+                  <div>
+                    <div className="font-semibold text-base">
+                      {new Date(date).toLocaleDateString('ko-KR', {
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                    <div className="text-sm opacity-70">
+                      {new Date(date).toLocaleDateString('ko-KR', {
+                        weekday: 'long'
+                      })}
+                    </div>
                   </div>
                   {date === new Date().toISOString().split('T')[0] && (
-                    <Badge variant="secondary" className="text-xs mt-1">오늘</Badge>
+                    <Badge variant="secondary" className="text-xs">오늘</Badge>
                   )}
                 </Button>
               ))}
@@ -128,7 +130,7 @@ export default function SmartOfficeBooking() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-5 gap-4 max-w-md mx-auto">
+            <div className="grid grid-cols-5 gap-3 max-w-xs mx-auto">
               {Array.from({ length: 10 }, (_, i) => i + 1).map((seatNum) => {
                 const isOccupied = occupiedSeats.has(seatNum);
                 const isSelected = selectedSeat === seatNum;
@@ -137,7 +139,7 @@ export default function SmartOfficeBooking() {
                   <Button
                     key={seatNum}
                     variant={isSelected ? "default" : isOccupied ? "secondary" : "outline"}
-                    className="aspect-square text-lg font-bold"
+                    className="aspect-square text-lg font-bold h-12 w-12"
                     disabled={isOccupied}
                     onClick={() => setSelectedSeat(isSelected ? null : seatNum)}
                   >
@@ -181,7 +183,7 @@ export default function SmartOfficeBooking() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {timeSlots.map((time) => {
                 const isBlocked = blockedSlots.has(time);
                 const isSelected = selectedTime === time;

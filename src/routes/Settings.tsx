@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
@@ -10,6 +11,7 @@ import {
   HelpCircle, 
   LogOut,
   ChevronRight,
+  ChevronLeft,
   Phone,
   Mail,
   Building
@@ -70,22 +72,30 @@ export default function Settings() {
 
   return (
     <div className="py-6 space-y-8">
-      <div className="text-center space-y-3">
-        <h1 className="text-3xl font-bold tracking-tight">설정</h1>
-        <p className="text-muted-foreground text-lg leading-relaxed">
-          앱 설정을 관리하세요
-        </p>
+      {/* 헤더 */}
+      <div className="flex items-center gap-4 px-2">
+        <Link to="/">
+          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted/50">
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">설정</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            앱 설정을 관리하세요
+          </p>
+        </div>
       </div>
 
       {/* 사용자 정보 카드 */}
-      <Card className="shadow-lg border-0 bg-gradient-to-br from-primary/5 to-accent/5">
-        <CardContent className="p-6">
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
+      <Card className="shadow-md border-0 bg-gradient-to-br from-primary/5 to-accent/5">
+        <CardContent className="p-8">
+          <div className="flex items-center space-x-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-2xl">{user.name.charAt(0)}</span>
             </div>
-            <div className="flex-1 space-y-1">
-              <h3 className="text-xl font-bold text-foreground leading-tight">{user.name}</h3>
+            <div className="flex-1 space-y-2">
+              <h3 className="text-2xl font-bold text-foreground leading-tight">{user.name}</h3>
               <div className="space-y-1">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Building className="h-4 w-4 mr-2" />
@@ -113,7 +123,7 @@ export default function Settings() {
               <span className="w-1 h-6 bg-gradient-to-b from-primary to-accent rounded-full mr-3"></span>
               {group.title}
             </h2>
-            <Card className="shadow-lg border-0">
+            <Card className="shadow-md border-0">
               <CardContent className="p-0">
                 {group.items.map((item, itemIndex) => (
                   <button
@@ -140,12 +150,12 @@ export default function Settings() {
       </div>
 
       {/* 로그아웃 버튼 */}
-      <Card className="shadow-lg border-0">
-        <CardContent className="p-6">
+      <Card className="shadow-md border-0">
+        <CardContent className="p-8">
           <Button
             onClick={logout}
             variant="destructive"
-            className="w-full h-12 text-base font-semibold flex items-center justify-center space-x-3"
+            className="w-full h-14 text-lg font-semibold flex items-center justify-center space-x-3"
           >
             <LogOut className="h-5 w-5" />
             <span>로그아웃</span>

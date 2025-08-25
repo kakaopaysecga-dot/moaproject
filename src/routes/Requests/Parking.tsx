@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useAuthStore } from '@/store/authStore';
 import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
-import { Car } from 'lucide-react';
+import { Car, ChevronLeft } from 'lucide-react';
 
 export default function Parking() {
   const { user } = useAuthStore();
@@ -25,8 +26,8 @@ export default function Parking() {
     
     if (!formData.carNumber || !formData.carModel || !formData.location) {
       toast({
-        title: "입력 오류",
-        description: "모든 필드를 입력해주세요.",
+        title: "입력 정보가 부족합니다",
+        description: "모든 항목을 입력해주세요.",
         variant: "destructive"
       });
       return;
@@ -35,71 +36,98 @@ export default function Parking() {
     createParkingRequest(formData.carNumber);
 
     toast({
-      title: "신청 완료",
-      description: "주차 등록 신청이 접수되었습니다."
+      title: "신청이 완료되었습니다",
+      description: "주차 등록 신청이 성공적으로 접수되었습니다."
     });
 
     setFormData({ carNumber: '', carModel: '', location: '' });
   };
 
   return (
-    <div className="py-8 space-y-6">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold">주차 등록</h1>
-        <p className="text-muted-foreground">회사 주차장 이용을 신청하세요</p>
+    <div className="py-6 space-y-8">
+      {/* 헤더 */}
+      <div className="flex items-center gap-4 px-2">
+        <Link to="/">
+          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted/50">
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">주차 등록 신청</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            회사 주차장 이용을 신청하세요
+          </p>
+        </div>
       </div>
 
-      <Card className="max-w-md mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Car className="h-5 w-5" />
-            주차 등록 신청
+      {/* 신청 폼 */}
+      <Card className="shadow-md border-0 max-w-lg mx-auto">
+        <CardHeader className="pb-6">
+          <CardTitle className="flex items-center gap-3 text-xl">
+            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Car className="h-5 w-5 text-primary" />
+            </div>
+            차량 정보 입력
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="carNumber">차량번호</Label>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-3">
+              <Label htmlFor="carNumber" className="text-base font-semibold">차량 번호</Label>
               <Input 
                 id="carNumber"
                 value={formData.carNumber}
                 onChange={(e) => setFormData(prev => ({ ...prev, carNumber: e.target.value }))}
                 placeholder="예: 12가3456"
+                className="h-12 text-base"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="carModel">차종</Label>
+            <div className="space-y-3">
+              <Label htmlFor="carModel" className="text-base font-semibold">차량 모델</Label>
               <Input 
                 id="carModel"
                 value={formData.carModel}
                 onChange={(e) => setFormData(prev => ({ ...prev, carModel: e.target.value }))}
-                placeholder="예: 아반떼"
+                placeholder="예: 아반떼, 쏘나타, K5"
+                className="h-12 text-base"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="location">희망 주차 위치</Label>
+            <div className="space-y-3">
+              <Label htmlFor="location" className="text-base font-semibold">희망 주차 위치</Label>
               <Select value={formData.location} onValueChange={(value) => setFormData(prev => ({ ...prev, location: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="위치 선택" />
+                <SelectTrigger className="h-12 text-base">
+                  <SelectValue placeholder="주차 위치를 선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ground">지상 주차장</SelectItem>
                   <SelectItem value="underground">지하 주차장</SelectItem>
-                  <SelectItem value="any">상관없음</SelectItem>
+                  <SelectItem value="any">어디든 상관없음</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <Button type="submit" className="w-full">
-              등록 신청
+            <div className="bg-muted/30 p-4 rounded-lg">
+              <h4 className="font-semibold mb-2">신청 안내</h4>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                <li>• 주차 등록은 승인 후 이용 가능합니다</li>
+                <li>• 차량 번호는 정확히 입력해주세요</li>
+                <li>• 승인까지 1-2일 소요됩니다</li>
+              </ul>
+            </div>
+
+            <Button type="submit" className="w-full h-14 text-lg font-semibold">
+              주차 등록 신청하기
             </Button>
           </form>
         </CardContent>
       </Card>
+
+      {/* 하단 여백 */}
+      <div className="h-6" />
     </div>
   );
 }
