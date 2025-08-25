@@ -77,81 +77,91 @@ export default function Home() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-6">
       {/* Welcome Section */}
-      <section className="text-center space-y-4 py-4">
-        <div className="mx-auto w-16 h-16 bg-gradient-to-br from-corporate-blue to-accent rounded-2xl flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-2xl">M</span>
+      <section className="relative text-center space-y-6 p-6 rounded-3xl bg-gradient-to-br from-primary via-accent to-corporate-blue overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-white/10 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px]"></div>
         </div>
-        <h1 className="text-2xl font-bold">
-          안녕하세요, {user.name}님
-        </h1>
-        <p className="text-muted-foreground">
-          {user.dept} · {user.building}
-        </p>
-        <div className="inline-flex items-center space-x-2 px-3 py-1 bg-success/10 rounded-full">
-          <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-          <span className="text-sm font-medium text-success">온라인</span>
+        
+        <div className="relative z-10">
+          <div className="mx-auto w-20 h-20 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30">
+            <span className="text-white font-bold text-3xl drop-shadow-sm">M</span>
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-white drop-shadow-sm">
+              안녕하세요, {user.name}님
+            </h1>
+            <p className="text-white/80 font-medium">
+              {user.dept} · {user.building}
+            </p>
+          </div>
+          <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-white">온라인</span>
+          </div>
         </div>
       </section>
 
       {/* Quick Actions */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold px-1">빠른 서비스</h2>
-        <div className="grid grid-cols-1 gap-4">
+      <section className="space-y-5">
+        <h2 className="text-xl font-bold px-1 flex items-center">
+          <span className="w-1 h-6 bg-gradient-to-b from-primary to-accent rounded-full mr-3"></span>
+          빠른 서비스
+        </h2>
+        <div className="grid grid-cols-2 gap-4">
           {serviceCards.map((service) => (
-            <Card key={service.path} variant="elevated" className="hover:shadow-lg transition-all duration-200 active:scale-[0.98] border-0 bg-gradient-to-br from-card to-card/80">
-              <CardHeader className="pb-3">
-                <div className="flex items-center space-x-3">
-                  <div className={`p-3 rounded-xl ${service.color} text-white shadow-md`}>
-                    <service.icon className="h-6 w-6" />
+            <Link key={service.path} to={service.path} className="group">
+              <Card className="h-full border-0 bg-white shadow-lg hover:shadow-xl transition-all duration-300 active:scale-[0.96] group-hover:-translate-y-1 overflow-hidden">
+                <CardContent className="p-5 text-center space-y-3">
+                  <div className={`mx-auto w-14 h-14 ${service.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <service.icon className="h-7 w-7 text-white" />
                   </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-lg">{service.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-sm leading-tight">{service.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       {service.description}
                     </p>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Button asChild variant="outline" className="w-full h-11 font-medium">
-                  <Link to={service.path}>
-                    이용하기
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </section>
 
       {/* Temperature Request Quick Access */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold px-1">실내 온도 조절</h2>
-        <Card className="border-0 bg-gradient-to-br from-card to-card/80">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="p-3 bg-accent rounded-lg">
-                  <Thermometer className="h-6 w-6 text-accent-foreground" />
+        <h2 className="text-xl font-bold px-1 flex items-center">
+          <span className="w-1 h-6 bg-gradient-to-b from-warning to-destructive rounded-full mr-3"></span>
+          실내 온도 조절
+        </h2>
+        <Card className="border-0 bg-white shadow-lg overflow-hidden">
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="p-4 bg-gradient-to-br from-accent to-corporate-blue rounded-2xl shadow-lg">
+                  <Thermometer className="h-6 w-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="font-medium">실내 온도가 불편하신가요?</h3>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg">실내 온도가 불편하신가요?</h3>
                   <p className="text-sm text-muted-foreground">
-                    온도 조절을 요청하실 수 있습니다
+                    온도 조절을 간편하게 요청하세요
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
-                <Button variant="outline" size="default" asChild className="flex-1 h-11">
-                  <Link to="/requests/environment?temp=cold">
-                    🥶 추워요
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" asChild className="h-12 border-2 border-blue-200 hover:bg-blue-50 hover:border-blue-300">
+                  <Link to="/requests/environment?temp=cold" className="flex items-center justify-center space-x-2">
+                    <span className="text-lg">🥶</span>
+                    <span className="font-medium">추워요</span>
                   </Link>
                 </Button>
-                <Button variant="outline" size="default" asChild className="flex-1 h-11">
-                  <Link to="/requests/environment?temp=hot">
-                    🔥 더워요
+                <Button variant="outline" asChild className="h-12 border-2 border-red-200 hover:bg-red-50 hover:border-red-300">
+                  <Link to="/requests/environment?temp=hot" className="flex items-center justify-center space-x-2">
+                    <span className="text-lg">🔥</span>
+                    <span className="font-medium">더워요</span>
                   </Link>
                 </Button>
               </div>
@@ -163,24 +173,27 @@ export default function Home() {
       {/* Admin Quick Access */}
       {user.isAdmin && (
         <section className="space-y-4">
-          <h2 className="text-xl font-semibold px-1">관리자 도구</h2>
-          <Card variant="bordered" className="border-0 bg-gradient-to-br from-destructive/5 to-destructive/10">
-            <CardContent className="pt-6">
+          <h2 className="text-xl font-bold px-1 flex items-center">
+            <span className="w-1 h-6 bg-gradient-to-b from-destructive to-primary rounded-full mr-3"></span>
+            관리자 도구
+          </h2>
+          <Card className="border-0 bg-gradient-to-br from-destructive/10 to-primary/10 shadow-lg">
+            <CardContent className="p-6">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="p-3 bg-destructive rounded-lg">
-                    <Settings className="h-6 w-6 text-destructive-foreground" />
+                <div className="flex items-center space-x-4">
+                  <div className="p-4 bg-gradient-to-br from-destructive to-primary rounded-2xl shadow-lg">
+                    <Settings className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-medium">관리자 페이지</h3>
+                    <h3 className="font-semibold text-lg">관리자 페이지</h3>
                     <p className="text-sm text-muted-foreground">
                       요청 관리 및 시스템 설정
                     </p>
                   </div>
                 </div>
-                <Button variant="destructive" asChild className="h-11 font-medium">
+                <Button asChild className="h-12 px-6 bg-gradient-to-r from-destructive to-primary hover:from-destructive/90 hover:to-primary/90 text-white font-medium shadow-lg">
                   <Link to="/admin">
-                    관리자 페이지
+                    관리하기
                   </Link>
                 </Button>
               </div>
