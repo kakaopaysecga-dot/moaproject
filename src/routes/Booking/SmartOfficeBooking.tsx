@@ -239,15 +239,15 @@ export default function SmartOfficeBooking() {
       {/* 예약 단계 */}
       <div className="space-y-8">
         {/* 예약 현황 */}
-        <Card className="shadow-md border-0">
+        <Card className="shadow-sm border-0 bg-gradient-to-br from-card to-card/80">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xl font-semibold">📊 오늘의 예약 현황</CardTitle>
+              <CardTitle className="text-lg font-semibold text-foreground">📊 오늘의 예약 현황</CardTitle>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowReservationStatus(!showReservationStatus)}
-                className="text-primary hover:text-primary/80"
+                className="text-primary hover:text-primary/80 transition-colors"
               >
                 {showReservationStatus ? '숨기기' : '자세히 보기'}
               </Button>
@@ -255,45 +255,66 @@ export default function SmartOfficeBooking() {
           </CardHeader>
           <CardContent>
             {showReservationStatus && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {Object.entries(officeData).map(([office, data]) => (
-                    <div key={office} className="space-y-3">
-                      <h4 className="font-semibold text-base">{office}</h4>
-                      <div className="space-y-2">
-                        {data.reservations.map((reservation, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg text-sm">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                                <span className="text-xs font-bold">{reservation.seat}</span>
-                              </div>
-                              <div>
-                                <div className="font-medium">{reservation.user}</div>
-                                <div className="text-muted-foreground text-xs">{reservation.time}</div>
+                    <Card key={office} className="border-0 bg-muted/20">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base font-semibold">{office}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {data.reservations.map((reservation, index) => {
+                          const now = new Date();
+                          const [startTime, endTime] = reservation.time.split('-');
+                          const startHour = parseInt(startTime.split(':')[0]);
+                          const endHour = parseInt(endTime.split(':')[0]);
+                          const currentHour = now.getHours();
+                          
+                          const isOngoing = currentHour >= startHour && currentHour < endHour;
+                          const isUpcoming = currentHour < startHour;
+                          
+                          return (
+                            <div key={index} className="flex items-center justify-between p-3 bg-background/80 rounded-lg border border-border/50">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                                  <span className="text-xs font-bold text-primary">{reservation.seat}</span>
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium text-sm">{reservation.user}</span>
+                                    <Badge 
+                                      variant={isOngoing ? "default" : isUpcoming ? "secondary" : "outline"} 
+                                      className="text-xs"
+                                    >
+                                      {isOngoing ? "진행중" : isUpcoming ? "예정" : "완료"}
+                                    </Badge>
+                                  </div>
+                                  <div className="text-muted-foreground text-xs mt-1">{reservation.time}</div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                          );
+                        })}
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               </div>
             )}
             {!showReservationStatus && (
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div className="p-4 bg-muted/30 rounded-lg">
-                  <div className="text-2xl font-bold text-primary">
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="p-4 text-center border-0 bg-primary/5">
+                  <div className="text-2xl font-bold text-primary mb-1">
                     {officeData['판교아지트'].reservations.length}
                   </div>
                   <div className="text-sm text-muted-foreground">판교아지트 예약</div>
-                </div>
-                <div className="p-4 bg-muted/30 rounded-lg">
-                  <div className="text-2xl font-bold text-primary">
+                </Card>
+                <Card className="p-4 text-center border-0 bg-primary/5">
+                  <div className="text-2xl font-bold text-primary mb-1">
                     {officeData['여의도오피스'].reservations.length}
                   </div>
                   <div className="text-sm text-muted-foreground">여의도오피스 예약</div>
-                </div>
+                </Card>
               </div>
             )}
           </CardContent>
@@ -515,14 +536,12 @@ export default function SmartOfficeBooking() {
         <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
-                <Clock className="h-5 w-5 text-secondary" />
+              <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
+                <Clock className="h-5 w-5 text-accent" />
               </div>
               <div>
                 <div className="text-lg font-semibold">4단계: 시간 선택</div>
-                <div className="text-sm text-muted-foreground font-normal">
-                  시작 시간을 먼저 클릭하고, 종료 시간을 클릭하면 연속된 시간이 자동 선택됩니다
-                </div>
+                <div className="text-sm text-muted-foreground font-normal">예약할 시간을 선택해주세요</div>
               </div>
             </CardTitle>
           </CardHeader>
@@ -533,137 +552,156 @@ export default function SmartOfficeBooking() {
               </div>
             ) : (
               <>
-                {/* 빠른 시간 선택 버튼 */}
+                {/* 빠른 선택 */}
                 <div className="space-y-3">
                   <Label className="text-base font-semibold">빠른 선택</Label>
                   <div className="grid grid-cols-3 gap-3">
                     <Button
                       variant="outline"
-                      size="sm"
                       onClick={() => handleQuickTimeSelection('all-day')}
-                      className="h-16 flex flex-col items-center justify-center gap-1"
+                      className="h-12 flex flex-col items-center justify-center text-xs space-y-1"
                     >
-                      <span className="font-medium">하루종일</span>
-                      <span className="text-xs text-muted-foreground">09:00~18:00</span>
+                      <div className="font-medium">전일</div>
+                      <div className="text-muted-foreground">09:00-18:00</div>
                     </Button>
                     <Button
                       variant="outline"
-                      size="sm"
                       onClick={() => handleQuickTimeSelection('morning')}
-                      className="h-16 flex flex-col items-center justify-center gap-1"
+                      className="h-12 flex flex-col items-center justify-center text-xs space-y-1"
                     >
-                      <span className="font-medium">오전</span>
-                      <span className="text-xs text-muted-foreground">09:00~12:00</span>
+                      <div className="font-medium">오전</div>
+                      <div className="text-muted-foreground">09:00-12:00</div>
                     </Button>
                     <Button
                       variant="outline"
-                      size="sm"
                       onClick={() => handleQuickTimeSelection('afternoon')}
-                      className="h-16 flex flex-col items-center justify-center gap-1"
+                      className="h-12 flex flex-col items-center justify-center text-xs space-y-1"
                     >
-                      <span className="font-medium">오후</span>
-                      <span className="text-xs text-muted-foreground">13:00~18:00</span>
+                      <div className="font-medium">오후</div>
+                      <div className="text-muted-foreground">13:00-18:00</div>
                     </Button>
                   </div>
                 </div>
 
-                {/* 시간 선택 상태 표시 */}
-                <div className="space-y-4">
-                  {startTime && endTime && (
-                    <div className="bg-primary/5 border border-primary/20 p-4 rounded-lg">
-                      <div className="text-sm font-medium mb-2 text-primary">선택된 시간대</div>
-                      <div className="text-lg font-semibold text-primary">
-                        {startTime} ~ {endTime}
-                      </div>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        총 {selectedTimeSlots.length}개 시간대 선택됨
-                      </div>
-                    </div>
-                  )}
-
-                  {startTime && !endTime && (
-                    <div className="bg-muted/30 p-4 rounded-lg">
-                      <div className="text-sm font-medium mb-2">선택 상태</div>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="text-primary font-medium">시작: {startTime}</span>
-                        <span className="text-muted-foreground">종료 시간을 선택해주세요</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Time slots grid */}
-                <div className="space-y-4">
-                  <Label className="text-base font-semibold">시간대 선택</Label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {timeSlots.map((time) => {
-                      const isSelected = selectedTimeSlots.includes(time);
-                      const isAvailable = selectedSeat ? isTimeSlotAvailable(time, selectedSeat) : false;
-                      const isStartTime = startTime === time;
-                      const isEndTime = endTime === time;
-                      const isInRange = startTime && endTime && 
-                        timeSlots.indexOf(time) >= timeSlots.indexOf(startTime) && 
-                        timeSlots.indexOf(time) <= timeSlots.indexOf(endTime);
-                      
-                      return (
-                        <Button
-                          key={time}
-                          variant={isSelected ? "default" : "outline"}
-                          size="sm"
-                          disabled={!isAvailable}
-                          onClick={() => handleTimeSlotClick(time)}
-                          className={`h-16 text-sm font-medium transition-all relative ${
-                            isSelected ? 'ring-2 ring-primary ring-offset-2' : ''
-                          } ${
-                            isStartTime ? 'ring-2 ring-green-500 ring-offset-2' : ''
-                          } ${
-                            isEndTime ? 'ring-2 ring-red-500 ring-offset-2' : ''
-                          } ${
-                            isInRange && !isSelected ? 'bg-primary/20 border-primary/50' : ''
-                          } ${
-                            !isAvailable ? 'opacity-50' : ''
-                          }`}
-                        >
-                          <div className="text-center">
-                            <div className="font-semibold">{time}</div>
-                            {!isAvailable && (
-                              <div className="text-xs opacity-60">예약됨</div>
-                            )}
-                            {isStartTime && (
-                              <div className="text-xs text-green-600 font-medium">시작</div>
-                            )}
-                            {isEndTime && (
-                              <div className="text-xs text-red-600 font-medium">종료</div>
-                            )}
+                {/* 타임테이블 */}
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold">시간 타임테이블</Label>
+                  <Card className="border-0 bg-muted/20">
+                    <CardContent className="p-4">
+                      <div className="grid grid-cols-1 gap-4">
+                        {/* 오전 시간대 */}
+                        <div className="space-y-3">
+                          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                            오전 (AM)
                           </div>
-                        </Button>
-                      );
-                    })}
-                  </div>
+                          <div className="grid grid-cols-6 gap-2">
+                            {timeSlots.filter(time => parseInt(time.split(':')[0]) < 12).map((time) => {
+                              const isAvailable = isTimeSlotAvailable(time, selectedSeat);
+                              const isSelected = selectedTimeSlots.includes(time);
+                              const isStart = startTime === time;
+                              const isEnd = endTime === time;
+                              
+                              return (
+                                <Button
+                                  key={time}
+                                  variant={isSelected ? "default" : "outline"}
+                                  size="sm"
+                                  onClick={() => handleTimeSlotClick(time)}
+                                  disabled={!isAvailable}
+                                  className={`
+                                    h-10 text-xs transition-all duration-200
+                                    ${isStart ? 'ring-2 ring-primary ring-offset-1' : ''}
+                                    ${isEnd ? 'ring-2 ring-secondary ring-offset-1' : ''}
+                                    ${!isAvailable ? 'opacity-30 cursor-not-allowed bg-destructive/10' : ''}
+                                  `}
+                                >
+                                  {time}
+                                </Button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* 오후 시간대 */}
+                        <div className="space-y-3 pt-2 border-t border-border/50">
+                          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                            오후 (PM)
+                          </div>
+                          <div className="grid grid-cols-6 gap-2">
+                            {timeSlots.filter(time => parseInt(time.split(':')[0]) >= 12).map((time) => {
+                              const isAvailable = isTimeSlotAvailable(time, selectedSeat);
+                              const isSelected = selectedTimeSlots.includes(time);
+                              const isStart = startTime === time;
+                              const isEnd = endTime === time;
+                              
+                              return (
+                                <Button
+                                  key={time}
+                                  variant={isSelected ? "default" : "outline"}
+                                  size="sm"
+                                  onClick={() => handleTimeSlotClick(time)}
+                                  disabled={!isAvailable}
+                                  className={`
+                                    h-10 text-xs transition-all duration-200
+                                    ${isStart ? 'ring-2 ring-primary ring-offset-1' : ''}
+                                    ${isEnd ? 'ring-2 ring-secondary ring-offset-1' : ''}
+                                    ${!isAvailable ? 'opacity-30 cursor-not-allowed bg-destructive/10' : ''}
+                                  `}
+                                >
+                                  {time}
+                                </Button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 범례 */}
+                      <div className="flex flex-wrap gap-4 pt-4 mt-4 border-t border-border/50">
+                        <div className="flex items-center gap-2 text-xs">
+                          <div className="w-3 h-3 bg-primary rounded-sm"></div>
+                          <span>선택됨</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <div className="w-3 h-3 bg-destructive/20 rounded-sm"></div>
+                          <span>예약불가</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <div className="w-3 h-3 border border-border rounded-sm"></div>
+                          <span>선택가능</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
-                {/* 선택 초기화 버튼 */}
+                {/* 선택된 시간 표시 */}
                 {selectedTimeSlots.length > 0 && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setStartTime(null);
-                      setEndTime(null);
-                      setSelectedTimeSlots([]);
-                    }}
-                    className="text-sm"
-                  >
-                    선택 초기화
-                  </Button>
+                  <Card className="border-0 bg-primary/5">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm font-semibold text-primary">선택된 시간</div>
+                          <div className="text-muted-foreground text-xs mt-1">
+                            {startTime && endTime ? `${startTime} ~ ${endTime}` : selectedTimeSlots.join(', ')}
+                          </div>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setStartTime(null);
+                            setEndTime(null);
+                            setSelectedTimeSlots([]);
+                          }}
+                          className="text-muted-foreground hover:text-foreground"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 )}
-
-                {/* Info section */}
-                <div className="bg-muted/30 p-4 rounded-lg">
-                  <p className="text-sm text-muted-foreground">
-                    <span className="font-medium">💡 사용법:</span> 시작 시간을 먼저 클릭하고, 종료 시간을 클릭하면 그 사이의 모든 시간이 자동으로 선택됩니다.
-                  </p>
-                </div>
               </>
             )}
           </CardContent>
