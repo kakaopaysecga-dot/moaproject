@@ -16,15 +16,31 @@ export default function BusinessCard() {
   const { createBusinessCardRequest } = useRequestsStore();
   const { toast } = useToast();
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    englishName: string;
+    koreanName: string;
+    position: string;
+    certification: string;
+    building: '판교오피스' | '여의도오피스';
+    design: string;
+    quantity: string;
+    memo: string;
+  }>({
     englishName: '',
     koreanName: user?.name || '',
     position: '',
     certification: '',
+    building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
     design: 'character',
     quantity: '100',
     memo: ''
   });
+
+  const capitalizeEnglishName = (name: string) => {
+    return name.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +62,7 @@ export default function BusinessCard() {
       certification: formData.certification,
       phone: user.phone,
       email: user.email,
-      building: user.building,
+      building: formData.building as '판교오피스' | '여의도오피스',
       style: formData.design as 'character' | 'normal'
     });
 
@@ -60,6 +76,7 @@ export default function BusinessCard() {
       koreanName: user?.name || '',
       position: '',
       certification: '',
+      building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
       design: 'character', 
       quantity: '100', 
       memo: '' 
@@ -110,7 +127,10 @@ export default function BusinessCard() {
                     <Input 
                       id="englishName" 
                       value={formData.englishName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, englishName: e.target.value }))}
+                      onChange={(e) => setFormData(prev => ({ 
+                        ...prev, 
+                        englishName: capitalizeEnglishName(e.target.value)
+                      }))}
                       placeholder="John Smith"
                       className="h-12 text-base font-medium"
                       required
@@ -174,11 +194,19 @@ export default function BusinessCard() {
                 </div>
 
                 <div className="space-y-3">
-                  <Label className="text-sm font-semibold text-foreground">주소</Label>
+                  <Label className="text-sm font-semibold text-foreground">주소 선택</Label>
+                  <Select value={formData.building} onValueChange={(value: '판교오피스' | '여의도오피스') => setFormData(prev => ({ ...prev, building: value }))}>
+                    <SelectTrigger className="h-12 text-base">
+                      <SelectValue placeholder="근무지를 선택하세요" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="여의도오피스">🏢 여의도오피스</SelectItem>
+                      <SelectItem value="판교아지트">🏢 판교아지트</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <div className="p-4 bg-muted/30 rounded-lg">
-                    <div className="font-medium text-sm mb-2">{user.building}</div>
                     <div className="text-sm text-muted-foreground">
-                      {user.building === '여의도오피스' 
+                      {formData.building === '여의도오피스' 
                         ? '07325 서울특별시 영등포구 국제금융로 2길 32 여의도파이낸스타워 5층\n5F, 32, Gukjegeumyung-ro 2-gil, Yeongdeungpo-gu, Seoul, Korea, 07325'
                         : '13529 경기도 성남시 분당구 판교역로 166 카카오판교아지트 B동 8F\n8F B, 166, Pangyoyeok-ro, Bundang-gu, Seongnam-si, Gyeonggi-do, Korea, 13528'
                       }
@@ -262,45 +290,108 @@ export default function BusinessCard() {
           </CardHeader>
           <CardContent className="px-8 pb-8">
             <div className="space-y-6">
-              <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 p-8 rounded-3xl border-2 border-dashed border-muted aspect-[0.6/1] flex flex-col justify-between space-y-4 shadow-inner relative overflow-hidden max-w-xs mx-auto">
-                {/* 배경 장식 */}
-                <div className="absolute top-3 right-3 w-12 h-12 bg-primary/5 rounded-full"></div>
-                <div className="absolute bottom-3 left-3 w-10 h-10 bg-accent/5 rounded-full"></div>
-                
-                {/* 상단 - 회사 로고 영역 */}
-                <div className="text-center relative z-10">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl mx-auto mb-3 flex items-center justify-center shadow-md">
-                    <span className="text-white font-bold text-lg">M</span>
+              <div className="bg-white p-8 rounded-lg border-2 border-gray-200 aspect-[0.6/1] max-w-xs mx-auto shadow-lg">
+                {formData.design === 'normal' ? (
+                  // 일반 명함 디자인 (참고 이미지 기반)
+                  <div className="h-full flex flex-col justify-between">
+                    {/* 상단 - 이름 */}
+                    <div className="space-y-3">
+                      <div className="flex items-baseline gap-2">
+                        <h3 className="text-lg font-bold text-gray-900">
+                          {formData.koreanName || user.name}
+                        </h3>
+                        <span className="text-sm font-medium text-gray-700">
+                          {formData.englishName || 'English Name'}
+                        </span>
+                      </div>
+                      
+                      {/* 부서/직급 */}
+                      <div className="text-sm text-gray-600">
+                        {formData.position && `${formData.position} / `}
+                        {user.dept}
+                        {formData.certification && ` ${formData.certification}`}
+                      </div>
+                      
+                      {/* 구분선 */}
+                      <div className="w-full h-1 bg-yellow-400 rounded"></div>
+                    </div>
+
+                    {/* 하단 - 연락처 및 주소 */}
+                    <div className="space-y-4">
+                      {/* 연락처 */}
+                      <div className="space-y-1">
+                        <div className="text-xs text-gray-800 font-medium">{user.phone}</div>
+                        <div className="text-xs text-gray-800">{user.email}</div>
+                      </div>
+                      
+                      {/* 주소 */}
+                      <div className="space-y-1">
+                        <div className="text-xs font-bold text-gray-900">
+                          {formData.building === '여의도오피스' ? '07325' : '13529'}
+                        </div>
+                        <div className="text-xs text-gray-700 leading-tight">
+                          {formData.building === '여의도오피스' 
+                            ? '서울특별시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5층'
+                            : '경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
+                          }
+                        </div>
+                        <div className="text-xs text-gray-700 leading-tight">
+                          {formData.building === '여의도오피스' 
+                            ? '5F, 32, Gukjegeumyung-ro 2-gil,\nYeongdeungpo-gu, Seoul, Republic of Korea'
+                            : '8F B, 166, Pangyoyeok-ro,\nBundang-gu, Seongnam-si, Gyeonggi-do, Korea'
+                          }
+                        </div>
+                      </div>
+                      
+                      {/* 회사 정보 */}
+                      <div className="text-xs text-gray-900 font-bold">
+                        www.kakaopaysec.com (주) 카카오페이증권
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground font-bold tracking-wide">카카오페이증권</p>
-                </div>
-                
-                {/* 중앙 - 개인 정보 */}
-                <div className="text-center space-y-2 relative z-10 flex-1 flex flex-col justify-center">
-                  <h3 className="font-bold text-lg text-foreground leading-tight">
-                    {formData.englishName || 'English Name'}
-                  </h3>
-                  <h4 className="font-bold text-base text-foreground leading-tight">
-                    {formData.koreanName || user.name}
-                  </h4>
-                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                    {user.dept} {formData.position && `· ${formData.position}`}
-                  </p>
-                  {formData.certification && (
-                    <p className="text-xs text-muted-foreground leading-relaxed">{formData.certification}</p>
-                  )}
-                  <div className="pt-2 space-y-1">
-                    <p className="text-xs text-muted-foreground leading-relaxed">{user.phone}</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{user.email}</p>
+                ) : (
+                  // 캐릭터 명함 디자인 (기존)
+                  <div className="bg-gradient-to-br from-white via-gray-50 to-gray-100 p-6 rounded-3xl border-2 border-dashed border-muted h-full flex flex-col justify-between space-y-4 shadow-inner relative overflow-hidden">
+                    {/* 배경 장식 */}
+                    <div className="absolute top-3 right-3 w-12 h-12 bg-primary/5 rounded-full"></div>
+                    <div className="absolute bottom-3 left-3 w-10 h-10 bg-accent/5 rounded-full"></div>
+                    
+                    {/* 상단 - 회사 로고 영역 */}
+                    <div className="text-center relative z-10">
+                      <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl mx-auto mb-3 flex items-center justify-center shadow-md">
+                        <span className="text-white font-bold text-lg">K</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground font-bold tracking-wide">카카오페이증권</p>
+                    </div>
+                    
+                    {/* 중앙 - 개인 정보 */}
+                    <div className="text-center space-y-2 relative z-10 flex-1 flex flex-col justify-center">
+                      <h3 className="font-bold text-lg text-foreground leading-tight">
+                        {formData.englishName || 'English Name'}
+                      </h3>
+                      <h4 className="font-bold text-base text-foreground leading-tight">
+                        {formData.koreanName || user.name}
+                      </h4>
+                      <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                        {user.dept} {formData.position && `· ${formData.position}`}
+                      </p>
+                      {formData.certification && (
+                        <p className="text-xs text-muted-foreground leading-relaxed">{formData.certification}</p>
+                      )}
+                      <div className="pt-2 space-y-1">
+                        <p className="text-xs text-muted-foreground leading-relaxed">{user.phone}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{user.email}</p>
+                      </div>
+                    </div>
+                    
+                    {/* 하단 - 디자인 타입 */}
+                    <div className="text-center pt-2 border-t border-muted/40">
+                      <span className="text-xs text-muted-foreground bg-white/80 px-3 py-1 rounded-full shadow-sm">
+                        🎨 캐릭터
+                      </span>
+                    </div>
                   </div>
-                </div>
-                
-                {/* 하단 - 디자인 타입 */}
-                <div className="text-center pt-2 border-t border-muted/40">
-                  <span className="text-xs text-muted-foreground bg-white/80 px-3 py-1 rounded-full shadow-sm">
-                    {formData.design === 'character' ? '🎨 캐릭터' : '📄 일반'}
-                  </span>
-                </div>
+                )}
               </div>
               
               {/* 제작 정보 */}
