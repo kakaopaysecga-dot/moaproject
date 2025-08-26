@@ -39,62 +39,58 @@ export default function BookingSelect() {
   ];
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen py-6 px-4">
+      <div className="max-w-md mx-auto">
         {/* 헤더 섹션 */}
-        <div className="text-center space-y-4 mb-10">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+        <div className="text-center space-y-4 mb-8">
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             예약 서비스
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-sm">
             스마트오피스 좌석부터 회의실까지, 필요한 공간을 간편하게 예약하세요
           </p>
         </div>
 
-        {/* 카드 그리드 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        {/* 카드 리스트 - 세로 배치 */}
+        <div className="space-y-4 mb-8">
           {bookingOptions.map((option, index) => (
-            <Link key={option.id} to={option.path} className="group">
-              <Card className="h-full bg-card border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer overflow-hidden">
-                <CardHeader className="text-center pb-4 pt-6">
-                  {/* 아이콘 */}
-                  <div className="relative mb-4">
-                    <div className={`w-16 h-16 ${option.bgColor} rounded-2xl flex items-center justify-center mx-auto shadow-sm group-hover:scale-105 transition-all duration-300`}>
-                      <option.icon className={`h-8 w-8 ${option.color}`} />
+            <Link key={option.id} to={option.path} className="block">
+              <Card className="bg-card border border-border hover:border-primary/30 transition-all duration-300 hover:shadow-md cursor-pointer overflow-hidden">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-4">
+                    {/* 아이콘 */}
+                    <div className={`w-12 h-12 ${option.bgColor} rounded-xl flex items-center justify-center shadow-sm flex-shrink-0`}>
+                      <option.icon className={`h-6 w-6 ${option.color}`} />
+                    </div>
+                    
+                    {/* 내용 */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-semibold text-base truncate">{option.title}</h3>
+                        <div className="w-5 h-5 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0 ml-2">
+                          {index + 1}
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3">{option.description}</p>
+                      
+                      {/* 기능 태그 */}
+                      <div className="flex flex-wrap gap-1">
+                        {option.features.map((feature, featureIndex) => (
+                          <span key={featureIndex} className="inline-flex items-center px-2 py-1 rounded-md bg-muted text-xs font-medium">
+                            {feature}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* 화살표 */}
+                    <div className="flex-shrink-0 ml-2">
+                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                        <span className="text-sm text-muted-foreground">→</span>
+                      </div>
                     </div>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors duration-300">
-                      {option.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm text-muted-foreground">
-                      {option.description}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="px-6 pb-6">
-                  {/* 기능 목록 */}
-                  <div className="space-y-2 mb-4">
-                    {option.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-center text-sm text-muted-foreground">
-                        <div className={`w-1.5 h-1.5 ${option.color.replace('text-', 'bg-')} rounded-full mr-3`}></div>
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* 액션 버튼 */}
-                  <Button className="w-full" variant="outline">
-                    시작하기
-                  </Button>
                 </CardContent>
-
-                {/* 인덱스 번호 */}
-                <div className="absolute top-3 right-3 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-bold opacity-70">
-                  {index + 1}
-                </div>
               </Card>
             </Link>
           ))}
@@ -105,9 +101,15 @@ export default function BookingSelect() {
           <p className="text-muted-foreground text-sm">
             궁금한 점이 있으시면 언제든지 문의해주세요
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-8 text-xs text-muted-foreground">
-            <span>📞 고객센터: 02-123-4567</span>
-            <span>⏰ 운영시간: 09:00 - 18:00</span>
+          <div className="flex flex-col gap-2 text-xs text-muted-foreground">
+            <div className="flex items-center justify-center gap-2">
+              <span>📞</span>
+              <span>고객센터: 02-123-4567</span>
+            </div>
+            <div className="flex items-center justify-center gap-2">
+              <span>⏰</span>
+              <span>운영시간: 09:00 - 18:00</span>
+            </div>
           </div>
         </div>
       </div>
