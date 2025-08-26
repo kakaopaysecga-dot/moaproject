@@ -57,11 +57,14 @@ export interface MeetingRoom {
 }
 
 export interface BusinessCardRequest {
-  name: string;
-  position: string;
+  englishName: string;
+  koreanName: string;
   dept: string;
+  position?: string;
+  certification?: string;
   phone: string;
   email: string;
+  building: '판교오피스' | '여의도오피스';
   style: 'character' | 'normal';
 }
 

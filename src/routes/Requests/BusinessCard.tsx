@@ -17,6 +17,10 @@ export default function BusinessCard() {
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
+    englishName: '',
+    koreanName: user?.name || '',
+    position: '',
+    certification: '',
     design: 'character',
     quantity: '100',
     memo: ''
@@ -25,12 +29,24 @@ export default function BusinessCard() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!formData.englishName || !formData.koreanName) {
+      toast({
+        title: "필수 정보를 입력해주세요",
+        description: "영어이름과 한글이름은 필수 입력 사항입니다.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     createBusinessCardRequest({
-      name: user.name,
-      position: user.name, // Using name as position for now
+      englishName: formData.englishName,
+      koreanName: formData.koreanName,
       dept: user.dept,
+      position: formData.position,
+      certification: formData.certification,
       phone: user.phone,
       email: user.email,
+      building: user.building,
       style: formData.design as 'character' | 'normal'
     });
 
@@ -39,7 +55,15 @@ export default function BusinessCard() {
       description: "명함 제작 신청이 성공적으로 접수되었습니다."
     });
 
-    setFormData({ design: 'character', quantity: '100', memo: '' });
+    setFormData({ 
+      englishName: '',
+      koreanName: user?.name || '',
+      position: '',
+      certification: '',
+      design: 'character', 
+      quantity: '100', 
+      memo: '' 
+    });
   };
 
   if (!user) return null;
@@ -82,14 +106,30 @@ export default function BusinessCard() {
                 </div>
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
-                    <Label htmlFor="name" className="text-sm font-semibold text-foreground">이름</Label>
+                    <Label htmlFor="englishName" className="text-sm font-semibold text-foreground">영어이름 *</Label>
                     <Input 
-                      id="name" 
-                      value={user.name} 
-                      disabled 
-                      className="bg-muted/50 h-12 text-base font-medium"
+                      id="englishName" 
+                      value={formData.englishName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, englishName: e.target.value }))}
+                      placeholder="John Smith"
+                      className="h-12 text-base font-medium"
+                      required
                     />
                   </div>
+                  <div className="space-y-3">
+                    <Label htmlFor="koreanName" className="text-sm font-semibold text-foreground">한글이름 *</Label>
+                    <Input 
+                      id="koreanName" 
+                      value={formData.koreanName}
+                      onChange={(e) => setFormData(prev => ({ ...prev, koreanName: e.target.value }))}
+                      placeholder="홍길동"
+                      className="h-12 text-base font-medium"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <Label htmlFor="dept" className="text-sm font-semibold text-foreground">부서</Label>
                     <Input 
@@ -99,16 +139,51 @@ export default function BusinessCard() {
                       className="bg-muted/50 h-12 text-base font-medium"
                     />
                   </div>
+                  <div className="space-y-3">
+                    <Label htmlFor="position" className="text-sm font-semibold text-foreground">직급 (필요시)</Label>
+                    <Input 
+                      id="position" 
+                      value={formData.position}
+                      onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))}
+                      placeholder="대리, 과장, 부장 등"
+                      className="h-12 text-base font-medium"
+                    />
+                  </div>
                 </div>
-                
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div className="space-y-3">
+                    <Label htmlFor="certification" className="text-sm font-semibold text-foreground">자격증 (필요시)</Label>
+                    <Input 
+                      id="certification" 
+                      value={formData.certification}
+                      onChange={(e) => setFormData(prev => ({ ...prev, certification: e.target.value }))}
+                      placeholder="변호사, 회계사, CPA 등"
+                      className="h-12 text-base font-medium"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <Label htmlFor="phone" className="text-sm font-semibold text-foreground">연락처</Label>
+                    <Input 
+                      id="phone" 
+                      value={user.phone} 
+                      disabled 
+                      className="bg-muted/50 h-12 text-base font-medium"
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-3">
-                  <Label htmlFor="phone" className="text-sm font-semibold text-foreground">연락처</Label>
-                  <Input 
-                    id="phone" 
-                    value={user.phone} 
-                    disabled 
-                    className="bg-muted/50 h-12 text-base font-medium"
-                  />
+                  <Label className="text-sm font-semibold text-foreground">주소</Label>
+                  <div className="p-4 bg-muted/30 rounded-lg">
+                    <div className="font-medium text-sm mb-2">{user.building}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {user.building === '여의도오피스' 
+                        ? '07325 서울특별시 영등포구 국제금융로 2길 32 여의도파이낸스타워 5층\n5F, 32, Gukjegeumyung-ro 2-gil, Yeongdeungpo-gu, Seoul, Korea, 07325'
+                        : '13529 경기도 성남시 분당구 판교역로 166 카카오판교아지트 B동 8F\n8F B, 166, Pangyoyeok-ro, Bundang-gu, Seongnam-si, Gyeonggi-do, Korea, 13528'
+                      }
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -202,8 +277,18 @@ export default function BusinessCard() {
                 
                 {/* 중앙 - 개인 정보 */}
                 <div className="text-center space-y-2 relative z-10 flex-1 flex flex-col justify-center">
-                  <h3 className="font-bold text-xl text-foreground leading-tight">{user.name}</h3>
-                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">{user.dept}</p>
+                  <h3 className="font-bold text-lg text-foreground leading-tight">
+                    {formData.englishName || 'English Name'}
+                  </h3>
+                  <h4 className="font-bold text-base text-foreground leading-tight">
+                    {formData.koreanName || user.name}
+                  </h4>
+                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                    {user.dept} {formData.position && `· ${formData.position}`}
+                  </p>
+                  {formData.certification && (
+                    <p className="text-xs text-muted-foreground leading-relaxed">{formData.certification}</p>
+                  )}
                   <div className="pt-2 space-y-1">
                     <p className="text-xs text-muted-foreground leading-relaxed">{user.phone}</p>
                     <p className="text-xs text-muted-foreground leading-relaxed">{user.email}</p>

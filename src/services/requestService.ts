@@ -68,7 +68,7 @@ export class RequestService {
     const request: RequestItem = {
       id: Date.now().toString(),
       title: '명함 신청',
-      content: `${data.name} (${data.position}) 명함 신청`,
+      content: `${data.koreanName} (${data.englishName}) ${data.position ? `· ${data.position}` : ''} 명함 신청`,
       status: 'pending',
       createdAt: new Date().toISOString(),
       type: 'business-card',
