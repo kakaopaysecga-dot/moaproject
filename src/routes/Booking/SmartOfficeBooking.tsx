@@ -16,6 +16,7 @@ export default function SmartOfficeBooking() {
   const [startTime, setStartTime] = useState<string | null>(null);
   const [endTime, setEndTime] = useState<string | null>(null);
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<string[]>([]);
+  const [showReservationStatus, setShowReservationStatus] = useState(false);
 
   // Mock data for demonstration - separate for each office (10 seats total)
   const officeData = {
@@ -25,7 +26,14 @@ export default function SmartOfficeBooking() {
         '09:00': [1, 3],
         '09:30': [1, 3, 7],
         '15:00': [4, 6]
-      }
+      },
+      reservations: [
+        { seat: 1, time: '09:00-12:00', user: '김*진', date: new Date().toISOString().split('T')[0] },
+        { seat: 3, time: '09:00-11:00', user: '이*수', date: new Date().toISOString().split('T')[0] },
+        { seat: 7, time: '14:00-18:00', user: '박*영', date: new Date().toISOString().split('T')[0] },
+        { seat: 2, time: '10:00-16:00', user: '최*미', date: new Date().toISOString().split('T')[0] },
+        { seat: 5, time: '13:00-17:00', user: '정*호', date: new Date().toISOString().split('T')[0] }
+      ]
     },
     '여의도오피스': {
       occupiedSeats: new Set([1, 4, 6]),
@@ -33,7 +41,14 @@ export default function SmartOfficeBooking() {
         '10:00': [2, 5],
         '10:30': [2, 5, 8],
         '14:00': [3, 7]
-      }
+      },
+      reservations: [
+        { seat: 2, time: '10:00-14:00', user: '강*희', date: new Date().toISOString().split('T')[0] },
+        { seat: 5, time: '10:00-15:00', user: '윤*석', date: new Date().toISOString().split('T')[0] },
+        { seat: 8, time: '11:00-17:00', user: '조*린', date: new Date().toISOString().split('T')[0] },
+        { seat: 1, time: '09:00-13:00', user: '신*우', date: new Date().toISOString().split('T')[0] },
+        { seat: 4, time: '14:00-18:00', user: '한*아', date: new Date().toISOString().split('T')[0] }
+      ]
     }
   };
 
@@ -223,6 +238,67 @@ export default function SmartOfficeBooking() {
 
       {/* 예약 단계 */}
       <div className="space-y-8">
+        {/* 예약 현황 */}
+        <Card className="shadow-md border-0">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl font-semibold">📊 오늘의 예약 현황</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowReservationStatus(!showReservationStatus)}
+                className="text-primary hover:text-primary/80"
+              >
+                {showReservationStatus ? '숨기기' : '자세히 보기'}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {showReservationStatus && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {Object.entries(officeData).map(([office, data]) => (
+                    <div key={office} className="space-y-3">
+                      <h4 className="font-semibold text-base">{office}</h4>
+                      <div className="space-y-2">
+                        {data.reservations.map((reservation, index) => (
+                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg text-sm">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                                <span className="text-xs font-bold">{reservation.seat}</span>
+                              </div>
+                              <div>
+                                <div className="font-medium">{reservation.user}</div>
+                                <div className="text-muted-foreground text-xs">{reservation.time}</div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!showReservationStatus && (
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">
+                    {officeData['판교아지트'].reservations.length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">판교아지트 예약</div>
+                </div>
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">
+                    {officeData['여의도오피스'].reservations.length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">여의도오피스 예약</div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* 1단계: 오피스 선택 */}
         <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
@@ -333,10 +409,10 @@ export default function SmartOfficeBooking() {
               <>
                 {/* 2x5 좌석 배치 */}
                 <div className="flex justify-center">
-                  <div className="space-y-4">
-                    {/* 창가 라벨 */}
-                    <div className="text-center text-sm text-muted-foreground font-medium">
-                      창가
+                  <div className="flex items-center gap-8">
+                    {/* 왼쪽 라벨 - 복도 */}
+                    <div className="text-sm text-muted-foreground font-medium transform -rotate-90">
+                      복도
                     </div>
                     
                     {/* 좌석 배치 */}
@@ -406,9 +482,9 @@ export default function SmartOfficeBooking() {
                       })}
                     </div>
                     
-                    {/* 복도 라벨 */}
-                    <div className="text-center text-sm text-muted-foreground font-medium">
-                      복도
+                    {/* 오른쪽 라벨 - 창가 */}
+                    <div className="text-sm text-muted-foreground font-medium transform rotate-90">
+                      창가
                     </div>
                   </div>
                 </div>

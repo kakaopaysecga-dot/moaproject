@@ -29,6 +29,7 @@ export default function MeetingRoomBooking() {
   const [selectedRoom, setSelectedRoom] = useState<MeetingRoom | null>(null);
   const [attendees, setAttendees] = useState('');
   const [purpose, setPurpose] = useState('');
+  const [showReservationStatus, setShowReservationStatus] = useState(false);
 
   const meetingRooms: MeetingRoom[] = [
     // 판교오피스
@@ -60,6 +61,21 @@ export default function MeetingRoomBooking() {
     { id: 'yd6', name: 'Fiji_피지_4인', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: true },
     { id: 'yd7', name: 'Cebu_세부_4인', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: false }
   ];
+
+  // Mock reservation data
+  const meetingRoomReservations = {
+    '판교오피스': [
+      { room: 'Santorini_산토리니_6인', time: '09:00-11:00', user: '김*진', purpose: '프로젝트 회의' },
+      { room: 'Mauritius_모리셔스_20인', time: '14:00-16:00', user: '이*수', purpose: '전체 회의' },
+      { room: 'Hawaii_하와이_6인', time: '10:00-12:00', user: '박*영', purpose: '팀 미팅' },
+      { room: 'Jeju_제주_12인', time: '15:00-17:00', user: '최*미', purpose: '워크샵' }
+    ],
+    '여의도오피스': [
+      { room: 'Phuket_푸켓_6인', time: '09:30-11:30', user: '정*호', purpose: '기획 회의' },
+      { room: 'Boracay_보라카이_15인', time: '13:00-15:00', user: '강*희', purpose: '세미나' },
+      { room: 'Capri_카프리_6인', time: '16:00-18:00', user: '윤*석', purpose: '고객 미팅' }
+    ]
+  };
 
   const timeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -142,6 +158,66 @@ export default function MeetingRoomBooking() {
 
       {/* 예약 단계 */}
       <div className="space-y-8">
+        {/* 예약 현황 */}
+        <Card className="shadow-md border-0">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl font-semibold">📊 오늘의 회의실 예약 현황</CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowReservationStatus(!showReservationStatus)}
+                className="text-primary hover:text-primary/80"
+              >
+                {showReservationStatus ? '숨기기' : '자세히 보기'}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {showReservationStatus && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {Object.entries(meetingRoomReservations).map(([office, reservations]) => (
+                    <div key={office} className="space-y-3">
+                      <h4 className="font-semibold text-base">{office}</h4>
+                      <div className="space-y-2">
+                        {reservations.map((reservation, index) => (
+                          <div key={index} className="p-3 bg-muted/30 rounded-lg text-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="font-medium text-primary">{reservation.room}</div>
+                              <div className="text-xs text-muted-foreground">{reservation.time}</div>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <div className="text-muted-foreground">{reservation.user}</div>
+                              <div className="text-xs bg-muted px-2 py-1 rounded">{reservation.purpose}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!showReservationStatus && (
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">
+                    {meetingRoomReservations['판교오피스'].length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">판교오피스 예약</div>
+                </div>
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">
+                    {meetingRoomReservations['여의도오피스'].length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">여의도오피스 예약</div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* 1단계: 오피스 선택 */}
         <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
