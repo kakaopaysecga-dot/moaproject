@@ -7,20 +7,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Calendar as CalendarIcon, Clock, Users, MapPin, Monitor, Wifi, ChevronLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface MeetingRoom {
-  id: number;
+  id: string;
   name: string;
   capacity: number;
-  location: string;
+  location: '판교오피스' | '여의도오피스';
   amenities: string[];
   available: boolean;
 }
 
 export default function MeetingRoomBooking() {
   const { toast } = useToast();
+  const [selectedOffice, setSelectedOffice] = useState<'판교오피스' | '여의도오피스' | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedEndTime, setSelectedEndTime] = useState('');
@@ -29,38 +31,34 @@ export default function MeetingRoomBooking() {
   const [purpose, setPurpose] = useState('');
 
   const meetingRooms: MeetingRoom[] = [
-    {
-      id: 1,
-      name: '회의실 A',
-      capacity: 8,
-      location: '판교',
-      amenities: ['프로젝터', 'WiFi', '화이트보드'],
-      available: true
-    },
-    {
-      id: 2,
-      name: '회의실 B',
-      capacity: 12,
-      location: '판교',
-      amenities: ['대형 모니터', 'WiFi', '화상회의'],
-      available: true
-    },
-    {
-      id: 3,
-      name: '회의실 C',
-      capacity: 6,
-      location: '여의도',
-      amenities: ['프로젝터', 'WiFi'],
-      available: false
-    },
-    {
-      id: 4,
-      name: '회의실 D',
-      capacity: 15,
-      location: '여의도',
-      amenities: ['대형 모니터', 'WiFi', '화상회의', '화이트보드'],
-      available: true
-    }
+    // 판교오피스
+    { id: 'pg1', name: 'Santorini_산토리니_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg2', name: 'Da Nang_다낭_2인', capacity: 2, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg3', name: 'Guam_괌_4인', capacity: 4, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg4', name: 'Mauritius_모리셔스_20인', capacity: 20, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
+    { id: 'pg5', name: 'Hawaii_하와이_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg6', name: 'Bali_발리_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg7', name: 'Cancun_칸쿤_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg8', name: 'Ibiza_이비자_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg9', name: 'Saipan_사이판_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg10', name: 'Jeju_제주_12인', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg11', name: 'Tahiti_타히티_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg12', name: 'Malta_몰타_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg13', name: 'Maldives_몰디브_8인', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg14', name: 'Majorca_마요르카_4인', capacity: 4, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg15', name: 'Palau_팔라우_5인', capacity: 5, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg16', name: 'Okinawa_오키나와_12인', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg17', name: 'Nice_니스_20인(최대30인)', capacity: 30, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
+    { id: 'pg18', name: 'Bohol_보홀_8인', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    
+    // 여의도오피스
+    { id: 'yd1', name: 'Phuket_푸켓_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd2', name: 'Capri_카프리_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd3', name: 'Positano_포지타노_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd4', name: 'Sicilia_시칠리아_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd5', name: 'Boracay_보라카이_15인', capacity: 15, location: '여의도오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'yd6', name: 'Fiji_피지_4인', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'yd7', name: 'Cebu_세부_4인', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: false }
   ];
 
   const timeSlots = [
@@ -81,7 +79,7 @@ export default function MeetingRoomBooking() {
   };
 
   const handleReservation = () => {
-    if (!selectedDate || !selectedTime || !selectedEndTime || !selectedRoom || !attendees || !purpose) {
+    if (!selectedOffice || !selectedDate || !selectedTime || !selectedEndTime || !selectedRoom || !attendees || !purpose) {
       toast({
         title: "예약 정보가 부족합니다",
         description: "모든 필수 정보를 입력해주세요.",
@@ -104,6 +102,7 @@ export default function MeetingRoomBooking() {
       description: `${selectedRoom.name}이 ${selectedDate} ${selectedTime}-${selectedEndTime}에 예약되었습니다.`
     });
 
+    setSelectedOffice(null);
     setSelectedDate('');
     setSelectedTime('');
     setSelectedEndTime('');
@@ -143,15 +142,50 @@ export default function MeetingRoomBooking() {
 
       {/* 예약 단계 */}
       <div className="space-y-8">
-        {/* 1단계: 날짜 및 시간 */}
+        {/* 1단계: 오피스 선택 */}
         <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-xl">
               <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                <CalendarIcon className="h-5 w-5 text-primary" />
+                <MapPin className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <div className="text-lg font-semibold">1단계: 날짜 및 시간 선택</div>
+                <div className="text-lg font-semibold">1단계: 오피스 선택</div>
+                <div className="text-sm text-muted-foreground font-normal">회의실이 위치한 오피스를 선택해주세요</div>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-4">
+              <Label className="text-base font-semibold">오피스 위치</Label>
+              <RadioGroup value={selectedOffice || ''} onValueChange={(value) => {
+                setSelectedOffice(value as '판교오피스' | '여의도오피스');
+                setSelectedRoom(null); // Reset room selection when office changes
+              }}>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary/50 transition-colors">
+                    <RadioGroupItem value="판교오피스" id="pangyo" />
+                    <Label htmlFor="pangyo" className="text-base font-medium cursor-pointer">판교오피스</Label>
+                  </div>
+                  <div className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary/50 transition-colors">
+                    <RadioGroupItem value="여의도오피스" id="yeouido" />
+                    <Label htmlFor="yeouido" className="text-base font-medium cursor-pointer">여의도오피스</Label>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 2단계: 날짜 및 시간 */}
+        <Card className="shadow-md border-0">
+          <CardHeader className="pb-6">
+            <CardTitle className="flex items-center gap-3 text-xl">
+              <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
+                <CalendarIcon className="h-5 w-5 text-accent" />
+              </div>
+              <div>
+                <div className="text-lg font-semibold">2단계: 날짜 및 시간 선택</div>
                 <div className="text-sm text-muted-foreground font-normal">회의 일정을 선택해주세요</div>
               </div>
             </CardTitle>
@@ -210,15 +244,15 @@ export default function MeetingRoomBooking() {
           </CardContent>
         </Card>
 
-        {/* 2단계: 회의 정보 */}
+        {/* 3단계: 회의 정보 */}
         <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
-                <Users className="h-5 w-5 text-accent" />
+              <div className="w-8 h-8 bg-corporate-blue/10 rounded-lg flex items-center justify-center">
+                <Users className="h-5 w-5 text-corporate-blue" />
               </div>
               <div>
-                <div className="text-lg font-semibold">2단계: 회의 정보 입력</div>
+                <div className="text-lg font-semibold">3단계: 회의 정보 입력</div>
                 <div className="text-sm text-muted-foreground font-normal">회의 상세 정보를 입력해주세요</div>
               </div>
             </CardTitle>
@@ -249,61 +283,70 @@ export default function MeetingRoomBooking() {
           </CardContent>
         </Card>
 
-        {/* 3단계: 회의실 선택 */}
+        {/* 4단계: 회의실 선택 */}
         <Card className="shadow-md border-0">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="w-8 h-8 bg-corporate-blue/10 rounded-lg flex items-center justify-center">
-                <MapPin className="h-5 w-5 text-corporate-blue" />
+              <div className="w-8 h-8 bg-secondary/10 rounded-lg flex items-center justify-center">
+                <Clock className="h-5 w-5 text-secondary" />
               </div>
               <div>
-                <div className="text-lg font-semibold">3단계: 회의실 선택</div>
+                <div className="text-lg font-semibold">4단계: 회의실 선택</div>
                 <div className="text-sm text-muted-foreground font-normal">적합한 회의실을 선택해주세요</div>
               </div>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {meetingRooms.map((room) => (
-              <div
-                key={room.id}
-                className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
-                  selectedRoom?.id === room.id
-                    ? 'border-primary bg-primary/5'
-                    : room.available
-                    ? 'border-border hover:border-primary/50 hover:bg-muted/30'
-                    : 'border-muted bg-muted/20 cursor-not-allowed opacity-60'
-                }`}
-                onClick={() => room.available && setSelectedRoom(room)}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-semibold text-lg">{room.name}</h3>
-                    <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
-                      <span>최대 {room.capacity}명</span>
-                      <span>{room.location}</span>
-                    </div>
-                  </div>
-                  <Badge variant={room.available ? "default" : "secondary"} className="text-sm">
-                    {room.available ? "이용 가능" : "사용 중"}
-                  </Badge>
-                </div>
-                
-                <div className="space-y-3">
-                  <h4 className="font-medium">편의시설</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {room.amenities.map((amenity, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg text-sm"
-                      >
-                        {getAmenityIcon(amenity)}
-                        <span>{amenity}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            {!selectedOffice ? (
+              <div className="text-center text-muted-foreground py-8">
+                먼저 오피스를 선택해주세요
               </div>
-            ))}
+            ) : (
+              <div className="space-y-3">
+                {meetingRooms
+                  .filter(room => room.location === selectedOffice)
+                  .map((room) => (
+                    <div
+                      key={room.id}
+                      className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+                        selectedRoom?.id === room.id
+                          ? 'border-primary bg-primary/5'
+                          : room.available
+                          ? 'border-border hover:border-primary/50 hover:bg-muted/30'
+                          : 'border-muted bg-muted/20 cursor-not-allowed opacity-60'
+                      }`}
+                      onClick={() => room.available && setSelectedRoom(room)}
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="font-semibold text-lg">{room.name}</h3>
+                          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                            <span>최대 {room.capacity}명</span>
+                          </div>
+                        </div>
+                        <Badge variant={room.available ? "default" : "secondary"} className="text-sm">
+                          {room.available ? "이용 가능" : "사용 중"}
+                        </Badge>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <h4 className="font-medium">편의시설</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {room.amenities.map((amenity, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg text-sm"
+                            >
+                              {getAmenityIcon(amenity)}
+                              <span>{amenity}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -317,8 +360,12 @@ export default function MeetingRoomBooking() {
               </div>
               
               <div className="bg-muted/30 p-6 rounded-xl space-y-3">
-                {selectedDate && selectedTime && selectedEndTime && selectedRoom && attendees && purpose ? (
+                {selectedOffice && selectedDate && selectedTime && selectedEndTime && selectedRoom && attendees && purpose ? (
                   <div className="space-y-3 text-center">
+                    <div className="text-lg">
+                      <span className="font-medium text-muted-foreground">오피스:</span>
+                      <span className="ml-2 font-semibold">{selectedOffice}</span>
+                    </div>
                     <div className="text-lg">
                       <span className="font-medium text-muted-foreground">예약 일시:</span>
                       <span className="ml-2 font-semibold">
@@ -332,7 +379,7 @@ export default function MeetingRoomBooking() {
                     </div>
                     <div className="text-lg">
                       <span className="font-medium text-muted-foreground">선택 회의실:</span>
-                      <span className="ml-2 font-semibold">{selectedRoom.name} ({selectedRoom.location})</span>
+                      <span className="ml-2 font-semibold">{selectedRoom.name}</span>
                     </div>
                     <div className="text-lg">
                       <span className="font-medium text-muted-foreground">참석 인원:</span>
@@ -352,7 +399,7 @@ export default function MeetingRoomBooking() {
               
               <Button 
                 onClick={handleReservation}
-                disabled={!selectedDate || !selectedTime || !selectedEndTime || !selectedRoom || !attendees || !purpose}
+                disabled={!selectedOffice || !selectedDate || !selectedTime || !selectedEndTime || !selectedRoom || !attendees || !purpose}
                 className="w-full h-14 text-lg font-semibold"
                 size="lg"
               >
