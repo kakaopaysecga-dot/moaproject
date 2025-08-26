@@ -333,10 +333,10 @@ export default function SmartOfficeBooking() {
               <>
                 {/* 2x5 좌석 배치 */}
                 <div className="flex justify-center">
-                  <div className="flex items-center gap-8">
-                    {/* 왼쪽 라벨 */}
-                    <div className="text-sm text-muted-foreground font-medium transform -rotate-90">
-                      복도
+                  <div className="space-y-4">
+                    {/* 창가 라벨 */}
+                    <div className="text-center text-sm text-muted-foreground font-medium">
+                      창가
                     </div>
                     
                     {/* 좌석 배치 */}
@@ -406,9 +406,9 @@ export default function SmartOfficeBooking() {
                       })}
                     </div>
                     
-                    {/* 오른쪽 라벨 */}
-                    <div className="text-sm text-muted-foreground font-medium transform rotate-90">
-                      창가
+                    {/* 복도 라벨 */}
+                    <div className="text-center text-sm text-muted-foreground font-medium">
+                      복도
                     </div>
                   </div>
                 </div>
@@ -465,28 +465,28 @@ export default function SmartOfficeBooking() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleQuickTimeSelection('all-day')}
-                      className="h-12"
+                      className="h-16 flex flex-col items-center justify-center gap-1"
                     >
-                      하루종일
-                      <div className="text-xs text-muted-foreground mt-1">09:00~18:00</div>
+                      <span className="font-medium">하루종일</span>
+                      <span className="text-xs text-muted-foreground">09:00~18:00</span>
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleQuickTimeSelection('morning')}
-                      className="h-12"
+                      className="h-16 flex flex-col items-center justify-center gap-1"
                     >
-                      오전
-                      <div className="text-xs text-muted-foreground mt-1">09:00~12:00</div>
+                      <span className="font-medium">오전</span>
+                      <span className="text-xs text-muted-foreground">09:00~12:00</span>
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleQuickTimeSelection('afternoon')}
-                      className="h-12"
+                      className="h-16 flex flex-col items-center justify-center gap-1"
                     >
-                      오후
-                      <div className="text-xs text-muted-foreground mt-1">13:00~18:00</div>
+                      <span className="font-medium">오후</span>
+                      <span className="text-xs text-muted-foreground">13:00~18:00</span>
                     </Button>
                   </div>
                 </div>
