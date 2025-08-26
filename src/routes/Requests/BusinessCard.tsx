@@ -293,126 +293,122 @@ export default function BusinessCard() {
               <div className="bg-white p-6 rounded-lg border border-gray-300 aspect-[0.6/1] max-w-xs mx-auto shadow-md">
                 {formData.design === 'normal' ? (
                   // 일반 명함 디자인 (참고 이미지 기반)
-                  <div className="h-full flex flex-col justify-between text-left">
-                    {/* 상단 - 이름 */}
-                    <div className="space-y-3">
-                      <div className="flex items-baseline gap-2">
-                        <h3 className="text-lg font-bold text-black">
+                  <div className="h-full flex flex-col justify-between text-left p-1">
+                    {/* 상단 - 이름과 부서 */}
+                    <div className="space-y-2">
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-bold text-black leading-tight">
                           {formData.koreanName || user.name}
                         </h3>
-                        <span className="text-base font-normal text-black">
+                        <div className="text-base text-black leading-tight">
                           {formData.englishName || 'English Name'}
-                        </span>
+                        </div>
                       </div>
                       
-                      {/* 부서/직급 */}
                       <div className="text-sm text-black">
-                        {formData.position && `${formData.position} / `}
+                        {formData.position && `${formData.position} `}
                         {user.dept}
                         {formData.certification && ` ${formData.certification}`}
                       </div>
                     </div>
 
-                    {/* 중간 공백 */}
-                    <div className="flex-1"></div>
-
-                    {/* 하단 - 연락처, 구분선, 주소 */}
-                    <div className="space-y-3">
+                    {/* 하단 - 연락처와 주소 */}
+                    <div className="space-y-2">
                       {/* 연락처 */}
-                      <div className="space-y-1">
-                        <div className="text-sm text-black font-medium">{user.phone}</div>
+                      <div className="space-y-0.5">
+                        <div className="text-sm text-black">{user.phone}</div>
                         <div className="text-sm text-black">{user.email}</div>
                       </div>
                       
                       {/* 노란색 구분선 */}
-                      <div className="w-full h-1 bg-yellow-400"></div>
+                      <div className="w-full h-0.5 bg-yellow-400"></div>
                       
-                      {/* 주소 */}
-                      <div className="space-y-1">
-                        <div className="text-sm font-bold text-black">
-                          {formData.building === '여의도오피스' ? '07325' : '13529'}
-                        </div>
-                        <div className="text-sm text-black leading-tight">
-                          {formData.building === '여의도오피스' 
-                            ? '서울특별시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5층'
-                            : '경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
-                          }
-                        </div>
-                        <div className="text-sm text-black leading-tight">
-                          {formData.building === '여의도오피스' 
-                            ? '5F, 32, Gukjegeumyung-ro 2-gil,\nYeongdeungpo-gu, Seoul, Republic of Korea'
-                            : '8F B, 166, Pangyoyeok-ro, Bundang-gu,\nSeongnam-si, Gyeonggi-do, Korea'
-                          }
-                        </div>
+                      {/* 우편번호 */}
+                      <div className="text-sm font-bold text-black">
+                        {formData.building === '여의도오피스' ? '07325' : '13529'}
+                      </div>
+                      
+                      {/* 한글 주소 */}
+                      <div className="text-sm text-black leading-tight">
+                        {formData.building === '여의도오피스' 
+                          ? '서울특별시 영등포구 국제금융로2길 32 여의도파이낸스타워 5층'
+                          : '경기도 성남시 분당구 판교역로 166 카카오판교아지트 B동 8F'
+                        }
+                      </div>
+                      
+                      {/* 영문 주소 */}
+                      <div className="text-sm text-black leading-tight">
+                        {formData.building === '여의도오피스' 
+                          ? '5F, 32, Gukjegeumyung-ro 2-gil, Yeongdeungpo-gu, Seoul, Republic of Korea'
+                          : '8F B, 166, Pangyoyeok-ro, Bundang-gu, Seongnam-si, Gyeonggi-do, Korea'
+                        }
                       </div>
                       
                       {/* 회사 정보 */}
-                      <div className="text-sm text-black font-bold">
+                      <div className="text-sm text-black font-bold pt-1">
                         www.kakaopaysec.com (주) 카카오페이증권
                       </div>
                     </div>
                   </div>
                 ) : (
                   // 캐릭터 명함 디자인 (참고 이미지 기반)
-                  <div className="h-full flex flex-col justify-between text-left">
-                    {/* 상단 - 이름 */}
-                    <div className="space-y-3">
-                      <div className="flex items-baseline gap-2">
-                        <h3 className="text-lg font-bold text-black">
+                  <div className="h-full flex flex-col justify-between text-left p-1">
+                    {/* 상단 - 이름과 부서 */}
+                    <div className="space-y-2">
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-bold text-black leading-tight">
                           {formData.koreanName || user.name}
                         </h3>
-                        <span className="text-base font-normal text-black">
+                        <div className="text-base text-black leading-tight">
                           {formData.englishName || 'English Name'}
-                        </span>
+                        </div>
                       </div>
                       
-                      {/* 부서/직급 */}
                       <div className="text-sm text-black">
-                        {formData.position && `${formData.position} / `}
+                        {formData.position && `${formData.position} `}
                         {user.dept}
                         {formData.certification && ` ${formData.certification}`}
                       </div>
                     </div>
 
-                    {/* 중간 공백 */}
-                    <div className="flex-1"></div>
-
-                    {/* 하단 - 연락처, 구분선, 주소 */}
-                    <div className="space-y-3">
+                    {/* 하단 - 연락처와 주소 */}
+                    <div className="space-y-2">
                       {/* 연락처 */}
-                      <div className="space-y-1">
-                        <div className="text-sm text-black font-medium">{user.phone}</div>
+                      <div className="space-y-0.5">
+                        <div className="text-sm text-black">{user.phone}</div>
                         <div className="text-sm text-black">{user.email}</div>
                       </div>
                       
-                      {/* 캐릭터용 노란색 구분선 (약간 다른 스타일) */}
-                      <div className="w-full h-1 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-sm"></div>
+                      {/* 캐릭터용 구분선 (그라데이션) */}
+                      <div className="w-full h-0.5 bg-gradient-to-r from-yellow-400 to-orange-400"></div>
                       
-                      {/* 주소 */}
-                      <div className="space-y-1">
-                        <div className="text-sm font-bold text-black">
-                          {formData.building === '여의도오피스' ? '07325' : '13529'}
-                        </div>
-                        <div className="text-sm text-black leading-tight">
-                          {formData.building === '여의도오피스' 
-                            ? '서울특별시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5층'
-                            : '경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
-                          }
-                        </div>
-                        <div className="text-sm text-black leading-tight">
-                          {formData.building === '여의도오피스' 
-                            ? '5F, 32, Gukjegeumyung-ro 2-gil,\nYeongdeungpo-gu, Seoul, Republic of Korea'
-                            : '8F B, 166, Pangyoyeok-ro, Bundang-gu,\nSeongnam-si, Gyeonggi-do, Korea'
-                          }
-                        </div>
+                      {/* 우편번호 */}
+                      <div className="text-sm font-bold text-black">
+                        {formData.building === '여의도오피스' ? '07325' : '13529'}
+                      </div>
+                      
+                      {/* 한글 주소 */}
+                      <div className="text-sm text-black leading-tight">
+                        {formData.building === '여의도오피스' 
+                          ? '서울특별시 영등포구 국제금융로2길 32 여의도파이낸스타워 5층'
+                          : '경기도 성남시 분당구 판교역로 166 카카오판교아지트 B동 8F'
+                        }
+                      </div>
+                      
+                      {/* 영문 주소 */}
+                      <div className="text-sm text-black leading-tight">
+                        {formData.building === '여의도오피스' 
+                          ? '5F, 32, Gukjegeumyung-ro 2-gil, Yeongdeungpo-gu, Seoul, Republic of Korea'
+                          : '8F B, 166, Pangyoyeok-ro, Bundang-gu, Seongnam-si, Gyeonggi-do, Korea'
+                        }
                       </div>
                       
                       {/* 회사 정보 + 캐릭터 표시 */}
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center pt-1">
                         <div className="text-sm text-black font-bold">
                           www.kakaopaysec.com (주) 카카오페이증권
                         </div>
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">🎨</span>
+                        <span className="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded text-center">🎨</span>
                       </div>
                     </div>
                   </div>
