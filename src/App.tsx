@@ -31,8 +31,8 @@ import Environment from "./routes/Requests/Environment";
 // Admin routes
 import AdminPage from "./routes/Admin/AdminPage";
 
-// Settings route
-import Settings from "./routes/Settings";
+// Profile route
+import Profile from "./routes/Profile";
 
 const queryClient = new QueryClient();
 
@@ -49,11 +49,11 @@ const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 const AppRoutes = () => {
-  const { initializeAuth } = useAuthStore();
+  const { initialize } = useAuthStore();
 
   useEffect(() => {
-    initializeAuth();
-  }, [initializeAuth]);
+    initialize();
+  }, [initialize]);
 
   return (
     <Layout>
@@ -136,10 +136,10 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
 
-        {/* Settings Route */}
-        <Route path="/settings" element={
+        {/* Profile Route */}
+        <Route path="/profile" element={
           <ProtectedRoute>
-            <Settings />
+            <Profile />
           </ProtectedRoute>
         } />
 

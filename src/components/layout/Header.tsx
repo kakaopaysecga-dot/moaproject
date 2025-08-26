@@ -5,7 +5,7 @@ import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 
 export const Header: React.FC = () => {
-  const { user, logout } = useAuthStore();
+  const { user, profile, signOut } = useAuthStore();
   const location = useLocation();
 
   if (!user) return null;
@@ -25,14 +25,14 @@ export const Header: React.FC = () => {
           {/* User Info & Actions */}
           <div className="flex items-center space-x-3">
             <div className="hidden sm:flex flex-col items-end text-right">
-              <span className="text-sm font-semibold text-foreground">{user.name}</span>
-              <span className="text-xs text-muted-foreground">{user.dept}</span>
+              <span className="text-sm font-semibold text-foreground">{profile?.name || user.email}</span>
+              <span className="text-xs text-muted-foreground">{profile?.dept || '미설정'}</span>
             </div>
             
             <Button 
               variant="ghost" 
               size="sm"
-              onClick={logout}
+              onClick={signOut}
               className="flex items-center space-x-2 hover:bg-muted/50 h-10 px-3 rounded-xl"
             >
               <LogOut className="h-4 w-4" />

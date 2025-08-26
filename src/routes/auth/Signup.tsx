@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormField, Input, Select } from '@/components/ui/FormField';
+import { supabase } from '@/integrations/supabase/client';
+
+interface WorkArea {
+  id: string;
+  name: string;
+  building: string;
+}
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { signup, isLoading, error, clearError } = useAuthStore();
+  const { signUp, isLoading, error, clearError } = useAuthStore();
+  const [workAreas, setWorkAreas] = useState<WorkArea[]>([]);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -15,11 +23,35 @@ export default function Signup() {
     name: '',
     dept: '개발팀',
     building: '판교오피스' as '판교오피스' | '여의도오피스',
+    work_area: '',
     phone: '',
-    car: ''
+    car_number: ''
   });
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+
+  // Fetch work areas when building changes
+  useEffect(() => {
+    const fetchWorkAreas = async () => {
+      try {
+        const { data } = await supabase
+          .from('work_areas')
+          .select('*')
+          .eq('building', formData.building)
+          .order('name');
+        
+        if (data) {
+          setWorkAreas(data);
+          // Reset work_area when building changes
+          setFormData(prev => ({ ...prev, work_area: '' }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch work areas:', error);
+      }
+    };
+
+    fetchWorkAreas();
+  }, [formData.building]);
 
   const validateForm = () => {
     const errors: Record<string, string> = {};
@@ -68,7 +100,7 @@ export default function Signup() {
     }
 
     try {
-      await signup(formData);
+      await signUp(formData);
       navigate('/');
     } catch (error) {
       // Error handled by store
@@ -183,11 +215,28 @@ export default function Signup() {
               />
             </FormField>
 
+            <FormField label="근무구역" required>
+              <Select
+                name="work_area"
+                value={formData.work_area}
+                onChange={handleChange}
+                disabled={isLoading || workAreas.length === 0}
+              >
+                <option value="">근무구역을 선택하세요</option>
+                {workAreas.map((area) => (
+                  <option key={area.id} value={area.name}>
+                    {area.name}
+                  </option>
+                ))}
+              </Select>
+            </FormField>
+
+
             <FormField label="차량번호">
               <Input
                 type="text"
-                name="car"
-                value={formData.car}
+                name="car_number"
+                value={formData.car_number}
                 onChange={handleChange}
                 placeholder="11가1111"
                 disabled={isLoading}
