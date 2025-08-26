@@ -45,7 +45,7 @@ export default function BookingSelect() {
             <h2 className="text-lg font-semibold">회의실 서비스</h2>
           </div>
           
-          {/* 퀸 회의실 예약 */}
+          {/* 퀵 회의실 예약 */}
           <Link to="/booking/quick-meeting">
             <Card className="border-0 bg-gradient-to-r from-primary/10 to-primary/5 hover:from-primary/15 hover:to-primary/10 transition-all duration-300 cursor-pointer">
               <CardContent className="p-4">
@@ -63,6 +63,30 @@ export default function BookingSelect() {
                   </div>
                   <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
                     <span className="text-primary">⚡</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          {/* 회의실 대시보드 */}
+          <Link to="/booking/dashboard">
+            <Card className="border border-border/50 hover:border-primary/30 transition-all duration-300 cursor-pointer">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
+                    <BarChart3 className="h-6 w-6 text-accent" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold mb-1">회의실 현황</h3>
+                    <p className="text-sm text-muted-foreground mb-2">실시간 회의실 현황 및 예약</p>
+                    <div className="flex gap-1">
+                      <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md">실시간현황</span>
+                      <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md">타임테이블</span>
+                    </div>
+                  </div>
+                  <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                    <span className="text-muted-foreground">→</span>
                   </div>
                 </div>
               </CardContent>
@@ -101,40 +125,16 @@ export default function BookingSelect() {
             <h2 className="text-lg font-semibold">스마트오피스</h2>
           </div>
 
-          {/* 퀸 좌석 예약 */}
-          <Link to="/booking/quick-office">
-            <Card className="border-0 bg-gradient-to-r from-secondary/10 to-secondary/5 hover:from-secondary/15 hover:to-secondary/10 transition-all duration-300 cursor-pointer">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-secondary/20 rounded-xl flex items-center justify-center">
-                    <Monitor className="h-6 w-6 text-secondary" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold mb-1">지금 바로 좌석</h3>
-                    <p className="text-sm text-muted-foreground mb-2">즉시 사용 가능한 좌석 예약</p>
-                    <div className="flex gap-1">
-                      <span className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-md font-medium">원클릭</span>
-                      <span className="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-md font-medium">좌석선택</span>
-                    </div>
-                  </div>
-                  <div className="w-8 h-8 bg-secondary/10 rounded-full flex items-center justify-center">
-                    <span className="text-secondary">⚡</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
           {/* 스마트오피스 예약 */}
           <Link to="/booking/smart-office">
             <Card className="border border-border/50 hover:border-secondary/30 transition-all duration-300 cursor-pointer">
               <CardContent className="p-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-muted/50 rounded-xl flex items-center justify-center">
-                    <Monitor className="h-6 w-6 text-muted-foreground" />
+                  <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center">
+                    <Monitor className="h-6 w-6 text-secondary" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold mb-1">시간 예약하기</h3>
+                    <h3 className="font-semibold mb-1">좌석 예약하기</h3>
                     <p className="text-sm text-muted-foreground mb-2">원하는 시간에 좌석 예약</p>
                     <div className="flex gap-1">
                       <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-md">좌석맵</span>
@@ -155,7 +155,7 @@ export default function BookingSelect() {
           <CardContent className="p-4 text-center space-y-3">
             <div className="text-sm font-medium">💡 이용 안내</div>
             <div className="space-y-2 text-xs text-muted-foreground">
-              <div>⚡ 퀸 예약: 30분 즉시 예약</div>
+              <div>⚡ 퀵 예약: 30분 즉시 예약</div>
               <div>🕒 시간 예약: 원하는 시간대 선택</div>
               <div>📞 문의: 02-123-4567 (09:00-18:00)</div>
             </div>

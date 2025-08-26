@@ -72,7 +72,7 @@ export default function QuickMeetingRoom() {
     if (!nextSlot) {
       toast({
         title: "예약할 수 없습니다",
-        description: "현재 시간에는 퀸 예약이 불가능합니다.",
+        description: "현재 시간에는 퀵 예약이 불가능합니다.",
         variant: "destructive"
       });
       return;
@@ -80,7 +80,7 @@ export default function QuickMeetingRoom() {
 
     const endTime = timeSlots[timeSlots.indexOf(nextSlot) + 1];
     toast({
-      title: "퀸 예약 완료! ⚡",
+      title: "퀵 예약 완료! ⚡",
       description: `${room.name} 회의실이 ${nextSlot}-${endTime}에 예약되었습니다.`,
     });
   };
@@ -95,7 +95,7 @@ export default function QuickMeetingRoom() {
           </Link>
           <div className="flex-1">
             <h1 className="text-lg font-bold">지금 바로 회의</h1>
-            <p className="text-sm text-muted-foreground">30분 퀸 예약 서비스</p>
+            <p className="text-sm text-muted-foreground">30분 퀵 예약 서비스</p>
           </div>
           <div className="text-right">
             <div className="text-sm font-bold text-primary">
@@ -124,7 +124,7 @@ export default function QuickMeetingRoom() {
                 <Zap className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="font-semibold">퀸 예약 시간</h3>
+                <h3 className="font-semibold">퀵 예약 시간</h3>
                 <p className="text-sm text-muted-foreground">즉시 30분 사용</p>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function QuickMeetingRoom() {
             ) : (
               <div className="bg-destructive/10 rounded-lg p-3 text-center">
                 <AlertCircle className="h-5 w-5 text-destructive mx-auto mb-1" />
-                <div className="text-sm text-destructive">현재 퀸 예약 불가</div>
+                <div className="text-sm text-destructive">현재 퀵 예약 불가</div>
               </div>
             )}
           </CardContent>
@@ -230,7 +230,7 @@ export default function QuickMeetingRoom() {
         {/* 하단 안내 */}
         <Card className="border-0 bg-muted/30">
           <CardContent className="p-4 text-center space-y-2">
-            <div className="text-sm font-medium">💡 퀸 예약 안내</div>
+            <div className="text-sm font-medium">💡 퀵 예약 안내</div>
             <div className="text-xs text-muted-foreground space-y-1">
               <div>• 클릭 한 번으로 30분 즉시 예약</div>
               <div>• 현재 시간 기준 다음 시간대부터 예약</div>
