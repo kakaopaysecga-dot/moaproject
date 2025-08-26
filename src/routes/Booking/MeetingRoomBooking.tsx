@@ -33,47 +33,49 @@ export default function MeetingRoomBooking() {
 
   const meetingRooms: MeetingRoom[] = [
     // 판교오피스
-    { id: 'pg1', name: 'Santorini_산토리니_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg2', name: 'Da Nang_다낭_2인', capacity: 2, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'pg3', name: 'Guam_괌_4인', capacity: 4, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg4', name: 'Mauritius_모리셔스_20인', capacity: 20, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
-    { id: 'pg5', name: 'Hawaii_하와이_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg6', name: 'Bali_발리_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg7', name: 'Cancun_칸쿤_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg8', name: 'Ibiza_이비자_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg9', name: 'Saipan_사이판_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg10', name: 'Jeju_제주_12인', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg11', name: 'Tahiti_타히티_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg12', name: 'Malta_몰타_6인', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg13', name: 'Maldives_몰디브_8인', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg14', name: 'Majorca_마요르카_4인', capacity: 4, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'pg15', name: 'Palau_팔라우_5인', capacity: 5, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg16', name: 'Okinawa_오키나와_12인', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg17', name: 'Nice_니스_20인(최대30인)', capacity: 30, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
-    { id: 'pg18', name: 'Bohol_보홀_8인', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg1', name: '산토리니 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg2', name: '다낭 (2인)', capacity: 2, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg3', name: '괌 (4인)', capacity: 4, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg4', name: '모리셔스 (20인)', capacity: 20, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
+    { id: 'pg5', name: '하와이 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg6', name: '발리 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg7', name: '칸쿤 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg8', name: '이비자 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg9', name: '사이판 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg10', name: '제주 (12인)', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg11', name: '타히티 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg12', name: '몰타 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg13', name: '몰디브 (8인)', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg14', name: '마요르카 (4인)', capacity: 4, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg15', name: '팔라우 (5인)', capacity: 5, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg16', name: '오키나와 (12인)', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg17', name: '니스 (최대30인)', capacity: 30, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
+    { id: 'pg18', name: '보홀 (8인)', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
     
     // 여의도오피스
-    { id: 'yd1', name: 'Phuket_푸켓_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'yd2', name: 'Capri_카프리_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'yd3', name: 'Positano_포지타노_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'yd4', name: 'Sicilia_시칠리아_6인', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'yd5', name: 'Boracay_보라카이_15인', capacity: 15, location: '여의도오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
-    { id: 'yd6', name: 'Fiji_피지_4인', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'yd7', name: 'Cebu_세부_4인', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: false }
+    { id: 'yd1', name: '푸켓 (6인)', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd2', name: '카프리 (6인)', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd3', name: '포지타노 (6인)', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd4', name: '시칠리아 (6인)', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'yd5', name: '보라카이 (15인)', capacity: 15, location: '여의도오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'yd6', name: '피지 (4인)', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'yd7', name: '세부 (4인)', capacity: 4, location: '여의도오피스', amenities: ['모니터', 'WiFi'], available: false }
   ];
 
   // Mock reservation data
   const meetingRoomReservations = {
     '판교오피스': [
-      { room: 'Santorini_산토리니_6인', time: '09:00-11:00', user: '김*진', purpose: '프로젝트 회의' },
-      { room: 'Mauritius_모리셔스_20인', time: '14:00-16:00', user: '이*수', purpose: '전체 회의' },
-      { room: 'Hawaii_하와이_6인', time: '10:00-12:00', user: '박*영', purpose: '팀 미팅' },
-      { room: 'Jeju_제주_12인', time: '15:00-17:00', user: '최*미', purpose: '워크샵' }
+      { room: '산토리니', time: '09:00-11:00', user: '김*진', purpose: '프로젝트 회의', status: 'ongoing' },
+      { room: '모리셔스', time: '14:00-16:00', user: '이*수', purpose: '전체 회의', status: 'upcoming' },
+      { room: '하와이', time: '10:00-12:00', user: '박*영', purpose: '팀 미팅', status: 'ongoing' },
+      { room: '제주', time: '15:00-17:00', user: '최*미', purpose: '워크샵', status: 'upcoming' },
+      { room: '발리', time: '11:00-13:00', user: '정*호', purpose: '기획 회의', status: 'ongoing' }
     ],
     '여의도오피스': [
-      { room: 'Phuket_푸켓_6인', time: '09:30-11:30', user: '정*호', purpose: '기획 회의' },
-      { room: 'Boracay_보라카이_15인', time: '13:00-15:00', user: '강*희', purpose: '세미나' },
-      { room: 'Capri_카프리_6인', time: '16:00-18:00', user: '윤*석', purpose: '고객 미팅' }
+      { room: '푸켓', time: '09:30-11:30', user: '강*희', purpose: '기획 회의', status: 'ongoing' },
+      { room: '보라카이', time: '13:00-15:00', user: '윤*석', purpose: '세미나', status: 'upcoming' },
+      { room: '카프리', time: '16:00-18:00', user: '조*린', purpose: '고객 미팅', status: 'upcoming' },
+      { room: '포지타노', time: '10:30-12:30', user: '신*우', purpose: '개발 회의', status: 'ongoing' }
     ]
   };
 
@@ -175,44 +177,76 @@ export default function MeetingRoomBooking() {
           </CardHeader>
           <CardContent>
             {showReservationStatus && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Object.entries(meetingRoomReservations).map(([office, reservations]) => (
-                    <div key={office} className="space-y-3">
-                      <h4 className="font-semibold text-base">{office}</h4>
-                      <div className="space-y-2">
-                        {reservations.map((reservation, index) => (
-                          <div key={index} className="p-3 bg-muted/30 rounded-lg text-sm">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="font-medium text-primary">{reservation.room}</div>
-                              <div className="text-xs text-muted-foreground">{reservation.time}</div>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <div className="text-muted-foreground">{reservation.user}</div>
-                              <div className="text-xs bg-muted px-2 py-1 rounded">{reservation.purpose}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+              <div className="space-y-6">
+                {Object.entries(meetingRoomReservations).map(([office, reservations]) => (
+                  <div key={office} className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-primary rounded-full"></div>
+                      <h4 className="font-semibold text-lg">{office}</h4>
+                      <Badge variant="secondary" className="text-xs">
+                        {reservations.length}개 예약
+                      </Badge>
                     </div>
-                  ))}
-                </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {reservations.map((reservation, index) => (
+                        <div key={index} className="relative overflow-hidden">
+                          <Card className="border-l-4 border-l-primary hover:shadow-md transition-shadow">
+                            <CardContent className="p-4">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="space-y-1">
+                                  <h5 className="font-semibold text-base text-primary">
+                                    {reservation.room}
+                                  </h5>
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Clock className="h-3 w-3" />
+                                    <span>{reservation.time}</span>
+                                  </div>
+                                </div>
+                                <Badge 
+                                  variant={reservation.status === 'ongoing' ? 'default' : 'secondary'}
+                                  className="text-xs"
+                                >
+                                  {reservation.status === 'ongoing' ? '진행중' : '예정'}
+                                </Badge>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <Users className="h-3 w-3 text-muted-foreground" />
+                                  <span className="font-medium">{reservation.user}</span>
+                                </div>
+                                <div className="text-sm text-muted-foreground bg-muted/50 px-2 py-1 rounded text-center">
+                                  {reservation.purpose}
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
             {!showReservationStatus && (
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div className="p-4 bg-muted/30 rounded-lg">
-                  <div className="text-2xl font-bold text-primary">
-                    {meetingRoomReservations['판교오피스'].length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">판교오피스 예약</div>
-                </div>
-                <div className="p-4 bg-muted/30 rounded-lg">
-                  <div className="text-2xl font-bold text-primary">
-                    {meetingRoomReservations['여의도오피스'].length}
-                  </div>
-                  <div className="text-sm text-muted-foreground">여의도오피스 예약</div>
-                </div>
+              <div className="grid grid-cols-2 gap-6">
+                <Card className="border-0 bg-gradient-to-br from-primary/5 to-primary/10">
+                  <CardContent className="p-6 text-center">
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      {meetingRoomReservations['판교오피스'].length}
+                    </div>
+                    <div className="text-sm text-muted-foreground font-medium">판교오피스</div>
+                    <div className="text-xs text-muted-foreground mt-1">회의실 예약</div>
+                  </CardContent>
+                </Card>
+                <Card className="border-0 bg-gradient-to-br from-accent/5 to-accent/10">
+                  <CardContent className="p-6 text-center">
+                    <div className="text-3xl font-bold text-accent mb-2">
+                      {meetingRoomReservations['여의도오피스'].length}
+                    </div>
+                    <div className="text-sm text-muted-foreground font-medium">여의도오피스</div>
+                    <div className="text-xs text-muted-foreground mt-1">회의실 예약</div>
+                  </CardContent>
+                </Card>
               </div>
             )}
           </CardContent>
