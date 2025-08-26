@@ -13,28 +13,30 @@ export default function SmartOfficeBooking() {
   const [selectedOffice, setSelectedOffice] = useState<'판교아지트' | '여의도오피스' | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSeat, setSelectedSeat] = useState<number | null>(null);
+  const [startTime, setStartTime] = useState<string | null>(null);
+  const [endTime, setEndTime] = useState<string | null>(null);
   const [selectedTimeSlots, setSelectedTimeSlots] = useState<string[]>([]);
 
-  // Mock data for demonstration - separate for each office
+  // Mock data for demonstration - separate for each office (10 seats total)
   const officeData = {
     '판교아지트': {
-      occupiedSeats: new Set([2, 5, 8, 12, 15]),
+      occupiedSeats: new Set([2, 5, 8]),
       bookedTimeSlots: {
-        '09:00': [1, 3, 7],
-        '09:30': [1, 3, 7, 9],
-        '12:00': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // Lunch time
-        '12:30': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // Lunch time
-        '15:00': [4, 6, 11, 14]
+        '09:00': [1, 3],
+        '09:30': [1, 3, 7],
+        '12:00': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // Lunch time
+        '12:30': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // Lunch time
+        '15:00': [4, 6]
       }
     },
     '여의도오피스': {
-      occupiedSeats: new Set([1, 4, 6, 9, 13]),
+      occupiedSeats: new Set([1, 4, 6]),
       bookedTimeSlots: {
-        '10:00': [2, 5, 8],
-        '10:30': [2, 5, 8, 10],
-        '12:00': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // Lunch time
-        '12:30': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], // Lunch time
-        '14:00': [3, 7, 12, 16]
+        '10:00': [2, 5],
+        '10:30': [2, 5, 8],
+        '12:00': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // Lunch time
+        '12:30': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // Lunch time
+        '14:00': [3, 7]
       }
     }
   };
@@ -68,7 +70,16 @@ export default function SmartOfficeBooking() {
     return !bookedSeats.includes(seatNum);
   };
 
-  const toggleTimeSlot = (time: string) => {
+  const getTimeSlotsBetween = (start: string, end: string): string[] => {
+    const startIndex = timeSlots.indexOf(start);
+    const endIndex = timeSlots.indexOf(end);
+    
+    if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) return [];
+    
+    return timeSlots.slice(startIndex, endIndex + 1);
+  };
+
+  const handleTimeSlotClick = (time: string) => {
     if (!selectedSeat) {
       toast({
         title: "좌석을 먼저 선택해주세요",
@@ -87,11 +98,42 @@ export default function SmartOfficeBooking() {
       return;
     }
 
-    setSelectedTimeSlots(prev => 
-      prev.includes(time) 
-        ? prev.filter(t => t !== time)
-        : [...prev, time].sort()
-    );
+    if (!startTime) {
+      // First click - set start time
+      setStartTime(time);
+      setEndTime(null);
+      setSelectedTimeSlots([time]);
+    } else if (!endTime) {
+      // Second click - set end time and select range
+      if (time === startTime) {
+        // Same time clicked - reset
+        setStartTime(null);
+        setEndTime(null);
+        setSelectedTimeSlots([]);
+      } else {
+        const timeBetween = getTimeSlotsBetween(startTime, time);
+        
+        // Check if all slots in range are available
+        const unavailableSlots = timeBetween.filter(t => !isTimeSlotAvailable(t, selectedSeat));
+        
+        if (unavailableSlots.length > 0) {
+          toast({
+            title: "선택된 시간 범위에 예약된 시간이 있습니다",
+            description: `${unavailableSlots.join(', ')} 시간대가 이미 예약되어 있습니다.`,
+            variant: "destructive"
+          });
+          return;
+        }
+        
+        setEndTime(time);
+        setSelectedTimeSlots(timeBetween);
+      }
+    } else {
+      // Third click - reset and start over
+      setStartTime(time);
+      setEndTime(null);
+      setSelectedTimeSlots([time]);
+    }
   };
 
   const handleReservation = () => {
@@ -113,6 +155,8 @@ export default function SmartOfficeBooking() {
     setSelectedOffice(null);
     setSelectedDate('');
     setSelectedSeat(null);
+    setStartTime(null);
+    setEndTime(null);
     setSelectedTimeSlots([]);
   };
 
@@ -154,6 +198,8 @@ export default function SmartOfficeBooking() {
               <RadioGroup value={selectedOffice || ''} onValueChange={(value) => {
                 setSelectedOffice(value as '판교아지트' | '여의도오피스');
                 setSelectedSeat(null);
+                setStartTime(null);
+                setEndTime(null);
                 setSelectedTimeSlots([]);
               }}>
                 <div className="space-y-3">
@@ -241,31 +287,98 @@ export default function SmartOfficeBooking() {
               </div>
             ) : (
               <>
-                {/* 세로형 좌석 배치 */}
+                {/* 2-4-4-2 좌석 배치 */}
                 <div className="flex justify-center">
-                  <div className="grid grid-cols-4 gap-4 max-w-sm">
-                    {Array.from({ length: 20 }, (_, i) => i + 1).map((seatNum) => {
-                      const currentData = getCurrentOfficeData();
-                      const isOccupied = currentData?.occupiedSeats.has(seatNum) || false;
-                      const isSelected = selectedSeat === seatNum;
-                      
-                      return (
-                        <Button
-                          key={seatNum}
-                          variant={isSelected ? "default" : isOccupied ? "secondary" : "outline"}
-                          className="aspect-square text-base font-bold h-16 w-16 flex flex-col items-center justify-center"
-                          disabled={isOccupied}
-                          onClick={() => {
-                            const newSeat = isSelected ? null : seatNum;
-                            setSelectedSeat(newSeat);
-                            if (!newSeat) setSelectedTimeSlots([]);
-                          }}
-                        >
-                          <User className="h-4 w-4 mb-1" />
-                          <span className="text-xs">{seatNum}</span>
-                        </Button>
-                      );
-                    })}
+                  <div className="space-y-6">
+                    {/* 첫 번째 줄: 2석 */}
+                    <div className="flex justify-center gap-4">
+                      {[1, 2].map((seatNum) => {
+                        const currentData = getCurrentOfficeData();
+                        const isOccupied = currentData?.occupiedSeats.has(seatNum) || false;
+                        const isSelected = selectedSeat === seatNum;
+                        
+                        return (
+                          <Button
+                            key={seatNum}
+                            variant={isSelected ? "default" : isOccupied ? "secondary" : "outline"}
+                            className="h-20 w-16 flex flex-col items-center justify-center text-sm font-bold"
+                            disabled={isOccupied}
+                            onClick={() => {
+                              const newSeat = isSelected ? null : seatNum;
+                              setSelectedSeat(newSeat);
+                              if (!newSeat) {
+                                setStartTime(null);
+                                setEndTime(null);
+                                setSelectedTimeSlots([]);
+                              }
+                            }}
+                          >
+                            <User className="h-5 w-5 mb-1" />
+                            <span>{seatNum}</span>
+                          </Button>
+                        );
+                      })}
+                    </div>
+
+                    {/* 두 번째 줄: 4석 */}
+                    <div className="flex justify-center gap-4">
+                      {[3, 4, 5, 6].map((seatNum) => {
+                        const currentData = getCurrentOfficeData();
+                        const isOccupied = currentData?.occupiedSeats.has(seatNum) || false;
+                        const isSelected = selectedSeat === seatNum;
+                        
+                        return (
+                          <Button
+                            key={seatNum}
+                            variant={isSelected ? "default" : isOccupied ? "secondary" : "outline"}
+                            className="h-20 w-16 flex flex-col items-center justify-center text-sm font-bold"
+                            disabled={isOccupied}
+                            onClick={() => {
+                              const newSeat = isSelected ? null : seatNum;
+                              setSelectedSeat(newSeat);
+                              if (!newSeat) {
+                                setStartTime(null);
+                                setEndTime(null);
+                                setSelectedTimeSlots([]);
+                              }
+                            }}
+                          >
+                            <User className="h-5 w-5 mb-1" />
+                            <span>{seatNum}</span>
+                          </Button>
+                        );
+                      })}
+                    </div>
+
+                    {/* 세 번째 줄: 4석 */}
+                    <div className="flex justify-center gap-4">
+                      {[7, 8, 9, 10].map((seatNum) => {
+                        const currentData = getCurrentOfficeData();
+                        const isOccupied = currentData?.occupiedSeats.has(seatNum) || false;
+                        const isSelected = selectedSeat === seatNum;
+                        
+                        return (
+                          <Button
+                            key={seatNum}
+                            variant={isSelected ? "default" : isOccupied ? "secondary" : "outline"}
+                            className="h-20 w-16 flex flex-col items-center justify-center text-sm font-bold"
+                            disabled={isOccupied}
+                            onClick={() => {
+                              const newSeat = isSelected ? null : seatNum;
+                              setSelectedSeat(newSeat);
+                              if (!newSeat) {
+                                setStartTime(null);
+                                setEndTime(null);
+                                setSelectedTimeSlots([]);
+                              }
+                            }}
+                          >
+                            <User className="h-5 w-5 mb-1" />
+                            <span>{seatNum}</span>
+                          </Button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
                 
@@ -300,7 +413,9 @@ export default function SmartOfficeBooking() {
               </div>
               <div>
                 <div className="text-lg font-semibold">4단계: 시간 선택</div>
-                <div className="text-sm text-muted-foreground font-normal">이용할 시간대를 선택해주세요 (여러 시간 선택 가능)</div>
+                <div className="text-sm text-muted-foreground font-normal">
+                  시작 시간을 먼저 클릭하고, 종료 시간을 클릭하면 연속된 시간이 자동 선택됩니다
+                </div>
               </div>
             </CardTitle>
           </CardHeader>
@@ -311,37 +426,66 @@ export default function SmartOfficeBooking() {
               </div>
             ) : (
               <>
-                {/* Selected time slots display */}
-                {selectedTimeSlots.length > 0 && (
-                  <div className="space-y-3">
-                    <Label className="text-base font-semibold">선택된 시간대</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedTimeSlots.map((time) => (
-                        <div
-                          key={time}
-                          className="flex items-center gap-2 px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium"
-                        >
-                          <span>{time}</span>
-                          <button
-                            onClick={() => toggleTimeSlot(time)}
-                            className="p-0.5 hover:bg-primary/20 rounded-full transition-colors"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
+                {/* 시간 선택 상태 표시 */}
+                <div className="space-y-4">
+                  {startTime && (
+                    <div className="bg-muted/30 p-4 rounded-lg">
+                      <div className="text-sm font-medium mb-2">선택 상태</div>
+                      <div className="flex items-center gap-4 text-sm">
+                        <span className="text-primary font-medium">시작: {startTime}</span>
+                        {endTime && (
+                          <span className="text-primary font-medium">종료: {endTime}</span>
+                        )}
+                        {!endTime && startTime && (
+                          <span className="text-muted-foreground">종료 시간을 선택해주세요</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+
+                  {/* Selected time slots display */}
+                  {selectedTimeSlots.length > 0 && (
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">선택된 시간대 ({selectedTimeSlots.length}개)</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedTimeSlots.map((time) => (
+                          <div
+                            key={time}
+                            className="px-3 py-2 bg-primary/10 text-primary rounded-lg text-sm font-medium"
+                          >
+                            {time}
+                          </div>
+                        ))}
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setStartTime(null);
+                          setEndTime(null);
+                          setSelectedTimeSlots([]);
+                        }}
+                        className="text-sm"
+                      >
+                        선택 초기화
+                      </Button>
+                    </div>
+                  )}
+                </div>
 
                 {/* Time slots grid */}
                 <div className="space-y-4">
-                  <Label className="text-base font-semibold">이용 가능한 시간대</Label>
+                  <Label className="text-base font-semibold">시간대 선택</Label>
                   <div className="grid grid-cols-3 gap-3">
                     {timeSlots.map((time) => {
                       const isSelected = selectedTimeSlots.includes(time);
                       const isAvailable = selectedSeat ? isTimeSlotAvailable(time, selectedSeat) : false;
                       const isLunchTime = time === '12:00' || time === '12:30';
+                      const isStartTime = startTime === time;
+                      const isEndTime = endTime === time;
+                      const isInRange = startTime && endTime && 
+                        timeSlots.indexOf(time) >= timeSlots.indexOf(startTime) && 
+                        timeSlots.indexOf(time) <= timeSlots.indexOf(endTime);
                       
                       return (
                         <Button
@@ -349,9 +493,15 @@ export default function SmartOfficeBooking() {
                           variant={isSelected ? "default" : "outline"}
                           size="sm"
                           disabled={!isAvailable}
-                          onClick={() => toggleTimeSlot(time)}
-                          className={`h-14 text-sm font-medium transition-all ${
+                          onClick={() => handleTimeSlotClick(time)}
+                          className={`h-16 text-sm font-medium transition-all relative ${
                             isSelected ? 'ring-2 ring-primary ring-offset-2' : ''
+                          } ${
+                            isStartTime ? 'ring-2 ring-green-500 ring-offset-2' : ''
+                          } ${
+                            isEndTime ? 'ring-2 ring-red-500 ring-offset-2' : ''
+                          } ${
+                            isInRange && !isSelected ? 'bg-primary/20 border-primary/50' : ''
                           } ${
                             !isAvailable ? 'opacity-50' : ''
                           }`}
@@ -364,6 +514,12 @@ export default function SmartOfficeBooking() {
                             {!isAvailable && !isLunchTime && (
                               <div className="text-xs opacity-60">예약됨</div>
                             )}
+                            {isStartTime && (
+                              <div className="text-xs text-green-600 font-medium">시작</div>
+                            )}
+                            {isEndTime && (
+                              <div className="text-xs text-red-600 font-medium">종료</div>
+                            )}
                           </div>
                         </Button>
                       );
@@ -374,7 +530,7 @@ export default function SmartOfficeBooking() {
                 {/* Info section */}
                 <div className="bg-muted/30 p-4 rounded-lg">
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium">💡 편리한 팁:</span> 여러 시간대를 선택하여 연속된 시간 동안 좌석을 이용할 수 있습니다.
+                    <span className="font-medium">💡 사용법:</span> 시작 시간을 먼저 클릭하고, 종료 시간을 클릭하면 그 사이의 모든 시간이 자동으로 선택됩니다.
                   </p>
                 </div>
               </>
