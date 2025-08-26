@@ -18,6 +18,8 @@ import BookingSelect from "./routes/Booking/BookingSelect";
 import SmartOfficeBooking from "./routes/Booking/SmartOfficeBooking";
 import MeetingRoomBooking from "./routes/Booking/MeetingRoomBooking";
 import MeetingRoomDashboard from "./routes/Booking/MeetingRoomDashboard";
+import QuickMeetingRoom from "./routes/Booking/QuickMeetingRoom";
+import QuickSmartOffice from "./routes/Booking/QuickSmartOffice";
 
 // Request routes
 import RequestStatus from "./routes/Requests/RequestStatus";
@@ -94,6 +96,16 @@ const AppRoutes = () => {
         <Route path="/booking/meeting-room" element={
           <ProtectedRoute>
             <MeetingRoomBooking />
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/quick-meeting" element={
+          <ProtectedRoute>
+            <QuickMeetingRoom />
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/quick-office" element={
+          <ProtectedRoute>
+            <QuickSmartOffice />
           </ProtectedRoute>
         } />
 
