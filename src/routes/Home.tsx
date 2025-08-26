@@ -97,10 +97,6 @@ export default function Home() {
               {user.dept} · {user.building}
             </p>
           </div>
-          <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full border border-white/30">
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-            <span className="text-sm font-medium text-white">온라인</span>
-          </div>
         </div>
       </section>
 
