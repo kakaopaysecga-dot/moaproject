@@ -17,7 +17,7 @@ import NotFound from "./pages/NotFound";
 import BookingSelect from "./routes/Booking/BookingSelect";
 import SmartOfficeBooking from "./routes/Booking/SmartOfficeBooking";
 import MeetingRoomBooking from "./routes/Booking/MeetingRoomBooking";
-import Dashboard from "./routes/Booking/Dashboard";
+import MeetingRoomDashboard from "./routes/Booking/MeetingRoomDashboard";
 
 // Request routes
 import RequestStatus from "./routes/Requests/RequestStatus";
@@ -83,7 +83,7 @@ const AppRoutes = () => {
         } />
         <Route path="/booking/dashboard" element={
           <ProtectedRoute>
-            <Dashboard />
+            <MeetingRoomDashboard />
           </ProtectedRoute>
         } />
         <Route path="/booking/smart-office" element={

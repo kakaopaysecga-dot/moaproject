@@ -54,73 +54,108 @@ export default function BookingSelect() {
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent rounded-full mx-auto"></div>
         </div>
 
-        {/* 카드 그리드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {bookingOptions.map((option, index) => (
-            <Link key={option.id} to={option.path} className="group">
-              <Card className="h-full bg-gradient-to-br from-background to-muted/20 border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden relative">
-                {/* 백그라운드 그라데이션 */}
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                
-                <CardHeader className="text-center pb-6 pt-8 relative z-10">
-                  {/* 아이콘 컨테이너 */}
-                  <div className="relative mb-6">
-                    <div className={`w-20 h-20 ${option.bgColor} rounded-3xl flex items-center justify-center mx-auto shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-                      <option.icon className={`h-10 w-10 ${option.color} group-hover:scale-110 transition-transform duration-300`} />
+        {/* 카드 그리드 - 모바일 친화적 가로 스크롤 */}
+        <div className="w-full">
+          {/* 데스크톱: 그리드 레이아웃 */}
+          <div className="hidden md:grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {bookingOptions.map((option, index) => (
+              <Link key={option.id} to={option.path} className="group">
+                <Card className="h-full bg-gradient-to-br from-background to-muted/10 border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  
+                  <CardHeader className="text-center pb-4 pt-6 relative z-10">
+                    <div className="relative mb-4">
+                      <div className={`w-16 h-16 ${option.bgColor} rounded-2xl flex items-center justify-center mx-auto shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                        <option.icon className={`h-8 w-8 ${option.color} group-hover:scale-110 transition-transform duration-300`} />
+                      </div>
                     </div>
-                    {/* 백그라운드 엘레먼트 */}
-                    <div className={`absolute -inset-4 ${option.bgColor} rounded-full opacity-20 scale-0 group-hover:scale-100 transition-all duration-500 -z-10`}></div>
-                  </div>
+                    
+                    <div className="space-y-2">
+                      <CardTitle className="text-lg font-bold group-hover:text-primary transition-colors duration-300">
+                        {option.title}
+                      </CardTitle>
+                      <CardDescription className="text-sm leading-relaxed text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                        {option.description}
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
                   
-                  <div className="space-y-3">
-                    <CardTitle className="text-2xl font-bold tracking-tight group-hover:text-primary transition-colors duration-300">
-                      {option.title}
-                    </CardTitle>
-                    <CardDescription className="text-base leading-relaxed text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
-                      {option.description}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-6 px-6 pb-8 relative z-10">
-                  {/* 기능 목록 */}
-                  <div className="space-y-3">
-                    {option.features.map((feature, featureIndex) => (
-                      <div 
-                        key={featureIndex} 
-                        className="flex items-center text-sm text-muted-foreground group-hover:text-foreground/90 transition-all duration-300"
-                        style={{ 
-                          animationDelay: `${featureIndex * 100}ms`,
-                          animation: 'fade-in 0.5s ease-out forwards'
-                        }}
-                      >
-                        <div className={`w-2 h-2 ${option.color.replace('text-', 'bg-')} rounded-full mr-3 group-hover:scale-125 transition-transform duration-300`}></div>
-                        <span className="font-medium">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* 액션 버튼 */}
-                  <div className="pt-2">
-                    <Button 
-                      className="w-full h-12 text-base font-semibold group-hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg"
-                      variant="outline"
-                    >
-                      <span className="group-hover:mr-2 transition-all duration-300">시작하기</span>
-                      <div className="w-0 group-hover:w-4 overflow-hidden transition-all duration-300">
-                        <span className="text-sm">→</span>
-                      </div>
+                  <CardContent className="space-y-4 px-6 pb-6 relative z-10">
+                    <div className="space-y-2">
+                      {option.features.map((feature, featureIndex) => (
+                        <div key={featureIndex} className="flex items-center text-sm text-muted-foreground group-hover:text-foreground/90 transition-all duration-300">
+                          <div className={`w-1.5 h-1.5 ${option.color.replace('text-', 'bg-')} rounded-full mr-2 group-hover:scale-125 transition-transform duration-300`}></div>
+                          <span className="font-medium">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <Button className="w-full text-sm font-semibold group-hover:scale-105 transition-all duration-300" variant="outline">
+                      시작하기
                     </Button>
-                  </div>
-                </CardContent>
+                  </CardContent>
 
-                {/* 카드 인덱스 표시 */}
-                <div className="absolute top-4 right-4 w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-bold opacity-50 group-hover:opacity-100 transition-opacity duration-300">
-                  {index + 1}
-                </div>
-              </Card>
-            </Link>
-          ))}
+                  <div className="absolute top-3 right-3 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-bold opacity-50 group-hover:opacity-100 transition-opacity duration-300">
+                    {index + 1}
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+
+          {/* 모바일: 가로 스크롤 카드 */}
+          <div className="md:hidden">
+            <div className="flex gap-4 overflow-x-auto pb-6 px-1 snap-x snap-mandatory scrollbar-hide">
+              {bookingOptions.map((option, index) => (
+                <Link key={option.id} to={option.path} className="group">
+                  <Card className="min-w-[280px] w-[280px] bg-gradient-to-br from-background to-muted/10 border border-border/50 shadow-lg cursor-pointer overflow-hidden relative snap-center">
+                    <CardHeader className="text-center pb-4 pt-6">
+                      <div className="relative mb-4">
+                        <div className={`w-14 h-14 ${option.bgColor} rounded-xl flex items-center justify-center mx-auto shadow-sm`}>
+                          <option.icon className={`h-7 w-7 ${option.color}`} />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <CardTitle className="text-lg font-bold">
+                          {option.title}
+                        </CardTitle>
+                        <CardDescription className="text-sm leading-relaxed text-muted-foreground">
+                          {option.description}
+                        </CardDescription>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4 px-6 pb-6">
+                      <div className="space-y-2">
+                        {option.features.map((feature, featureIndex) => (
+                          <div key={featureIndex} className="flex items-center text-sm text-muted-foreground">
+                            <div className={`w-1.5 h-1.5 ${option.color.replace('text-', 'bg-')} rounded-full mr-2`}></div>
+                            <span className="font-medium">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <Button className="w-full text-sm font-semibold" variant="outline">
+                        시작하기
+                      </Button>
+                    </CardContent>
+
+                    <div className="absolute top-3 right-3 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-bold opacity-75">
+                      {index + 1}
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            
+            {/* 스크롤 인디케이터 */}
+            <div className="flex justify-center gap-2 mt-4">
+              {bookingOptions.map((_, index) => (
+                <div key={index} className="w-2 h-2 bg-muted rounded-full"></div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* 하단 안내 */}
