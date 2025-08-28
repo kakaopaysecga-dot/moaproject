@@ -110,7 +110,7 @@ export default function Signup() {
           <div className="flex flex-col items-center space-y-4">
             <div className="flex items-center space-x-4">
               <img 
-                src="/src/assets/kakaopay-logo.png" 
+                src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
                 alt="카카오페이증권" 
                 className="h-8 w-auto"
               />
