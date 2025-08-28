@@ -79,7 +79,7 @@ export default function Home() {
   return (
     <div className="space-y-6 pb-6">
       {/* Welcome Section */}
-      <section className="relative text-center space-y-6 p-6 rounded-3xl bg-gradient-to-br from-primary via-accent to-corporate-blue overflow-hidden">
+      <section className="relative text-center space-y-6 p-6 rounded-3xl bg-primary overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-white/10"></div>
