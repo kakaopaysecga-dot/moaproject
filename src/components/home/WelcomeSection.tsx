@@ -4,12 +4,14 @@ interface WelcomeSectionProps {
   userEnglishName: string;
   userDept: string;
   userBuilding: string;
+  userWorkArea: string;
 }
 
 export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
   userEnglishName,
   userDept,
   userBuilding,
+  userWorkArea,
 }) => {
   return (
     <section className="relative text-center space-y-6 p-6 rounded-3xl bg-primary overflow-hidden">
@@ -27,7 +29,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
             안녕하세요, {userEnglishName}님
           </h1>
           <p className="text-white/80 font-medium">
-            {userDept} · {userBuilding}
+            {userDept} · {userBuilding} · {userWorkArea}
           </p>
         </div>
       </div>

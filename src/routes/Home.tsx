@@ -30,6 +30,7 @@ export default function Home() {
         userEnglishName={user.englishName}
         userDept={user.dept}
         userBuilding={user.building}
+        userWorkArea={user.workArea}
       />
       
       <ServiceCards />
