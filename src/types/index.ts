@@ -3,12 +3,13 @@ export type AdminLevel = 'supreme' | 'part' | null;
 export interface User {
   email: string;
   password?: string;
-  name: string;       // e.g., "Master.Admin"
+  name: string;         // Korean name e.g., "홍길동"
+  englishName?: string; // English name e.g., "Hong Gildong"
   dept: string;
   building: '판교오피스' | '여의도오피스';
-  workArea?: string;  // Work area within the building
-  phone: string;      // "010-1234-5678"
-  car: string;        // "11가1111"
+  workArea?: string;    // Work area within the building
+  phone: string;        // "010-1234-5678"
+  car: string;          // "11가1111"
   isAdmin: boolean;
   adminLevel: AdminLevel;
 }

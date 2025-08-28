@@ -13,6 +13,7 @@ export default function Signup() {
     password: '',
     confirmPassword: '',
     name: '',
+    englishName: '',
     dept: '개발팀',
     building: '판교오피스' as '판교오피스' | '여의도오피스',
     workArea: '',
@@ -44,6 +45,10 @@ export default function Signup() {
 
     if (!formData.name.trim()) {
       errors.name = '이름을 입력해주세요.';
+    }
+
+    if (!formData.englishName.trim()) {
+      errors.englishName = '영어이름을 입력해주세요.';
     }
 
     setValidationErrors(errors);
@@ -145,14 +150,26 @@ export default function Signup() {
               />
             </FormField>
 
-            <FormField label="이름" error={validationErrors.name} required>
+            <FormField label="이름 (한글)" error={validationErrors.name} required>
               <Input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="이름"
+                placeholder="홍길동"
                 error={!!validationErrors.name}
+                disabled={isLoading}
+              />
+            </FormField>
+
+            <FormField label="영어이름" error={validationErrors.englishName} required>
+              <Input
+                type="text"
+                name="englishName"
+                value={formData.englishName}
+                onChange={handleChange}
+                placeholder="Hong Gildong"
+                error={!!validationErrors.englishName}
                 disabled={isLoading}
               />
             </FormField>

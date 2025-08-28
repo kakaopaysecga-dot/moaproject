@@ -26,6 +26,7 @@ export default function Settings() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
+    englishName: user?.englishName || '',
     dept: user?.dept || '',
     building: user?.building || '판교오피스',
     workArea: user?.workArea || '',
@@ -72,6 +73,7 @@ export default function Settings() {
     // Reset form data to current user data when opening modal
     setProfileData({
       name: user.name || '',
+      englishName: user.englishName || '',
       dept: user.dept || '',
       building: user.building || '판교오피스',
       workArea: user.workArea || '',
@@ -155,7 +157,9 @@ export default function Settings() {
               <span className="text-white font-bold text-2xl">{user.name.charAt(0)}</span>
             </div>
             <div className="flex-1 space-y-2">
-              <h3 className="text-2xl font-bold text-foreground leading-tight">{user.name}</h3>
+              <h3 className="text-2xl font-bold text-foreground leading-tight">
+                {user.name} ({user.englishName})
+              </h3>
               <div className="space-y-1">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Building className="h-4 w-4 mr-2" />
@@ -244,12 +248,22 @@ export default function Settings() {
             </div>
           )}
 
-          <FormField label="이름" required>
+          <FormField label="이름 (한글)" required>
             <Input
               name="name"
               value={profileData.name}
               onChange={handleProfileChange}
-              placeholder="이름"
+              placeholder="홍길동"
+              disabled={isUpdating}
+            />
+          </FormField>
+
+          <FormField label="영어이름" required>
+            <Input
+              name="englishName"
+              value={profileData.englishName}
+              onChange={handleProfileChange}
+              placeholder="Hong Gildong"
               disabled={isUpdating}
             />
           </FormField>

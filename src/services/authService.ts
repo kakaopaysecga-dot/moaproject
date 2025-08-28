@@ -63,6 +63,7 @@ export class AuthService {
     const user: User = {
       email,
       name: rest.name || `${firstName}.${lastName}`,
+      englishName: rest.englishName || `${firstName} ${lastName}`,
       dept: rest.dept || '개발팀',
       building: rest.building || '판교오피스',
       workArea: rest.workArea || '',
