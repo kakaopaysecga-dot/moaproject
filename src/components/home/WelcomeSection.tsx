@@ -1,13 +1,13 @@
 import React from 'react';
 
 interface WelcomeSectionProps {
-  userName: string;
+  userEnglishName: string;
   userDept: string;
   userBuilding: string;
 }
 
 export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
-  userName,
+  userEnglishName,
   userDept,
   userBuilding,
 }) => {
@@ -24,7 +24,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-white drop-shadow-sm">
-            안녕하세요, {userName}님
+            안녕하세요, {userEnglishName}님
           </h1>
           <p className="text-white/80 font-medium">
             {userDept} · {userBuilding}

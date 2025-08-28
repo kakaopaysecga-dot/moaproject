@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <div className="space-y-6 pb-6">
       <WelcomeSection 
-        userName={user.name}
+        userEnglishName={user.englishName}
         userDept={user.dept}
         userBuilding={user.building}
       />
