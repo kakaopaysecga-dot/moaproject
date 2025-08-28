@@ -4,21 +4,29 @@ import { useAuthStore } from '@/store/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormField, Input } from '@/components/ui/FormField';
-
 export default function Login() {
   const navigate = useNavigate();
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const {
+    login,
+    isLoading,
+    error,
+    clearError
+  } = useAuthStore();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const {
+      name,
+      value
+    } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
     if (error) clearError();
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -28,21 +36,13 @@ export default function Login() {
       // Error handled by store
     }
   };
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+  return <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-6">
           <div className="flex flex-col items-center space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-primary-foreground text-xl">💬</span>
-              </div>
-              <img 
-                src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
-                alt="카카오페이증권" 
-                className="h-6"
-              />
+              
+              <img src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" alt="카카오페이증권" className="h-6" />
               <div className="h-8 w-px bg-border"></div>
               <span className="font-bold text-2xl text-primary tracking-tight">MOA</span>
             </div>
@@ -55,35 +55,14 @@ export default function Login() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormField label="이메일" error={error} required>
-              <Input
-                type="text"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="아이디 또는 이메일"
-                error={!!error}
-                disabled={isLoading}
-                autoComplete="email"
-              />
+              <Input type="text" name="email" value={formData.email} onChange={handleChange} placeholder="아이디 또는 이메일" error={!!error} disabled={isLoading} autoComplete="email" />
             </FormField>
 
             <FormField label="비밀번호" required>
-              <Input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="비밀번호"
-                disabled={isLoading}
-                autoComplete="current-password"
-              />
+              <Input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="비밀번호" disabled={isLoading} autoComplete="current-password" />
             </FormField>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isLoading || !formData.email || !formData.password}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading || !formData.email || !formData.password}>
               {isLoading ? '로그인 중...' : '로그인'}
             </Button>
           </form>
@@ -104,6 +83,5 @@ export default function Login() {
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 }
