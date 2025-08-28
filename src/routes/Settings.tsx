@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function Settings() {
-  const { user, logout } = useAuthStore();
+  const { user, updateProfile, isLoading, error, clearError } = useAuthStore();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
@@ -32,6 +32,7 @@ export default function Settings() {
     phone: user?.phone || '',
     car: user?.car || ''
   });
+  const [isUpdating, setIsUpdating] = useState(false);
 
   if (!user) return null;
 
@@ -54,10 +55,31 @@ export default function Settings() {
     }));
   };
 
-  const handleProfileSave = () => {
-    // TODO: Update user profile in store/database
-    console.log('Profile updated:', profileData);
-    setIsProfileModalOpen(false);
+  const handleProfileSave = async () => {
+    setIsUpdating(true);
+    try {
+      await updateProfile(profileData);
+      setIsProfileModalOpen(false);
+      // Success feedback could be added here
+    } catch (error) {
+      // Error is handled by the store
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const openProfileModal = () => {
+    // Reset form data to current user data when opening modal
+    setProfileData({
+      name: user.name || '',
+      dept: user.dept || '',
+      building: user.building || '판교오피스',
+      workArea: user.workArea || '',
+      phone: user.phone || '',
+      car: user.car || ''
+    });
+    clearError();
+    setIsProfileModalOpen(true);
   };
 
   const settingsGroups = [
@@ -68,7 +90,7 @@ export default function Settings() {
           icon: User, 
           label: '프로필 관리', 
           description: '개인정보 및 프로필 수정',
-          action: () => setIsProfileModalOpen(true)
+          action: () => openProfileModal()
         },
         { 
           icon: Shield, 
@@ -199,7 +221,7 @@ export default function Settings() {
       <Card className="shadow-md border-0">
         <CardContent className="p-8">
           <Button
-            onClick={logout}
+            onClick={() => useAuthStore.getState().logout()}
             variant="destructive"
             className="w-full h-14 text-lg font-semibold flex items-center justify-center space-x-3"
           >
@@ -216,12 +238,19 @@ export default function Settings() {
         title="프로필 수정"
       >
         <div className="space-y-4">
+          {error && (
+            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          )}
+
           <FormField label="이름" required>
             <Input
               name="name"
               value={profileData.name}
               onChange={handleProfileChange}
               placeholder="이름"
+              disabled={isUpdating}
             />
           </FormField>
 
@@ -230,6 +259,7 @@ export default function Settings() {
               name="dept"
               value={profileData.dept}
               onChange={handleProfileChange}
+              disabled={isUpdating}
             >
               <option value="개발팀">개발팀</option>
               <option value="기획팀">기획팀</option>
@@ -247,6 +277,7 @@ export default function Settings() {
               name="building"
               value={profileData.building}
               onChange={handleProfileChange}
+              disabled={isUpdating}
             >
               <option value="판교오피스">판교오피스</option>
               <option value="여의도오피스">여의도오피스</option>
@@ -258,7 +289,7 @@ export default function Settings() {
               name="workArea"
               value={profileData.workArea}
               onChange={handleProfileChange}
-              disabled={!profileData.building}
+              disabled={isUpdating || !profileData.building}
             >
               <option value="">근무구역을 선택하세요</option>
               {getWorkAreaOptions().map(area => (
@@ -273,6 +304,7 @@ export default function Settings() {
               value={profileData.phone}
               onChange={handleProfileChange}
               placeholder="010-1234-5678"
+              disabled={isUpdating}
             />
           </FormField>
 
@@ -282,6 +314,7 @@ export default function Settings() {
               value={profileData.car}
               onChange={handleProfileChange}
               placeholder="11가1111"
+              disabled={isUpdating}
             />
           </FormField>
 
@@ -290,14 +323,16 @@ export default function Settings() {
               variant="outline" 
               onClick={() => setIsProfileModalOpen(false)}
               className="flex-1"
+              disabled={isUpdating}
             >
               취소
             </Button>
             <Button 
               onClick={handleProfileSave}
               className="flex-1"
+              disabled={isUpdating}
             >
-              저장
+              {isUpdating ? '저장 중...' : '저장'}
             </Button>
           </div>
         </div>

@@ -65,6 +65,7 @@ export class AuthService {
       name: rest.name || `${firstName}.${lastName}`,
       dept: rest.dept || '개발팀',
       building: rest.building || '판교오피스',
+      workArea: rest.workArea || '',
       phone: rest.phone || '010-0000-0000',
       car: rest.car || '',
       isAdmin: emailPrefix.startsWith('admin'),
@@ -75,6 +76,21 @@ export class AuthService {
     return user;
   }
 
+  static async updateProfile(profileData: Partial<User>): Promise<User> {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
+      throw new Error('로그인이 필요합니다.');
+    }
+
+    const updatedUser: User = {
+      ...currentUser,
+      ...profileData,
+      email: currentUser.email // 이메일은 변경 불가
+    };
+
+    StorageService.set(STORAGE_KEYS.USER, updatedUser);
+    return updatedUser;
+  }
   static getCurrentUser(): User | null {
     return StorageService.get<User>(STORAGE_KEYS.USER);
   }

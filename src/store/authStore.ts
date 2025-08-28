@@ -9,6 +9,7 @@ interface AuthState {
   
   login: (email: string, password: string) => Promise<void>;
   signup: (userData: Partial<User> & { email: string; password: string }) => Promise<void>;
+  updateProfile: (profileData: Partial<User>) => Promise<void>;
   logout: () => void;
   clearError: () => void;
   initializeAuth: () => void;
@@ -42,6 +43,20 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         error: error instanceof Error ? error.message : '회원가입에 실패했습니다.',
         isLoading: false 
       });
+    }
+  },
+
+  updateProfile: async (profileData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const user = await AuthService.updateProfile(profileData);
+      set({ user, isLoading: false });
+    } catch (error) {
+      set({ 
+        error: error instanceof Error ? error.message : '프로필 업데이트에 실패했습니다.',
+        isLoading: false 
+      });
+      throw error;
     }
   },
 
