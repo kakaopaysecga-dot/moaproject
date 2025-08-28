@@ -51,6 +51,14 @@ export default function Signup() {
       errors.englishName = '영어이름을 입력해주세요.';
     }
 
+    if (!formData.phone.trim()) {
+      errors.phone = '전화번호를 입력해주세요.';
+    }
+
+    if (!formData.car.trim()) {
+      errors.car = '차량번호를 입력해주세요.';
+    }
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -89,7 +97,7 @@ export default function Signup() {
 
     try {
       await signup(formData);
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       // Error handled by store
     }
@@ -218,24 +226,26 @@ export default function Signup() {
               </Select>
             </FormField>
 
-            <FormField label="전화번호">
+            <FormField label="전화번호" error={validationErrors.phone} required>
               <Input
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="010-1234-5678"
+                error={!!validationErrors.phone}
                 disabled={isLoading}
               />
             </FormField>
 
-            <FormField label="차량번호">
+            <FormField label="차량번호" error={validationErrors.car} required>
               <Input
                 type="text"
                 name="car"
                 value={formData.car}
                 onChange={handleChange}
                 placeholder="11가1111"
+                error={!!validationErrors.car}
                 disabled={isLoading}
               />
             </FormField>

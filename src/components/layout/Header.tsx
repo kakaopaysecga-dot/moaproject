@@ -29,6 +29,17 @@ export const Header: React.FC = () => {
               <span className="text-xs text-muted-foreground">{user.dept}</span>
             </div>
             
+            <Link to="/settings">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="flex items-center space-x-2 hover:bg-muted/50 h-10 px-3 rounded-xl"
+              >
+                <User className="h-4 w-4" />
+                <span className="hidden sm:inline font-medium">마이페이지</span>
+              </Button>
+            </Link>
+            
             <Button 
               variant="ghost" 
               size="sm"
