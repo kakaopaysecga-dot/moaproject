@@ -22,7 +22,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
       
       <div className="relative z-10">
         <div className="mx-auto w-20 h-20 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30">
-          <span className="text-white font-bold text-3xl drop-shadow-sm">{userEnglishName.charAt(0).toUpperCase()}</span>
+          <span className="text-white font-bold text-3xl drop-shadow-sm">{userEnglishName?.charAt(0)?.toUpperCase() || '?'}</span>
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-white drop-shadow-sm">
