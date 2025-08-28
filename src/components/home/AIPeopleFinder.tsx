@@ -43,6 +43,87 @@ const mockPeople: Person[] = [
     currentActivity: '업무 중',
     availableSlots: ['13:00-14:00', '15:30-16:30'],
     status: 'available'
+  },
+  {
+    id: '4',
+    name: '최수진',
+    dept: '인사팀',
+    currentLocation: 'C동 102호',
+    currentActivity: '면접 진행',
+    availableSlots: ['11:00-12:00'],
+    status: 'busy'
+  },
+  {
+    id: '5',
+    name: '정태호',
+    dept: '재무팀',
+    currentLocation: 'A동 205호',
+    currentActivity: '결산 업무',
+    availableSlots: ['16:00-17:00', '17:30-18:30'],
+    status: 'busy'
+  },
+  {
+    id: '6',
+    name: '한미라',
+    dept: '법무팀',
+    currentLocation: 'B동 305호',
+    currentActivity: '계약서 검토',
+    availableSlots: ['10:00-11:00', '14:30-15:30'],
+    status: 'available'
+  },
+  {
+    id: '7',
+    name: '송준혁',
+    dept: '영업팀',
+    currentLocation: '외부 미팅',
+    currentActivity: '고객사 방문',
+    availableSlots: [],
+    status: 'away'
+  },
+  {
+    id: '8',
+    name: '윤서연',
+    dept: '디자인팀',
+    currentLocation: 'D동 401호',
+    currentActivity: 'UI/UX 디자인',
+    availableSlots: ['13:30-14:30', '15:00-16:00'],
+    status: 'available'
+  },
+  {
+    id: '9',
+    name: '임도현',
+    dept: '기술본부',
+    currentLocation: 'B동 301호',
+    currentActivity: '코드 리뷰',
+    availableSlots: ['11:30-12:30', '16:00-17:00'],
+    status: 'available'
+  },
+  {
+    id: '10',
+    name: '조은아',
+    dept: '품질관리팀',
+    currentLocation: 'C동 201호',
+    currentActivity: '테스트 진행',
+    availableSlots: ['10:30-11:30'],
+    status: 'busy'
+  },
+  {
+    id: '11',
+    name: '강민석',
+    dept: '보안팀',
+    currentLocation: 'A동 101호',
+    currentActivity: '보안 점검',
+    availableSlots: ['14:00-15:00', '17:00-18:00'],
+    status: 'available'
+  },
+  {
+    id: '12',
+    name: '이상헌',
+    dept: '운영팀',
+    currentLocation: '휴가',
+    currentActivity: '연차 사용',
+    availableSlots: [],
+    status: 'away'
   }
 ];
 

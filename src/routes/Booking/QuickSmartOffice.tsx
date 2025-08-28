@@ -1,289 +1,218 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Clock, User, MapPin, Zap, CheckCircle, AlertCircle, Monitor } from 'lucide-react';
+import { MapPin, Monitor, Wifi, Coffee, Zap, CheckCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+interface SmartOffice {
+  id: string;
+  name: string;
+  building: string;
+  floor: string;
+  features: string[];
+  status: 'available' | 'occupied';
+  occupancy: number;
+  maxCapacity: number;
+}
+
+const mockOffices: SmartOffice[] = [
+  {
+    id: '1',
+    name: '집중 워크스페이스',
+    building: 'A동',
+    floor: '4층',
+    features: ['고속 WiFi', '무선충전', '개인사물함', '조용한 환경'],
+    status: 'available',
+    occupancy: 3,
+    maxCapacity: 20
+  },
+  {
+    id: '2',
+    name: '협업 라운지',
+    building: 'B동',
+    floor: '3층',
+    features: ['대형 모니터', '화이트보드', '커피머신', '편안한 소파'],
+    status: 'available',
+    occupancy: 8,
+    maxCapacity: 15
+  },
+  {
+    id: '3',
+    name: '크리에이티브 스튜디오',
+    building: 'C동',
+    floor: '2층',
+    features: ['창의적 공간', 'VR 장비', '디자인 툴', '브레인스토밍 보드'],
+    status: 'available',
+    occupancy: 2,
+    maxCapacity: 12
+  },
+  {
+    id: '4',
+    name: '힐링 스페이스',
+    building: 'D동',
+    floor: '1층',
+    features: ['자연광', '식물', '안마의자', '명상 공간'],
+    status: 'occupied',
+    occupancy: 10,
+    maxCapacity: 10
+  }
+];
 
 export default function QuickSmartOffice() {
   const { toast } = useToast();
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [selectedOffice, setSelectedOffice] = useState<'판교아지트' | '여의도오피스'>('판교아지트');
+  const [offices, setOffices] = useState<SmartOffice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 60000);
-    return () => clearInterval(timer);
+    // 스마트 오피스 로딩 시뮬레이션
+    setTimeout(() => {
+      setOffices(mockOffices);
+      setIsLoading(false);
+    }, 800);
   }, []);
 
-  const timeSlots = [
-    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-    '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
-    '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'
-  ];
-
-  const officeData = {
-    '판교아지트': {
-      totalSeats: 10,
-      occupiedSeats: new Set([2, 5, 8]),
-    },
-    '여의도오피스': {
-      totalSeats: 10,
-      occupiedSeats: new Set([1, 4, 6]),
-    }
-  };
-
-  const getCurrentTimeSlot = () => {
-    const hour = currentTime.getHours();
-    const minute = currentTime.getMinutes();
-    const timeString = `${hour.toString().padStart(2, '0')}:${minute < 30 ? '00' : '30'}`;
-    return timeString;
-  };
-
-  const getNextAvailableSlot = () => {
-    const currentSlot = getCurrentTimeSlot();
-    const currentIndex = timeSlots.indexOf(currentSlot);
-    if (currentIndex !== -1 && currentIndex < timeSlots.length - 1) {
-      return timeSlots[currentIndex + 1];
-    }
-    return null;
-  };
-
-  const getAvailableSeats = () => {
-    const currentData = officeData[selectedOffice];
-    const availableSeats = [];
-    
-    for (let i = 1; i <= currentData.totalSeats; i++) {
-      if (!currentData.occupiedSeats.has(i)) {
-        availableSeats.push(i);
-      }
-    }
-    
-    return availableSeats;
-  };
-
-  const handleQuickBooking = (seatNumber: number) => {
-    const nextSlot = getNextAvailableSlot();
-    if (!nextSlot) {
-      toast({
-        title: "예약할 수 없습니다",
-        description: "현재 시간에는 퀸 예약이 불가능합니다.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const endTime = timeSlots[timeSlots.indexOf(nextSlot) + 2]; // 1시간 예약
+  const useOffice = (office: SmartOffice) => {
     toast({
-      title: "퀸 예약 완료! ⚡",
-      description: `${selectedOffice} ${seatNumber}번 좌석이 ${nextSlot}-${endTime}에 예약되었습니다.`,
+      title: "이용 시작! ✨",
+      description: `${office.name} 이용이 시작되었습니다. 즐거운 시간 보내세요!`,
     });
   };
 
-  const getSeatStatus = (seatNumber: number) => {
-    const currentData = officeData[selectedOffice];
-    return !currentData.occupiedSeats.has(seatNumber);
+  const getOccupancyColor = (occupancy: number, maxCapacity: number) => {
+    const ratio = occupancy / maxCapacity;
+    if (ratio < 0.5) return 'text-success';
+    if (ratio < 0.8) return 'text-warning';
+    return 'text-destructive';
+  };
+
+  const getFeatureIcon = (feature: string) => {
+    if (feature.includes('WiFi')) return <Wifi className="h-3 w-3" />;
+    if (feature.includes('모니터')) return <Monitor className="h-3 w-3" />;
+    if (feature.includes('커피')) return <Coffee className="h-3 w-3" />;
+    return <Zap className="h-3 w-3" />;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      {/* 헤더 */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border/30 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <Link to="/booking" className="p-2 -ml-2 hover:bg-muted/50 rounded-lg transition-colors">
-            <ArrowLeft className="h-5 w-5" />
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6 max-w-md">
+        {/* 헤더 */}
+        <div className="mb-6">
+          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-3">
+            <ArrowLeft className="h-4 w-4" />
+            홈으로 돌아가기
           </Link>
-          <div className="flex-1">
-            <h1 className="text-lg font-bold">지금 바로 좌석</h1>
-            <p className="text-sm text-muted-foreground">1시간 퀸 예약 서비스</p>
-          </div>
-          <div className="text-right">
-            <div className="text-sm font-bold text-secondary">
-              {currentTime.toLocaleTimeString('ko-KR', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-              })}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {currentTime.toLocaleDateString('ko-KR', { 
-                month: 'short', 
-                day: 'numeric',
-                weekday: 'short'
-              })}
-            </div>
-          </div>
+          <h1 className="text-2xl font-bold">스마트 오피스 즉시예약</h1>
+          <p className="text-muted-foreground">지금 바로 이용 가능한 스마트 워크스페이스</p>
         </div>
-      </div>
 
-      <div className="p-4 space-y-6 max-w-md mx-auto">
-        {/* 예약 시간 안내 */}
-        <Card className="border-0 bg-gradient-to-r from-secondary/10 to-secondary/5">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
-                <Zap className="h-5 w-5 text-secondary" />
-              </div>
-              <div>
-                <h3 className="font-semibold">퀸 예약 시간</h3>
-                <p className="text-sm text-muted-foreground">즉시 1시간 사용</p>
-              </div>
+        {/* 로딩 상태 */}
+        {isLoading && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-center gap-2 py-8">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+              <span className="text-muted-foreground">최적의 스마트 오피스를 찾고 있습니다...</span>
             </div>
-            {getNextAvailableSlot() ? (
-              <div className="bg-background/60 rounded-lg p-3 text-center">
-                <div className="text-lg font-bold text-secondary">
-                  {getNextAvailableSlot()} - {timeSlots[timeSlots.indexOf(getNextAvailableSlot() || '') + 2]}
-                </div>
-                <div className="text-sm text-muted-foreground">예약 가능 시간</div>
-              </div>
-            ) : (
-              <div className="bg-destructive/10 rounded-lg p-3 text-center">
-                <AlertCircle className="h-5 w-5 text-destructive mx-auto mb-1" />
-                <div className="text-sm text-destructive">현재 퀸 예약 불가</div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            {[...Array(3)].map((_, i) => (
+              <Card key={i} className="p-4 animate-pulse">
+                <div className="h-4 bg-muted rounded mb-2"></div>
+                <div className="h-3 bg-muted rounded mb-2 w-3/4"></div>
+                <div className="h-8 bg-muted rounded w-24"></div>
+              </Card>
+            ))}
+          </div>
+        )}
 
-        {/* 오피스 선택 */}
-        <Card className="border-0">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <MapPin className="h-5 w-5 text-accent" />
-              오피스 선택
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                variant={selectedOffice === '판교아지트' ? 'default' : 'outline'}
-                className="h-12"
-                onClick={() => setSelectedOffice('판교아지트')}
+        {/* 스마트 오피스 목록 */}
+        {!isLoading && (
+          <div className="space-y-4">
+            {offices.map((office, index) => (
+              <Card 
+                key={office.id} 
+                className="p-4 hover:shadow-lg transition-all duration-300 animate-fade-in border-l-4 border-l-primary"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                판교아지트
-              </Button>
-              <Button
-                variant={selectedOffice === '여의도오피스' ? 'default' : 'outline'}
-                className="h-12"
-                onClick={() => setSelectedOffice('여의도오피스')}
-              >
-                여의도오피스
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 좌석 선택 */}
-        <Card className="border-0">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-base">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              사용 가능한 좌석
-              <Badge variant="secondary" className="ml-auto">
-                {getAvailableSeats().length}/{officeData[selectedOffice].totalSeats}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {getAvailableSeats().length > 0 ? (
-              <div className="space-y-4">
-                {/* 좌석 맵 */}
-                <div className="bg-muted/20 rounded-lg p-4">
-                  <div className="text-center text-sm text-muted-foreground mb-3">좌석 배치도</div>
-                  <div className="grid grid-cols-5 gap-2 max-w-xs mx-auto">
-                    {Array.from({ length: officeData[selectedOffice].totalSeats }, (_, i) => i + 1).map((seatNum) => {
-                      const isAvailable = getSeatStatus(seatNum);
-                      return (
-                        <div
-                          key={seatNum}
-                          className={`
-                            w-12 h-12 rounded-lg flex items-center justify-center text-sm font-semibold border-2
-                            ${isAvailable 
-                              ? 'bg-green-100 border-green-300 text-green-700' 
-                              : 'bg-red-100 border-red-300 text-red-700'
-                            }
-                          `}
-                        >
-                          {seatNum}
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="flex justify-center gap-4 mt-3 text-xs">
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-green-100 border border-green-300 rounded"></div>
-                      <span>사용가능</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 bg-red-100 border border-red-300 rounded"></div>
-                      <span>사용중</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 퀸 예약 버튼들 */}
                 <div className="space-y-3">
-                  {getAvailableSeats().slice(0, 3).map((seatNum) => (
-                    <Card key={seatNum} className="border border-border/50">
-                      <CardContent className="p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-secondary/10 rounded-full flex items-center justify-center">
-                              <span className="font-bold text-secondary">{seatNum}</span>
-                            </div>
-                            <div>
-                              <h4 className="font-semibold">{seatNum}번 좌석</h4>
-                              <p className="text-sm text-muted-foreground">{selectedOffice}</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="text-green-600 border-green-600">
-                            사용가능
-                          </Badge>
-                        </div>
-
-                        <Button 
-                          className="w-full"
-                          onClick={() => handleQuickBooking(seatNum)}
-                          disabled={!getNextAvailableSlot()}
-                        >
-                          <Zap className="h-4 w-4 mr-2" />
-                          바로 예약하기
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                  
-                  {getAvailableSeats().length > 3 && (
-                    <div className="text-center pt-2">
-                      <Link to="/booking/smart-office">
-                        <Button variant="outline" size="sm">
-                          더 많은 좌석 보기
-                        </Button>
-                      </Link>
+                  {/* 기본 정보 */}
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <h3 className="font-semibold text-lg">{office.name}</h3>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="h-4 w-4" />
+                        {office.building} {office.floor}
+                      </div>
                     </div>
+                    <Badge className={office.status === 'available' ? 'bg-success/10 text-success border-success/20' : 'bg-destructive/10 text-destructive border-destructive/20'}>
+                      {office.status === 'available' ? '이용 가능' : '만석'}
+                    </Badge>
+                  </div>
+
+                  {/* 현재 이용률 */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">현재 이용률</span>
+                      <span className={getOccupancyColor(office.occupancy, office.maxCapacity)}>
+                        {office.occupancy}/{office.maxCapacity}명
+                      </span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-2">
+                      <div 
+                        className="bg-primary rounded-full h-2 transition-all duration-300"
+                        style={{ width: `${(office.occupancy / office.maxCapacity) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* 특징 */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {office.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center gap-1 text-xs text-muted-foreground">
+                        {getFeatureIcon(feature)}
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* 이용 버튼 */}
+                  {office.status === 'available' ? (
+                    <Button 
+                      onClick={() => useOffice(office)} 
+                      className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+                    >
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      즉시 이용하기
+                    </Button>
+                  ) : (
+                    <Button variant="outline" disabled className="w-full">
+                      현재 만석입니다
+                    </Button>
                   )}
                 </div>
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">현재 {selectedOffice}에서 사용 가능한 좌석이 없습니다</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              </Card>
+            ))}
+          </div>
+        )}
 
-        {/* 하단 안내 */}
-        <Card className="border-0 bg-muted/30">
-          <CardContent className="p-4 text-center space-y-2">
-            <div className="text-sm font-medium">💡 퀸 예약 안내</div>
+        {/* 전체 스마트 오피스 보기 */}
+        <div className="mt-6">
+          <Link to="/booking/smart-office">
+            <Button variant="outline" className="w-full">
+              전체 스마트 오피스 보기
+            </Button>
+          </Link>
+        </div>
+
+        {/* 이용 안내 */}
+        <Card className="mt-6 bg-muted/30">
+          <div className="p-4 text-center space-y-2">
+            <div className="text-sm font-medium">💡 즉시예약 안내</div>
             <div className="text-xs text-muted-foreground space-y-1">
-              <div>• 클릭 한 번으로 1시간 즉시 예약</div>
-              <div>• 현재 시간 기준 다음 시간대부터 예약</div>
-              <div>• 추가 시간이 필요하면 현장에서 연장 가능</div>
+              <div>• 클릭 한 번으로 바로 이용 시작</div>
+              <div>• 실시간 이용률 확인 가능</div>
+              <div>• 다양한 편의시설 제공</div>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>

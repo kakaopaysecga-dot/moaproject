@@ -45,8 +45,8 @@ export default function Home() {
       {/* 기존 서비스 카드 */}
       <ServiceCards />
       
-      {/* 최근 활동 */}
-      <RecentActivity />
+      {/* 최근 활동 - 관리자만 */}
+      {user.isAdmin && <RecentActivity />}
       
       <TemperatureControl />
       
