@@ -107,6 +107,13 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
+              alt="카카오페이증권" 
+              className="h-12 w-auto"
+            />
+          </div>
           <CardTitle className="text-2xl">회원가입</CardTitle>
           <CardDescription>
             카카오페이증권 계정으로 가입하세요

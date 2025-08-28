@@ -33,8 +33,12 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-primary-foreground font-bold text-2xl">M</span>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
+              alt="카카오페이증권" 
+              className="h-16 w-auto"
+            />
           </div>
           <CardTitle className="text-2xl">MOA 로그인</CardTitle>
           <CardDescription>

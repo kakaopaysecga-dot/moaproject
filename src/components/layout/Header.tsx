@@ -16,9 +16,11 @@ export const Header: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-lg">M</span>
-            </div>
+            <img 
+              src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
+              alt="카카오페이증권" 
+              className="h-8 w-auto"
+            />
             <span className="font-bold text-xl text-foreground">MOA</span>
           </Link>
 
