@@ -6,7 +6,6 @@ import { WelcomeSection } from '@/components/home/WelcomeSection';
 import { ServiceCards } from '@/components/home/ServiceCards';
 import { TemperatureControl } from '@/components/home/TemperatureControl';
 import { AdminPanel } from '@/components/home/AdminPanel';
-import { AIInsights } from '@/components/home/AIInsights';
 import { QuickActions } from '@/components/home/QuickActions';
 import { RecentActivity } from '@/components/home/RecentActivity';
 
@@ -38,9 +37,6 @@ export default function Home() {
       
       {/* AI-powered Quick Actions */}
       <QuickActions />
-      
-      {/* AI Insights Dashboard */}
-      <AIInsights />
       
       {/* Traditional Service Cards */}
       <ServiceCards />
