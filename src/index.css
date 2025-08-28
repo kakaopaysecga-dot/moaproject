@@ -19,20 +19,26 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 217 25% 15%;
 
-    /* Modern corporate primary - teal blue */
-    --primary: 200 95% 45%;
-    --primary-foreground: 0 0% 100%;
+    /* Kakao Pay Securities Brand Colors */
+    --primary: 55 100% 50%; /* Kakao Yellow */
+    --primary-foreground: 217 25% 15%;
 
-    /* Elegant secondary */
+    /* Professional secondary */
     --secondary: 210 25% 95%;
     --secondary-foreground: 217 25% 15%;
 
     --muted: 210 15% 96%;
     --muted-foreground: 217 12% 45%;
 
-    /* Professional accent - darker teal */
-    --accent: 195 85% 40%;
+    /* Kakao accent colors */
+    --accent: 45 100% 45%; /* Darker Kakao Yellow */
     --accent-foreground: 0 0% 100%;
+
+    /* Kakao brand support colors */
+    --kakao-yellow: 55 100% 50%;
+    --kakao-dark: 217 25% 15%;
+    --kakao-gray: 210 15% 50%;
+    --kakao-light: 55 100% 95%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -57,11 +63,12 @@ All colors MUST be HSL.
     --corporate-gray: 217 12% 45%;
     --corporate-gray-light: 217 8% 85%;
 
-    /* Modern professional gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(200 95% 45%), hsl(195 85% 40%));
-    --gradient-accent: linear-gradient(135deg, hsl(195 85% 40%), hsl(200 95% 45%));
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 20% 99%));
-    --gradient-subtle: linear-gradient(180deg, hsl(210 20% 98%), hsl(210 25% 96%));
+    /* Kakao Pay Securities gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(55 100% 50%), hsl(45 100% 45%));
+    --gradient-accent: linear-gradient(135deg, hsl(45 100% 45%), hsl(55 100% 50%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(55 100% 98%));
+    --gradient-subtle: linear-gradient(180deg, hsl(55 100% 99%), hsl(55 50% 96%));
+    --gradient-hero: linear-gradient(135deg, hsl(55 100% 50%), hsl(45 95% 55%), hsl(35 90% 60%));
 
     /* Shadows */
     --shadow-soft: 0 2px 8px -2px hsl(217 25% 15% / 0.1);
