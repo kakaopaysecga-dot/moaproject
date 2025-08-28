@@ -34,18 +34,17 @@ export default function Login() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-6">
           <div className="flex flex-col items-center space-y-4">
-            <div className="flex items-center space-x-4">
-              <img 
-                src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
-                alt="카카오페이증권" 
-                className="h-12 w-auto"
-              />
-              <div className="h-8 w-px bg-border"></div>
-              <span className="font-bold text-3xl text-primary tracking-tight">MOA</span>
+            <img 
+              src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
+              alt="카카오페이증권" 
+              className="h-8 w-auto"
+            />
+            <div className="text-center">
+              <CardTitle className="text-3xl font-bold text-primary">MOA</CardTitle>
+              <CardDescription className="text-muted-foreground mt-2">
+                카카오페이증권 총무 포털
+              </CardDescription>
             </div>
-            <CardDescription className="text-muted-foreground">
-              카카오페이증권 업무 관리 시스템
-            </CardDescription>
           </div>
         </CardHeader>
         
