@@ -19,111 +19,111 @@ interface Person {
 const mockPeople: Person[] = [
   {
     id: '1',
-    name: '김영수',
-    dept: '기술본부',
-    currentLocation: 'B동 201호',
-    currentActivity: '개발팀 회의',
+    name: '김민석',
+    dept: '총무팀',
+    currentLocation: '산토리니회의실',
+    currentActivity: '개발미팅중 (MOA 앱 개발 논의)',
     availableSlots: ['14:00-15:00', '16:30-17:30'],
     status: 'meeting'
   },
   {
     id: '2',
-    name: '박지은',
-    dept: '마케팅팀',
-    currentLocation: '자리에 없음',
-    currentActivity: '외부미팅',
+    name: '박서영',
+    dept: '디자인팀',
+    currentLocation: '판교아지트 크리에이티브 존',
+    currentActivity: 'UI/UX 디자인 작업중',
     availableSlots: ['15:00-16:00', '17:00-18:00'],
-    status: 'away'
+    status: 'available'
   },
   {
     id: '3',
-    name: '이민호',
+    name: '이준호',
     dept: '기획팀',
-    currentLocation: 'A동 301호',
-    currentActivity: '업무 중',
+    currentLocation: '여의도오피스 3층',
+    currentActivity: '서비스 기획 회의',
     availableSlots: ['13:00-14:00', '15:30-16:30'],
-    status: 'available'
+    status: 'meeting'
   },
   {
     id: '4',
     name: '최수진',
     dept: '인사팀',
-    currentLocation: 'C동 102호',
-    currentActivity: '면접 진행',
+    currentLocation: '판교아지트 2층',
+    currentActivity: '신입사원 면접 진행',
     availableSlots: ['11:00-12:00'],
     status: 'busy'
   },
   {
     id: '5',
-    name: '정태호',
+    name: '정민우',
     dept: '재무팀',
-    currentLocation: 'A동 205호',
-    currentActivity: '결산 업무',
+    currentLocation: '여의도오피스 1층',
+    currentActivity: '월말 정산 업무',
     availableSlots: ['16:00-17:00', '17:30-18:30'],
     status: 'busy'
   },
   {
     id: '6',
-    name: '한미라',
-    dept: '법무팀',
-    currentLocation: 'B동 305호',
-    currentActivity: '계약서 검토',
+    name: '한예림',
+    dept: '마케팅팀',
+    currentLocation: '팔로알토 마케팅 스튜디오',
+    currentActivity: '콘텐츠 제작 회의',
     availableSlots: ['10:00-11:00', '14:30-15:30'],
     status: 'available'
   },
   {
     id: '7',
-    name: '송준혁',
+    name: '송재혁',
     dept: '영업팀',
-    currentLocation: '외부 미팅',
-    currentActivity: '고객사 방문',
+    currentLocation: '외부 고객사',
+    currentActivity: '대기업 클라이언트 미팅',
     availableSlots: [],
     status: 'away'
   },
   {
     id: '8',
-    name: '윤서연',
-    dept: '디자인팀',
-    currentLocation: 'D동 401호',
-    currentActivity: 'UI/UX 디자인',
+    name: '윤지혜',
+    dept: '개발팀',
+    currentLocation: '판교아지트 개발실',
+    currentActivity: '백엔드 API 개발중',
     availableSlots: ['13:30-14:30', '15:00-16:00'],
     status: 'available'
   },
   {
     id: '9',
-    name: '임도현',
-    dept: '기술본부',
-    currentLocation: 'B동 301호',
-    currentActivity: '코드 리뷰',
+    name: '임도영',
+    dept: '개발팀',
+    currentLocation: '몰디브회의실',
+    currentActivity: '코드 리뷰 및 테스트',
     availableSlots: ['11:30-12:30', '16:00-17:00'],
-    status: 'available'
+    status: 'meeting'
   },
   {
     id: '10',
-    name: '조은아',
-    dept: '품질관리팀',
-    currentLocation: 'C동 201호',
-    currentActivity: '테스트 진행',
+    name: '조민아',
+    dept: 'QA팀',
+    currentLocation: '여의도오피스 테스트실',
+    currentActivity: '앱 품질 테스트 진행',
     availableSlots: ['10:30-11:30'],
     status: 'busy'
   },
   {
     id: '11',
-    name: '강민석',
+    name: '강현수',
     dept: '보안팀',
-    currentLocation: 'A동 101호',
-    currentActivity: '보안 점검',
+    currentLocation: '판교아지트 보안센터',
+    currentActivity: '시스템 보안 점검',
     availableSlots: ['14:00-15:00', '17:00-18:00'],
     status: 'available'
   },
   {
     id: '12',
-    name: '이상헌',
+    name: '이상진',
     dept: '운영팀',
-    currentLocation: '휴가',
-    currentActivity: '연차 사용',
-    availableSlots: [],
-    status: 'away'
+    currentLocation: '재택근무',
+    currentActivity: '서버 모니터링',
+    availableSlots: ['09:00-10:00', '16:00-17:00'],
+    status: 'available'
   }
 ];
 
