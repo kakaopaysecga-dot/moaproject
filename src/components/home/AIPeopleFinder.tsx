@@ -8,6 +8,7 @@ import { Search, Users, Calendar, MapPin, Clock, MessageSquare } from 'lucide-re
 interface Person {
   id: string;
   name: string;
+  englishName: string;
   dept: string;
   currentLocation?: string;
   currentActivity?: string;
@@ -20,8 +21,9 @@ const mockPeople: Person[] = [
   {
     id: '1',
     name: '김민석',
+    englishName: 'Kim Minseok',
     dept: '총무팀',
-    currentLocation: '산토리니회의실',
+    currentLocation: '판교오피스 산토리니회의실',
     currentActivity: '개발미팅중 (MOA 앱 개발 논의)',
     availableSlots: ['14:00-15:00', '16:30-17:30'],
     status: 'meeting'
@@ -29,8 +31,9 @@ const mockPeople: Person[] = [
   {
     id: '2',
     name: '박서영',
+    englishName: 'Park Seoyoung',
     dept: '디자인팀',
-    currentLocation: '판교아지트 크리에이티브 존',
+    currentLocation: '판교오피스 크리에이티브존',
     currentActivity: 'UI/UX 디자인 작업중',
     availableSlots: ['15:00-16:00', '17:00-18:00'],
     status: 'available'
@@ -38,8 +41,9 @@ const mockPeople: Person[] = [
   {
     id: '3',
     name: '이준호',
+    englishName: 'Lee Junho',
     dept: '기획팀',
-    currentLocation: '여의도오피스 3층',
+    currentLocation: '여의도오피스 3층 기획실',
     currentActivity: '서비스 기획 회의',
     availableSlots: ['13:00-14:00', '15:30-16:30'],
     status: 'meeting'
@@ -47,8 +51,9 @@ const mockPeople: Person[] = [
   {
     id: '4',
     name: '최수진',
+    englishName: 'Choi Sujin',
     dept: '인사팀',
-    currentLocation: '판교아지트 2층',
+    currentLocation: '판교오피스 2층 면접실',
     currentActivity: '신입사원 면접 진행',
     availableSlots: ['11:00-12:00'],
     status: 'busy'
@@ -56,8 +61,9 @@ const mockPeople: Person[] = [
   {
     id: '5',
     name: '정민우',
+    englishName: 'Jung Minwoo',
     dept: '재무팀',
-    currentLocation: '여의도오피스 1층',
+    currentLocation: '여의도오피스 1층 재무실',
     currentActivity: '월말 정산 업무',
     availableSlots: ['16:00-17:00', '17:30-18:30'],
     status: 'busy'
@@ -65,8 +71,9 @@ const mockPeople: Person[] = [
   {
     id: '6',
     name: '한예림',
+    englishName: 'Han Yerim',
     dept: '마케팅팀',
-    currentLocation: '팔로알토 마케팅 스튜디오',
+    currentLocation: '판교오피스 팔로알토 스튜디오',
     currentActivity: '콘텐츠 제작 회의',
     availableSlots: ['10:00-11:00', '14:30-15:30'],
     status: 'available'
@@ -74,8 +81,9 @@ const mockPeople: Person[] = [
   {
     id: '7',
     name: '송재혁',
+    englishName: 'Song Jaehyuk',
     dept: '영업팀',
-    currentLocation: '외부 고객사',
+    currentLocation: '외부 고객사 (강남역)',
     currentActivity: '대기업 클라이언트 미팅',
     availableSlots: [],
     status: 'away'
@@ -83,8 +91,9 @@ const mockPeople: Person[] = [
   {
     id: '8',
     name: '윤지혜',
+    englishName: 'Yoon Jihye',
     dept: '개발팀',
-    currentLocation: '판교아지트 개발실',
+    currentLocation: '판교오피스 개발실',
     currentActivity: '백엔드 API 개발중',
     availableSlots: ['13:30-14:30', '15:00-16:00'],
     status: 'available'
@@ -92,8 +101,9 @@ const mockPeople: Person[] = [
   {
     id: '9',
     name: '임도영',
+    englishName: 'Lim Doyoung',
     dept: '개발팀',
-    currentLocation: '몰디브회의실',
+    currentLocation: '판교오피스 몰디브회의실',
     currentActivity: '코드 리뷰 및 테스트',
     availableSlots: ['11:30-12:30', '16:00-17:00'],
     status: 'meeting'
@@ -101,6 +111,7 @@ const mockPeople: Person[] = [
   {
     id: '10',
     name: '조민아',
+    englishName: 'Jo Mina',
     dept: 'QA팀',
     currentLocation: '여의도오피스 테스트실',
     currentActivity: '앱 품질 테스트 진행',
@@ -110,8 +121,9 @@ const mockPeople: Person[] = [
   {
     id: '11',
     name: '강현수',
+    englishName: 'Kang Hyunsoo',
     dept: '보안팀',
-    currentLocation: '판교아지트 보안센터',
+    currentLocation: '판교오피스 보안센터',
     currentActivity: '시스템 보안 점검',
     availableSlots: ['14:00-15:00', '17:00-18:00'],
     status: 'available'
@@ -119,8 +131,9 @@ const mockPeople: Person[] = [
   {
     id: '12',
     name: '이상진',
+    englishName: 'Lee Sangjin',
     dept: '운영팀',
-    currentLocation: '재택근무',
+    currentLocation: '재택근무 (성남시)',
     currentActivity: '서버 모니터링',
     availableSlots: ['09:00-10:00', '16:00-17:00'],
     status: 'available'
