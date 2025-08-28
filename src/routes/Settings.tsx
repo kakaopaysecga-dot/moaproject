@@ -24,6 +24,11 @@ import {
 export default function Settings() {
   const { user, updateProfile, isLoading, error, clearError } = useAuthStore();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
+  const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+  
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
     englishName: user?.englishName || '',
@@ -33,6 +38,21 @@ export default function Settings() {
     phone: user?.phone || '',
     car: user?.car || ''
   });
+  
+  const [notificationSettings, setNotificationSettings] = useState({
+    pushNotifications: true,
+    emailNotifications: true,
+    smsNotifications: false,
+    bookingReminders: true,
+    requestUpdates: true
+  });
+  
+  const [securityData, setSecurityData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  
   const [isUpdating, setIsUpdating] = useState(false);
 
   if (!user) return null;
@@ -84,6 +104,21 @@ export default function Settings() {
     setIsProfileModalOpen(true);
   };
 
+  const handleNotificationSave = () => {
+    // Save notification settings
+    setIsNotificationModalOpen(false);
+  };
+
+  const handleSecuritySave = async () => {
+    if (securityData.newPassword !== securityData.confirmPassword) {
+      alert('새 비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    // Save security settings
+    setIsSecurityModalOpen(false);
+    setSecurityData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  };
+
   const settingsGroups = [
     {
       title: '계정 정보',
@@ -98,7 +133,7 @@ export default function Settings() {
           icon: Shield, 
           label: '보안 설정', 
           description: '비밀번호 변경 및 보안 관리',
-          action: () => console.log('보안 설정')
+          action: () => setIsSecurityModalOpen(true)
         },
       ]
     },
@@ -109,13 +144,13 @@ export default function Settings() {
           icon: Bell, 
           label: '알림 설정', 
           description: '푸시 알림 및 이메일 알림 관리',
-          action: () => console.log('알림 설정')
+          action: () => setIsNotificationModalOpen(true)
         },
         { 
           icon: Palette, 
           label: '테마 설정', 
           description: '다크 모드 및 테마 변경',
-          action: () => console.log('테마 설정')
+          action: () => setIsThemeModalOpen(true)
         },
       ]
     },
@@ -126,7 +161,7 @@ export default function Settings() {
           icon: HelpCircle, 
           label: '도움말', 
           description: '자주 묻는 질문 및 사용법',
-          action: () => console.log('도움말')
+          action: () => setIsHelpModalOpen(true)
         },
       ]
     }
@@ -349,6 +384,218 @@ export default function Settings() {
               {isUpdating ? '저장 중...' : '저장'}
             </Button>
           </div>
+        </div>
+      </Modal>
+
+      {/* 알림 설정 모달 */}
+      <Modal
+        isOpen={isNotificationModalOpen}
+        onClose={() => setIsNotificationModalOpen(false)}
+        title="알림 설정"
+      >
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
+              <div>
+                <h3 className="font-medium">푸시 알림</h3>
+                <p className="text-sm text-muted-foreground">앱 알림 받기</p>
+              </div>
+              <input 
+                type="checkbox" 
+                checked={notificationSettings.pushNotifications}
+                onChange={(e) => setNotificationSettings(prev => ({...prev, pushNotifications: e.target.checked}))}
+                className="w-4 h-4"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
+              <div>
+                <h3 className="font-medium">이메일 알림</h3>
+                <p className="text-sm text-muted-foreground">이메일로 알림 받기</p>
+              </div>
+              <input 
+                type="checkbox" 
+                checked={notificationSettings.emailNotifications}
+                onChange={(e) => setNotificationSettings(prev => ({...prev, emailNotifications: e.target.checked}))}
+                className="w-4 h-4"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
+              <div>
+                <h3 className="font-medium">예약 알림</h3>
+                <p className="text-sm text-muted-foreground">회의실/오피스 예약 알림</p>
+              </div>
+              <input 
+                type="checkbox" 
+                checked={notificationSettings.bookingReminders}
+                onChange={(e) => setNotificationSettings(prev => ({...prev, bookingReminders: e.target.checked}))}
+                className="w-4 h-4"
+              />
+            </div>
+          </div>
+          
+          <div className="flex space-x-3">
+            <Button 
+              variant="outline" 
+              onClick={() => setIsNotificationModalOpen(false)}
+              className="flex-1"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={handleNotificationSave}
+              className="flex-1"
+            >
+              저장
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 보안 설정 모달 */}
+      <Modal
+        isOpen={isSecurityModalOpen}
+        onClose={() => setIsSecurityModalOpen(false)}
+        title="보안 설정"
+      >
+        <div className="space-y-4">
+          <FormField label="현재 비밀번호" required>
+            <Input
+              type="password"
+              value={securityData.currentPassword}
+              onChange={(e) => setSecurityData(prev => ({...prev, currentPassword: e.target.value}))}
+              placeholder="현재 비밀번호"
+            />
+          </FormField>
+          
+          <FormField label="새 비밀번호" required>
+            <Input
+              type="password"
+              value={securityData.newPassword}
+              onChange={(e) => setSecurityData(prev => ({...prev, newPassword: e.target.value}))}
+              placeholder="새 비밀번호"
+            />
+          </FormField>
+          
+          <FormField label="새 비밀번호 확인" required>
+            <Input
+              type="password"
+              value={securityData.confirmPassword}
+              onChange={(e) => setSecurityData(prev => ({...prev, confirmPassword: e.target.value}))}
+              placeholder="새 비밀번호 확인"
+            />
+          </FormField>
+          
+          <div className="flex space-x-3 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setIsSecurityModalOpen(false)}
+              className="flex-1"
+            >
+              취소
+            </Button>
+            <Button 
+              onClick={handleSecuritySave}
+              className="flex-1"
+            >
+              변경
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 테마 설정 모달 */}
+      <Modal
+        isOpen={isThemeModalOpen}
+        onClose={() => setIsThemeModalOpen(false)}
+        title="테마 설정"
+      >
+        <div className="space-y-4">
+          <div className="space-y-3">
+            <button className="w-full p-4 text-left bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">라이트 모드</h3>
+                  <p className="text-sm text-muted-foreground">밝은 테마</p>
+                </div>
+                <div className="w-4 h-4 rounded-full bg-primary"></div>
+              </div>
+            </button>
+            
+            <button className="w-full p-4 text-left bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">다크 모드</h3>
+                  <p className="text-sm text-muted-foreground">어두운 테마</p>
+                </div>
+                <div className="w-4 h-4 rounded-full border-2 border-muted"></div>
+              </div>
+            </button>
+            
+            <button className="w-full p-4 text-left bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">시스템 설정</h3>
+                  <p className="text-sm text-muted-foreground">시스템 설정에 따라</p>
+                </div>
+                <div className="w-4 h-4 rounded-full border-2 border-muted"></div>
+              </div>
+            </button>
+          </div>
+          
+          <Button 
+            onClick={() => setIsThemeModalOpen(false)}
+            className="w-full"
+          >
+            확인
+          </Button>
+        </div>
+      </Modal>
+
+      {/* 도움말 모달 */}
+      <Modal
+        isOpen={isHelpModalOpen}
+        onClose={() => setIsHelpModalOpen(false)}
+        title="도움말"
+      >
+        <div className="space-y-4">
+          <div className="space-y-3">
+            <div className="p-4 bg-muted/30 rounded-lg">
+              <h3 className="font-medium mb-2">회의실 예약</h3>
+              <p className="text-sm text-muted-foreground">
+                홈 화면에서 '회의실 예약'을 선택하여 원하는 날짜와 시간을 예약할 수 있습니다.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-muted/30 rounded-lg">
+              <h3 className="font-medium mb-2">스마트 오피스</h3>
+              <p className="text-sm text-muted-foreground">
+                개인 업무 공간을 예약하여 집중할 수 있는 환경을 제공합니다.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-muted/30 rounded-lg">
+              <h3 className="font-medium mb-2">각종 신청</h3>
+              <p className="text-sm text-muted-foreground">
+                주차권, 명함, 환경개선 등 다양한 신청을 온라인으로 처리할 수 있습니다.
+              </p>
+            </div>
+            
+            <div className="p-4 bg-muted/30 rounded-lg">
+              <h3 className="font-medium mb-2">문의하기</h3>
+              <p className="text-sm text-muted-foreground">
+                추가 문의사항은 총무팀(ext.1234)로 연락해 주세요.
+              </p>
+            </div>
+          </div>
+          
+          <Button 
+            onClick={() => setIsHelpModalOpen(false)}
+            className="w-full"
+          >
+            확인
+          </Button>
         </div>
       </Modal>
 
