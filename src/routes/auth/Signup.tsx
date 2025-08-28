@@ -107,17 +107,15 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
-          <div className="flex flex-col items-center space-y-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-md">
-                <span className="text-primary-foreground text-sm">💬</span>
-              </div>
-              <div className="flex items-baseline space-x-1">
-                <span className="text-primary font-bold text-lg">pay</span>
-                <span className="text-foreground font-medium text-lg">증권</span>
-              </div>
-              <div className="h-6 w-px bg-border"></div>
-              <span className="font-bold text-xl text-primary tracking-tight">MOA</span>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="flex items-center space-x-4">
+              <img 
+                src="/src/assets/kakaopay-logo.png" 
+                alt="카카오페이증권" 
+                className="h-8 w-auto"
+              />
+              <div className="h-8 w-px bg-border"></div>
+              <span className="font-bold text-2xl text-primary tracking-tight">MOA</span>
             </div>
             <CardDescription className="text-muted-foreground">
               카카오페이증권 계정으로 가입하세요
