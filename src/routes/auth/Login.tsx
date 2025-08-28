@@ -38,10 +38,11 @@ export default function Login() {
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-primary-foreground text-xl">💬</span>
               </div>
-              <div className="flex items-baseline space-x-1">
-                <span className="text-primary font-bold text-xl">pay</span>
-                <span className="text-foreground font-medium text-xl">증권</span>
-              </div>
+              <img 
+                src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
+                alt="카카오페이증권" 
+                className="h-6"
+              />
               <div className="h-8 w-px bg-border"></div>
               <span className="font-bold text-2xl text-primary tracking-tight">MOA</span>
             </div>
