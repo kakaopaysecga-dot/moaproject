@@ -16,12 +16,15 @@ export const Header: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <img 
-              src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
-              alt="카카오페이증권" 
-              className="h-8 w-auto"
-            />
-            <span className="font-bold text-xl text-foreground">MOA</span>
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">💬</span>
+              </div>
+              <span className="text-orange-500 font-bold text-lg">pay</span>
+              <span className="text-foreground font-medium text-lg">증권</span>
+            </div>
+            <div className="h-6 w-px bg-border"></div>
+            <span className="font-bold text-xl text-foreground tracking-wide">MOA</span>
           </Link>
 
           {/* User Info & Actions */}
