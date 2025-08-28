@@ -20,17 +20,19 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
         <div className="absolute inset-0 bg-white/10"></div>
       </div>
       
-      <div className="relative z-10">
-        <div className="mx-auto w-20 h-20 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30">
-          <span className="text-white font-bold text-3xl drop-shadow-sm">{userEnglishName?.charAt(0)?.toUpperCase() || '?'}</span>
+      <div className="relative z-10 flex items-center gap-6">
+        <div className="w-16 h-16 bg-accent/90 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg border border-white/20">
+          <span className="text-white font-bold text-2xl drop-shadow-sm">{userEnglishName?.charAt(0)?.toUpperCase() || '?'}</span>
         </div>
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-white drop-shadow-sm">
+        <div className="flex-1 text-left space-y-1">
+          <h1 className="text-xl font-bold text-white drop-shadow-sm">
             안녕하세요, {userEnglishName}님
           </h1>
-          <p className="text-white/80 font-medium">
-            {userDept} · {userBuilding} · {userWorkArea}
-          </p>
+          <div className="space-y-0.5">
+            <p className="text-white/90 text-sm font-medium">팀명: {userDept}</p>
+            <p className="text-white/90 text-sm font-medium">오피스명: {userBuilding}</p>
+            <p className="text-white/90 text-sm font-medium">근무위치: {userWorkArea}</p>
+          </div>
         </div>
       </div>
     </section>
