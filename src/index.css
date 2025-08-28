@@ -19,9 +19,9 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 217 25% 15%;
 
-    /* Kakao Yellow primary */
-    --primary: 50 100% 50%;
-    --primary-foreground: 217 25% 15%;
+    /* Modern corporate primary - teal blue */
+    --primary: 200 95% 45%;
+    --primary-foreground: 0 0% 100%;
 
     /* Elegant secondary */
     --secondary: 210 25% 95%;
@@ -30,16 +30,16 @@ All colors MUST be HSL.
     --muted: 210 15% 96%;
     --muted-foreground: 217 12% 45%;
 
-    /* Kakao accent yellow */
-    --accent: 45 100% 55%;
-    --accent-foreground: 217 25% 15%;
+    /* Professional accent - darker teal */
+    --accent: 195 85% 40%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 210 25% 92%;
     --input: 210 25% 95%;
-    --ring: 50 100% 50%;
+    --ring: 200 95% 45%;
 
     --radius: 1rem;
 
@@ -52,14 +52,14 @@ All colors MUST be HSL.
     --warning-foreground: 217 25% 15%;
 
     /* Modern app specific colors */
-    --corporate-blue: 214 95% 65%;
-    --corporate-blue-light: 214 85% 85%;
+    --corporate-blue: 210 90% 55%;
+    --corporate-blue-light: 210 80% 85%;
     --corporate-gray: 217 12% 45%;
     --corporate-gray-light: 217 8% 85%;
 
-    /* Kakao gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(50 100% 50%), hsl(45 100% 55%));
-    --gradient-accent: linear-gradient(135deg, hsl(45 100% 55%), hsl(50 100% 50%));
+    /* Modern professional gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(200 95% 45%), hsl(195 85% 40%));
+    --gradient-accent: linear-gradient(135deg, hsl(195 85% 40%), hsl(200 95% 45%));
     --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 20% 99%));
     --gradient-subtle: linear-gradient(180deg, hsl(210 20% 98%), hsl(210 25% 96%));
 
@@ -70,12 +70,12 @@ All colors MUST be HSL.
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 217 25% 15%;
-    --sidebar-primary: 50 100% 50%;
-    --sidebar-primary-foreground: 217 25% 15%;
+    --sidebar-primary: 200 95% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 210 30% 96%;
     --sidebar-accent-foreground: 217 25% 15%;
     --sidebar-border: 210 20% 92%;
-    --sidebar-ring: 50 100% 50%;
+    --sidebar-ring: 200 95% 45%;
   }
 
   .dark {
@@ -88,8 +88,8 @@ All colors MUST be HSL.
     --popover: 217 30% 12%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 50 100% 50%;
-    --primary-foreground: 217 35% 8%;
+    --primary: 200 95% 45%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 217 25% 20%;
     --secondary-foreground: 210 40% 98%;
@@ -97,15 +97,15 @@ All colors MUST be HSL.
     --muted: 217 25% 20%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 45 100% 55%;
-    --accent-foreground: 217 35% 8%;
+    --accent: 195 85% 40%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 217 25% 20%;
     --input: 217 25% 20%;
-    --ring: 50 100% 50%;
+    --ring: 200 95% 45%;
 
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
@@ -113,14 +113,14 @@ All colors MUST be HSL.
     --warning: 38 92% 50%;
     --warning-foreground: 217 35% 8%;
 
-    --corporate-blue: 214 95% 65%;
-    --corporate-blue-light: 214 85% 25%;
+    --corporate-blue: 210 90% 55%;
+    --corporate-blue-light: 210 80% 25%;
     --corporate-gray: 215 20% 65%;
     --corporate-gray-light: 217 25% 25%;
 
-    /* Dark mode Kakao gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(50 100% 50%), hsl(45 100% 55%));
-    --gradient-accent: linear-gradient(135deg, hsl(45 100% 55%), hsl(50 100% 50%));
+    /* Dark mode professional gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(200 95% 45%), hsl(195 85% 40%));
+    --gradient-accent: linear-gradient(135deg, hsl(195 85% 40%), hsl(200 95% 45%));
     --gradient-card: linear-gradient(135deg, hsl(217 30% 12%), hsl(217 35% 15%));
     --gradient-subtle: linear-gradient(180deg, hsl(217 35% 8%), hsl(217 30% 10%));
 
@@ -131,12 +131,12 @@ All colors MUST be HSL.
 
     --sidebar-background: 217 35% 8%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 50 100% 50%;
-    --sidebar-primary-foreground: 217 35% 8%;
+    --sidebar-primary: 200 95% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 217 25% 20%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 217 25% 20%;
-    --sidebar-ring: 50 100% 50%;
+    --sidebar-ring: 200 95% 45%;
   }
 }
 
