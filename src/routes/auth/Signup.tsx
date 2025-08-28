@@ -108,21 +108,20 @@ export default function Signup() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
           <div className="flex flex-col items-center space-y-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-lg">💬</span>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-md">
+                <span className="text-primary-foreground text-sm">💬</span>
               </div>
               <div className="flex items-baseline space-x-1">
-                <span className="text-orange-500 font-bold text-xl">pay</span>
-                <span className="text-foreground font-medium text-xl">증권</span>
+                <span className="text-primary font-bold text-lg">pay</span>
+                <span className="text-foreground font-medium text-lg">증권</span>
               </div>
+              <div className="h-6 w-px bg-border"></div>
+              <span className="font-bold text-xl text-primary tracking-tight">MOA</span>
             </div>
-            <div className="text-center">
-              <CardTitle className="text-2xl font-bold text-primary">회원가입</CardTitle>
-              <CardDescription className="text-muted-foreground mt-1">
-                카카오페이증권 계정으로 가입하세요
-              </CardDescription>
-            </div>
+            <CardDescription className="text-muted-foreground">
+              카카오페이증권 계정으로 가입하세요
+            </CardDescription>
           </div>
         </CardHeader>
         

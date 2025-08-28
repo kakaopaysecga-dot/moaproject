@@ -15,16 +15,8 @@ export const Header: React.FC = () => {
       <div className="px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">💬</span>
-              </div>
-              <span className="text-orange-500 font-bold text-lg">pay</span>
-              <span className="text-foreground font-medium text-lg">증권</span>
-            </div>
-            <div className="h-6 w-px bg-border"></div>
-            <span className="font-bold text-xl text-foreground tracking-wide">MOA</span>
+          <Link to="/" className="flex items-center">
+            <span className="font-bold text-2xl text-primary tracking-tight">MOA</span>
           </Link>
 
           {/* User Info & Actions */}
