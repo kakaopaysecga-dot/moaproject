@@ -44,7 +44,7 @@ export const QuickActions: React.FC = () => {
   return (
     <section className="space-y-4 animate-fade-in">
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-foreground">빠른 실행</h2>
+        <h2 className="text-lg font-semibold text-foreground">퀵 실행</h2>
         <Zap className="h-4 w-4 text-primary animate-bounce-subtle" />
       </div>
       

@@ -8,6 +8,7 @@ import { TemperatureControl } from '@/components/home/TemperatureControl';
 import { AdminPanel } from '@/components/home/AdminPanel';
 import { QuickActions } from '@/components/home/QuickActions';
 import { RecentActivity } from '@/components/home/RecentActivity';
+import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
 
 export default function Home() {
   const { user } = useAuthStore();
@@ -35,13 +36,16 @@ export default function Home() {
         userWorkArea={user.workArea}
       />
       
-      {/* AI-powered Quick Actions */}
+      {/* 퀵 실행 */}
       <QuickActions />
       
-      {/* Traditional Service Cards */}
+      {/* AI 사람찾기 서비스 */}
+      <AIPeopleFinder />
+      
+      {/* 기존 서비스 카드 */}
       <ServiceCards />
       
-      {/* Recent Activity Feed */}
+      {/* 최근 활동 */}
       <RecentActivity />
       
       <TemperatureControl />

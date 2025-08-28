@@ -69,7 +69,7 @@ export const ServiceCards: React.FC = () => {
     <section className="space-y-5">
       <h2 className="text-xl font-bold px-1 flex items-center">
         <span className="w-1 h-6 bg-gradient-to-b from-primary to-accent rounded-full mr-3"></span>
-        빠른 서비스
+        주요 서비스
       </h2>
       <div className="grid grid-cols-2 gap-4">
         {serviceCards.map((service) => (
