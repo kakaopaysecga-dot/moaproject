@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, 
@@ -8,15 +8,11 @@ import {
   Heart, 
   Thermometer, 
   Camera,
-  Settings,
-  User,
-  ChevronDown
+  Settings
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/FormField';
 import { useAuthStore } from '@/store/authStore';
-import { supabase } from '@/integrations/supabase/client';
 
 const serviceCards = [
   {
@@ -63,50 +59,8 @@ const serviceCards = [
   }
 ];
 
-interface WorkArea {
-  id: string;
-  name: string;
-  building: string;
-}
-
 export default function Home() {
-  const { user, profile } = useAuthStore();
-  const [workAreas, setWorkAreas] = useState<WorkArea[]>([]);
-  const [selectedTeam, setSelectedTeam] = useState('');
-  const [selectedOffice, setSelectedOffice] = useState('');
-  const [selectedWorkArea, setSelectedWorkArea] = useState('');
-
-  // Initialize selections with user's profile data
-  useEffect(() => {
-    if (profile) {
-      setSelectedTeam(profile.dept || '');
-      setSelectedOffice(profile.building || '');
-      setSelectedWorkArea(profile.work_area || '');
-    }
-  }, [profile]);
-
-  // Fetch work areas when office changes
-  useEffect(() => {
-    const fetchWorkAreas = async () => {
-      if (!selectedOffice) return;
-      
-      try {
-        const { data } = await supabase
-          .from('work_areas')
-          .select('*')
-          .eq('building', selectedOffice)
-          .order('name');
-        
-        if (data) {
-          setWorkAreas(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch work areas:', error);
-      }
-    };
-
-    fetchWorkAreas();
-  }, [selectedOffice]);
+  const { user } = useAuthStore();
 
   if (!user) {
     return (
@@ -137,79 +91,11 @@ export default function Home() {
           </div>
           <div className="space-y-2">
             <h1 className="text-2xl font-bold text-white drop-shadow-sm">
-              안녕하세요, {profile?.name || user.email}님
+              안녕하세요, {user.name}님
             </h1>
-            <div className="flex items-center space-x-2">
-              <p className="text-white/80 font-medium">
-                {profile?.dept || '미설정'} · {profile?.building || '미설정'}
-              </p>
-              <Link to="/profile" className="p-1 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
-                <User className="h-4 w-4 text-white" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Selectors */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-bold px-1 flex items-center">
-          <span className="w-1 h-6 bg-gradient-to-b from-primary to-accent rounded-full mr-3"></span>
-          빠른 선택
-        </h2>
-        <div className="grid grid-cols-1 gap-3">
-          <div className="grid grid-cols-3 gap-2">
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-muted-foreground">팀</label>
-              <Select
-                value={selectedTeam}
-                onChange={(e) => setSelectedTeam(e.target.value)}
-                className="w-full text-sm"
-              >
-                <option value="">팀 선택</option>
-                <option value="개발팀">개발팀</option>
-                <option value="기획팀">기획팀</option>
-                <option value="디자인팀">디자인팀</option>
-                <option value="마케팅팀">마케팅팀</option>
-                <option value="영업팀">영업팀</option>
-                <option value="총무팀">총무팀</option>
-                <option value="인사팀">인사팀</option>
-                <option value="경영팀">경영팀</option>
-              </Select>
-            </div>
-            
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-muted-foreground">오피스</label>
-              <Select
-                value={selectedOffice}
-                onChange={(e) => {
-                  setSelectedOffice(e.target.value);
-                  setSelectedWorkArea(''); // Reset work area when office changes
-                }}
-                className="w-full text-sm"
-              >
-                <option value="">오피스 선택</option>
-                <option value="판교오피스">판교오피스</option>
-                <option value="여의도오피스">여의도오피스</option>
-              </Select>
-            </div>
-            
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-muted-foreground">근무구역</label>
-              <Select
-                value={selectedWorkArea}
-                onChange={(e) => setSelectedWorkArea(e.target.value)}
-                disabled={!selectedOffice || workAreas.length === 0}
-                className="w-full text-sm"
-              >
-                <option value="">구역 선택</option>
-                {workAreas.map((area) => (
-                  <option key={area.id} value={area.name}>
-                    {area.name}
-                  </option>
-                ))}
-              </Select>
-            </div>
+            <p className="text-white/80 font-medium">
+              {user.dept} · {user.building}
+            </p>
           </div>
         </div>
       </section>
@@ -281,7 +167,7 @@ export default function Home() {
       </section>
 
       {/* Admin Quick Access */}
-      {profile?.id && (
+      {user.isAdmin && (
         <section className="space-y-4">
           <h2 className="text-xl font-bold px-1 flex items-center">
             <span className="w-1 h-6 bg-gradient-to-b from-destructive to-primary rounded-full mr-3"></span>

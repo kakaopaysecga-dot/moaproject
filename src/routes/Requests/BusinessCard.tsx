@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { CreditCard, ChevronLeft } from 'lucide-react';
 
 export default function BusinessCard() {
-  const { user, profile } = useAuthStore();
+  const { user } = useAuthStore();
   const { createBusinessCardRequest } = useRequestsStore();
   const { toast } = useToast();
   
@@ -27,10 +27,10 @@ export default function BusinessCard() {
     memo: string;
   }>({
     englishName: '',
-    koreanName: profile?.name || '',
+    koreanName: user?.name || '',
     position: '',
     certification: '',
-    building: (profile?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
+    building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
     design: 'character',
     quantity: '100',
     memo: ''
@@ -57,11 +57,11 @@ export default function BusinessCard() {
     createBusinessCardRequest({
       englishName: formData.englishName,
       koreanName: formData.koreanName,
-      dept: profile?.dept || '',
+      dept: user.dept,
       position: formData.position,
       certification: formData.certification,
-      phone: profile?.phone || '',
-      email: user?.email || '',
+      phone: user.phone,
+      email: user.email,
       building: formData.building as '판교오피스' | '여의도오피스',
       style: formData.design as 'character' | 'normal'
     });
@@ -73,10 +73,10 @@ export default function BusinessCard() {
 
     setFormData({ 
       englishName: '',
-      koreanName: profile?.name || '',
+      koreanName: user?.name || '',
       position: '',
       certification: '',
-      building: (profile?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
+      building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
       design: 'character', 
       quantity: '100', 
       memo: '' 
@@ -154,7 +154,7 @@ export default function BusinessCard() {
                     <Label htmlFor="dept" className="text-sm font-semibold text-foreground">부서</Label>
                     <Input 
                       id="dept" 
-                      value={profile?.dept || ''} 
+                      value={user.dept} 
                       disabled 
                       className="bg-muted/50 h-12 text-base font-medium"
                     />
@@ -186,7 +186,7 @@ export default function BusinessCard() {
                     <Label htmlFor="phone" className="text-sm font-semibold text-foreground">연락처</Label>
                     <Input 
                       id="phone" 
-                      value={profile?.phone || ''} 
+                      value={user.phone} 
                       disabled 
                       className="bg-muted/50 h-12 text-base font-medium"
                     />
@@ -298,14 +298,14 @@ export default function BusinessCard() {
                     <div className="space-y-3">
                       <div className="space-y-1">
                         <h3 className="text-lg font-bold text-black leading-tight">
-                          {formData.koreanName || profile?.name} {formData.englishName && `${formData.englishName}`}
+                          {formData.koreanName || user.name} {formData.englishName && `${formData.englishName}`}
                         </h3>
                       </div>
                       
                       <div className="text-sm text-black space-y-1">
                         <div>
                           {formData.position && `${formData.position} `}
-                          {profile?.dept}
+                          {user.dept}
                         </div>
                         {formData.certification && (
                           <div>{formData.certification}</div>
@@ -317,8 +317,8 @@ export default function BusinessCard() {
                     <div className="space-y-2">
                       {/* 연락처 */}
                       <div className="space-y-1">
-                        <div className="text-sm text-black">{profile?.phone || ''}</div>
-                        <div className="text-sm text-black">{user?.email || ''}</div>
+                        <div className="text-sm text-black">{user.phone}</div>
+                        <div className="text-sm text-black">{user.email}</div>
                       </div>
                       
                       {/* 노란색 구분선 */}
@@ -361,14 +361,14 @@ export default function BusinessCard() {
                     <div className="space-y-3">
                       <div className="space-y-1">
                         <h3 className="text-lg font-bold text-black leading-tight">
-                          {formData.koreanName || profile?.name} {formData.englishName && `${formData.englishName}`}
+                          {formData.koreanName || user.name} {formData.englishName && `${formData.englishName}`}
                         </h3>
                       </div>
                       
                       <div className="text-sm text-black space-y-1">
                         <div>
                           {formData.position && `${formData.position} `}
-                          {profile?.dept}
+                          {user.dept}
                         </div>
                         {formData.certification && (
                           <div>{formData.certification}</div>
@@ -380,8 +380,8 @@ export default function BusinessCard() {
                     <div className="space-y-2">
                       {/* 연락처 */}
                       <div className="space-y-1">
-                        <div className="text-sm text-black">{profile?.phone || ''}</div>
-                        <div className="text-sm text-black">{user?.email || ''}</div>
+                        <div className="text-sm text-black">{user.phone}</div>
+                        <div className="text-sm text-black">{user.email}</div>
                       </div>
                       
                       {/* 캐릭터용 구분선 (그라데이션) */}

@@ -7,7 +7,7 @@ import { FormField, Input } from '@/components/ui/FormField';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn, isLoading, error, clearError } = useAuthStore();
+  const { login, isLoading, error, clearError } = useAuthStore();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -21,9 +21,8 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
-      await signIn(formData.email, formData.password);
+      await login(formData.email, formData.password);
       navigate('/');
     } catch (error) {
       // Error handled by store
@@ -31,53 +30,49 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">로그인</CardTitle>
+          <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+            <span className="text-primary-foreground font-bold text-2xl">M</span>
+          </div>
+          <CardTitle className="text-2xl">MOA 로그인</CardTitle>
           <CardDescription>
-            카카오페이증권 계정으로 로그인하세요
+            카카오페이증권 업무 관리 시스템
           </CardDescription>
         </CardHeader>
         
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <FormField label="이메일" error={error && error.includes('이메일') ? error : ''} required>
+            <FormField label="이메일" error={error} required>
               <Input
-                type="email"
+                type="text"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="firstname.lastname@kakaopaysec.com"
+                placeholder="아이디 또는 이메일"
                 error={!!error}
                 disabled={isLoading}
                 autoComplete="email"
               />
             </FormField>
 
-            <FormField label="비밀번호" error={error && error.includes('비밀번호') ? error : ''} required>
+            <FormField label="비밀번호" required>
               <Input
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="비밀번호"
-                error={!!error}
                 disabled={isLoading}
                 autoComplete="current-password"
               />
             </FormField>
 
-            {error && !error.includes('이메일') && !error.includes('비밀번호') && (
-              <div className="text-sm text-destructive text-center p-2 bg-destructive/10 rounded-md">
-                {error}
-              </div>
-            )}
-
             <Button 
               type="submit" 
               className="w-full" 
-              disabled={isLoading}
+              disabled={isLoading || !formData.email || !formData.password}
             >
               {isLoading ? '로그인 중...' : '로그인'}
             </Button>
@@ -89,6 +84,12 @@ export default function Login() {
               <Link to="/signup" className="text-primary hover:underline">
                 회원가입
               </Link>
+            </p>
+          </div>
+
+          <div className="mt-4 p-3 bg-muted rounded-lg">
+            <p className="text-xs text-muted-foreground text-center">
+              <strong>테스트 계정:</strong> 아이디 "1", 비밀번호 "1"
             </p>
           </div>
         </CardContent>

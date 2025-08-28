@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 export const FooterNav: React.FC = () => {
   const location = useLocation();
-  const { user, profile } = useAuthStore();
+  const { user } = useAuthStore();
 
   if (!user) return null;
 
@@ -27,7 +27,7 @@ export const FooterNav: React.FC = () => {
       label: '예약', 
       path: '/booking'
     },
-    profile?.id 
+    user?.isAdmin 
       ? { 
           icon: Shield, 
           label: '관리', 
@@ -35,8 +35,8 @@ export const FooterNav: React.FC = () => {
         }
       : { 
           icon: Settings, 
-          label: '프로필', 
-          path: '/profile'
+          label: '설정', 
+          path: '/settings'
         }
   ];
 

@@ -11,12 +11,12 @@ import { useToast } from '@/hooks/use-toast';
 import { Car, ChevronLeft } from 'lucide-react';
 
 export default function Parking() {
-  const { user, profile } = useAuthStore();
+  const { user } = useAuthStore();
   const { createParkingRequest } = useRequestsStore();
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
-    carNumber: profile?.car_number || '',
+    carNumber: user?.car || '',
     carModel: '',
     location: ''
   });

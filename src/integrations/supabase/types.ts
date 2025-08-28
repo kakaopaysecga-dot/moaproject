@@ -14,72 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      profiles: {
-        Row: {
-          building: string
-          car_number: string | null
-          created_at: string
-          dept: string
-          email: string
-          id: string
-          name: string
-          phone: string | null
-          updated_at: string
-          user_id: string
-          work_area: string | null
-        }
-        Insert: {
-          building: string
-          car_number?: string | null
-          created_at?: string
-          dept: string
-          email: string
-          id?: string
-          name: string
-          phone?: string | null
-          updated_at?: string
-          user_id: string
-          work_area?: string | null
-        }
-        Update: {
-          building?: string
-          car_number?: string | null
-          created_at?: string
-          dept?: string
-          email?: string
-          id?: string
-          name?: string
-          phone?: string | null
-          updated_at?: string
-          user_id?: string
-          work_area?: string | null
-        }
-        Relationships: []
-      }
-      work_areas: {
-        Row: {
-          building: string
-          created_at: string
-          description: string | null
-          id: string
-          name: string
-        }
-        Insert: {
-          building: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          name: string
-        }
-        Update: {
-          building?: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          name?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never

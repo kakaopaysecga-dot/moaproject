@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 export default function Settings() {
-  const { user, profile, signOut } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   if (!user) return null;
 
@@ -92,22 +92,22 @@ export default function Settings() {
         <CardContent className="p-8">
           <div className="flex items-center space-x-6">
             <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-2xl">{(profile?.name || user?.email || 'U').charAt(0)}</span>
+              <span className="text-white font-bold text-2xl">{user.name.charAt(0)}</span>
             </div>
             <div className="flex-1 space-y-2">
-              <h3 className="text-2xl font-bold text-foreground leading-tight">{profile?.name || user?.email}</h3>
+              <h3 className="text-2xl font-bold text-foreground leading-tight">{user.name}</h3>
               <div className="space-y-1">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Building className="h-4 w-4 mr-2" />
-                  <span>{profile?.dept || '미설정'}</span>
+                  <span>{user.dept}</span>
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Phone className="h-4 w-4 mr-2" />
-                  <span>{profile?.phone || '미설정'}</span>
+                  <span>{user.phone}</span>
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Mail className="h-4 w-4 mr-2" />
-                  <span>{user?.email}</span>
+                  <span>{user.email}</span>
                 </div>
               </div>
             </div>
@@ -153,7 +153,7 @@ export default function Settings() {
       <Card className="shadow-md border-0">
         <CardContent className="p-8">
           <Button
-            onClick={signOut}
+            onClick={logout}
             variant="destructive"
             className="w-full h-14 text-lg font-semibold flex items-center justify-center space-x-3"
           >
