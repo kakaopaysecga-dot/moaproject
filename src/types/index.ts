@@ -6,6 +6,7 @@ export interface User {
   name: string;       // e.g., "Master.Admin"
   dept: string;
   building: '판교오피스' | '여의도오피스';
+  workArea?: string;  // Work area within the building
   phone: string;      // "010-1234-5678"
   car: string;        // "11가1111"
   isAdmin: boolean;

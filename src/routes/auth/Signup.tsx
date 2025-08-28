@@ -15,6 +15,7 @@ export default function Signup() {
     name: '',
     dept: '개발팀',
     building: '판교오피스' as '판교오피스' | '여의도오피스',
+    workArea: '',
     phone: '',
     car: ''
   });
@@ -51,13 +52,27 @@ export default function Signup() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: value,
+      // Reset work area when building changes
+      ...(name === 'building' ? { workArea: '' } : {})
+    }));
     
     // Clear validation errors when user types
     if (validationErrors[name]) {
       setValidationErrors(prev => ({ ...prev, [name]: '' }));
     }
     if (error) clearError();
+  };
+
+  const getWorkAreaOptions = () => {
+    if (formData.building === '판교오피스') {
+      return ['실리콘밸리', '팔로알토', '월스트리트'];
+    } else if (formData.building === '여의도오피스') {
+      return ['퀸즈', '브루클린'];
+    }
+    return [];
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -160,7 +175,7 @@ export default function Signup() {
               </Select>
             </FormField>
 
-            <FormField label="근무지" required>
+            <FormField label="오피스" required>
               <Select
                 name="building"
                 value={formData.building}
@@ -169,6 +184,20 @@ export default function Signup() {
               >
                 <option value="판교오피스">판교오피스</option>
                 <option value="여의도오피스">여의도오피스</option>
+              </Select>
+            </FormField>
+
+            <FormField label="근무구역" required>
+              <Select
+                name="workArea"
+                value={formData.workArea}
+                onChange={handleChange}
+                disabled={isLoading || !formData.building}
+              >
+                <option value="">근무구역을 선택하세요</option>
+                {getWorkAreaOptions().map(area => (
+                  <option key={area} value={area}>{area}</option>
+                ))}
               </Select>
             </FormField>
 
