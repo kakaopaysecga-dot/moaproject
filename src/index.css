@@ -57,11 +57,11 @@ All colors MUST be HSL.
     --corporate-gray: 217 12% 45%;
     --corporate-gray-light: 217 8% 85%;
 
-    /* Kakao gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(50 100% 50%), hsl(45 100% 55%));
-    --gradient-accent: linear-gradient(135deg, hsl(45 100% 55%), hsl(50 100% 50%));
-    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(210 20% 99%));
-    --gradient-subtle: linear-gradient(180deg, hsl(210 20% 98%), hsl(210 25% 96%));
+    /* Clean solid colors */
+    --gradient-primary: hsl(50 100% 50%);
+    --gradient-accent: hsl(45 100% 55%);
+    --gradient-card: hsl(0 0% 100%);
+    --gradient-subtle: hsl(210 20% 98%);
 
     /* Shadows */
     --shadow-soft: 0 2px 8px -2px hsl(217 25% 15% / 0.1);
@@ -118,11 +118,11 @@ All colors MUST be HSL.
     --corporate-gray: 215 20% 65%;
     --corporate-gray-light: 217 25% 25%;
 
-    /* Dark mode Kakao gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(50 100% 50%), hsl(45 100% 55%));
-    --gradient-accent: linear-gradient(135deg, hsl(45 100% 55%), hsl(50 100% 50%));
-    --gradient-card: linear-gradient(135deg, hsl(217 30% 12%), hsl(217 35% 15%));
-    --gradient-subtle: linear-gradient(180deg, hsl(217 35% 8%), hsl(217 30% 10%));
+    /* Dark mode clean colors */
+    --gradient-primary: hsl(50 100% 50%);
+    --gradient-accent: hsl(45 100% 55%);
+    --gradient-card: hsl(217 30% 12%);
+    --gradient-subtle: hsl(217 35% 8%);
 
     /* Dark shadows */
     --shadow-soft: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
@@ -150,7 +150,7 @@ All colors MUST be HSL.
     font-family: 'Noto Sans KR', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: linear-gradient(135deg, hsl(var(--background)), hsl(210 25% 96%));
+    background: hsl(var(--background));
     min-height: 100vh;
     line-height: 1.6;
     letter-spacing: -0.01em;

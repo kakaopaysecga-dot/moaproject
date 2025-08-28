@@ -15,7 +15,13 @@ export const Header: React.FC = () => {
       <div className="px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center space-x-3">
+            <img 
+              src="/lovable-uploads/fc34501e-c18a-46ea-821e-e0801af7e936.png" 
+              alt="카카오페이증권" 
+              className="h-7 w-auto"
+            />
+            <div className="h-6 w-px bg-border"></div>
             <span className="font-bold text-2xl text-primary tracking-tight">MOA</span>
           </Link>
 
