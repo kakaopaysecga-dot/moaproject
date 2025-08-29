@@ -146,39 +146,42 @@ const mockPeople: Person[] = [
 
 // 회의실 데이터 - 실제 서비스 내 회의실 정보 반영
 const meetingRooms = [
-  // 판교오피스
-  { id: '1', name: '산토리니', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '2', name: '다낭', location: '판교오피스', capacity: 2, floor: '3층' },
-  { id: '3', name: '괌', location: '판교오피스', capacity: 4, floor: '3층' },
-  { id: '4', name: '모리셔스', location: '판교오피스', capacity: 20, floor: '4층' },
-  { id: '5', name: '하와이', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '6', name: '발리', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '7', name: '칸쿤', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '8', name: '이비자', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '9', name: '사이판', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '10', name: '제주', location: '판교오피스', capacity: 12, floor: '4층' },
-  { id: '11', name: '타히티', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '12', name: '몰타', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '13', name: '몰디브', location: '판교오피스', capacity: 8, floor: '3층' },
-  { id: '14', name: '마요르카', location: '판교오피스', capacity: 4, floor: '2층' },
-  { id: '15', name: '팔라우', location: '판교오피스', capacity: 5, floor: '2층' },
-  { id: '16', name: '오키나와', location: '판교오피스', capacity: 12, floor: '4층' },
-  { id: '17', name: '니스', location: '판교오피스', capacity: 30, floor: '4층' },
-  { id: '18', name: '보홀', location: '판교오피스', capacity: 8, floor: '3층' },
+  // 판교아지트
+  { id: '1', name: '산토리니', location: '판교아지트', capacity: 6 },
+  { id: '2', name: '다낭', location: '판교아지트', capacity: 2 },
+  { id: '3', name: '괌', location: '판교아지트', capacity: 4 },
+  { id: '4', name: '모리셔스', location: '판교아지트', capacity: 20 },
+  { id: '5', name: '하와이', location: '판교아지트', capacity: 6 },
+  { id: '6', name: '발리', location: '판교아지트', capacity: 6 },
+  { id: '7', name: '칸쿤', location: '판교아지트', capacity: 6 },
+  { id: '8', name: '이비자', location: '판교아지트', capacity: 6 },
+  { id: '9', name: '사이판', location: '판교아지트', capacity: 6 },
+  { id: '10', name: '제주', location: '판교아지트', capacity: 12 },
+  { id: '11', name: '타히티', location: '판교아지트', capacity: 6 },
+  { id: '12', name: '몰타', location: '판교아지트', capacity: 6 },
+  { id: '13', name: '몰디브', location: '판교아지트', capacity: 8 },
+  { id: '14', name: '마요르카', location: '판교아지트', capacity: 4 },
+  { id: '15', name: '팔라우', location: '판교아지트', capacity: 5 },
+  { id: '16', name: '오키나와', location: '판교아지트', capacity: 12 },
+  { id: '17', name: '니스', location: '판교아지트', capacity: 30 },
+  { id: '18', name: '보홀', location: '판교아지트', capacity: 8 },
   
   // 여의도오피스
-  { id: '19', name: '푸켓', location: '여의도오피스', capacity: 6, floor: '3층' },
-  { id: '20', name: '카프리', location: '여의도오피스', capacity: 6, floor: '3층' },
-  { id: '21', name: '포지타노', location: '여의도오피스', capacity: 6, floor: '3층' },
-  { id: '22', name: '시칠리아', location: '여의도오피스', capacity: 6, floor: '3층' },
-  { id: '23', name: '보라카이', location: '여의도오피스', capacity: 15, floor: '4층' },
-  { id: '24', name: '피지', location: '여의도오피스', capacity: 4, floor: '2층' },
-  { id: '25', name: '세부', location: '여의도오피스', capacity: 4, floor: '2층' }
+  { id: '19', name: '푸켓', location: '여의도오피스', capacity: 6 },
+  { id: '20', name: '카프리', location: '여의도오피스', capacity: 6 },
+  { id: '21', name: '포지타노', location: '여의도오피스', capacity: 6 },
+  { id: '22', name: '시칠리아', location: '여의도오피스', capacity: 6 },
+  { id: '23', name: '보라카이', location: '여의도오피스', capacity: 15 },
+  { id: '24', name: '피지', location: '여의도오피스', capacity: 4 },
+  { id: '25', name: '세부', location: '여의도오피스', capacity: 4 }
 ];
+
+const locations = ['판교아지트', '여의도오피스'];
 
 interface MeetingFormData {
   person: Person;
   timeSlot: string;
+  selectedLocation: string;
   meetingRoom: string;
   title: string;
   content: string;
@@ -187,6 +190,7 @@ interface MeetingFormData {
 export const AIPeopleFinder: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Person[]>([]);
+  const [previewResults, setPreviewResults] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
@@ -194,20 +198,39 @@ export const AIPeopleFinder: React.FC = () => {
   const [meetingForm, setMeetingForm] = useState<MeetingFormData>({
     person: {} as Person,
     timeSlot: '',
+    selectedLocation: '',
     meetingRoom: '',
     title: '',
     content: ''
   });
 
+  // 실시간 검색 미리보기
+  const handleSearchInput = (value: string) => {
+    setSearchQuery(value);
+    
+    if (value.trim().length >= 2) {
+      const results = mockPeople.filter(person => 
+        person.name.includes(value) || 
+        person.englishName.toLowerCase().includes(value.toLowerCase()) ||
+        person.dept.includes(value)
+      );
+      setPreviewResults(results.slice(0, 3)); // 최대 3개만 미리보기
+    } else {
+      setPreviewResults([]);
+    }
+  };
+
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     
     setIsLoading(true);
+    setPreviewResults([]); // 미리보기 숨기기
     
     // 실제로는 AI API 호출 + 데이터베이스 조회
     setTimeout(() => {
       const results = mockPeople.filter(person => 
         person.name.includes(searchQuery) || 
+        person.englishName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         person.dept.includes(searchQuery)
       );
       setSearchResults(results);
@@ -263,6 +286,7 @@ export const AIPeopleFinder: React.FC = () => {
     setMeetingForm({
       person,
       timeSlot,
+      selectedLocation: '',
       meetingRoom: '',
       title: '',
       content: ''
@@ -293,6 +317,7 @@ export const AIPeopleFinder: React.FC = () => {
     setMeetingForm({
       person: {} as Person,
       timeSlot: '',
+      selectedLocation: '',
       meetingRoom: '',
       title: '',
       content: ''
@@ -308,17 +333,46 @@ export const AIPeopleFinder: React.FC = () => {
 
       {/* 검색 입력 */}
       <Card className="p-4">
-        <div className="flex gap-2">
-          <Input
-            placeholder="이름이나 부서를 입력하세요..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            className="flex-1"
-          />
-          <Button onClick={handleSearch} disabled={isLoading}>
-            <Search className="h-4 w-4" />
-          </Button>
+        <div className="space-y-2">
+          <div className="flex gap-2">
+            <Input
+              placeholder="이름이나 부서를 입력하세요... (한글/영어 가능)"
+              value={searchQuery}
+              onChange={(e) => handleSearchInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              className="flex-1"
+            />
+            <Button onClick={handleSearch} disabled={isLoading}>
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* 실시간 미리보기 */}
+          {previewResults.length > 0 && !isLoading && (
+            <div className="border border-border rounded-lg bg-background/95 backdrop-blur-sm">
+              {previewResults.map((person) => (
+                <div
+                  key={person.id}
+                  className="p-3 hover:bg-muted/50 cursor-pointer border-b border-border last:border-b-0 transition-colors"
+                  onClick={() => {
+                    setSearchQuery(person.name);
+                    setPreviewResults([]);
+                    handleSearch();
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium text-sm">{person.name}</div>
+                      <div className="text-xs text-muted-foreground">{person.englishName} • {person.dept}</div>
+                    </div>
+                    <Badge className={getStatusColor(person.status)}>
+                      {getStatusText(person.status)}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </Card>
 
@@ -438,45 +492,69 @@ export const AIPeopleFinder: React.FC = () => {
             </div>
           </Card>
 
-          {/* 회의실 선택 */}
+          {/* 오피스 위치 선택 */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-foreground">회의실 선택 *</label>
-              <span className="text-xs text-muted-foreground">
-                {meetingForm.timeSlot} 시간 기준 사용 가능한 회의실
-              </span>
-            </div>
+            <label className="text-sm font-medium text-foreground">오피스 위치 선택 *</label>
             <Select
-              value={meetingForm.meetingRoom}
-              onValueChange={(value) => setMeetingForm(prev => ({ ...prev, meetingRoom: value }))}
+              value={meetingForm.selectedLocation}
+              onValueChange={(value) => setMeetingForm(prev => ({ ...prev, selectedLocation: value, meetingRoom: '' }))}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="사용 가능한 회의실을 선택하세요" />
+                <SelectValue placeholder="오피스 위치를 선택하세요" />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border z-50">
-                {getAvailableRooms(meetingForm.timeSlot).map((room) => (
-                  <SelectItem key={room.id} value={room.id}>
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">{room.name}</span>
-                        <Badge variant="outline" className="text-xs px-1 py-0 bg-success/10 text-success border-success/20">
-                          사용가능
-                        </Badge>
-                      </div>
-                      <span className="text-xs text-muted-foreground">
-                        {room.location} {room.floor} · 최대 {room.capacity}명
-                      </span>
-                    </div>
+                {locations.map((location) => (
+                  <SelectItem key={location} value={location}>
+                    {location}
                   </SelectItem>
                 ))}
-                {getAvailableRooms(meetingForm.timeSlot).length === 0 && (
-                  <div className="p-2 text-center text-muted-foreground text-sm">
-                    해당 시간에 사용 가능한 회의실이 없습니다
-                  </div>
-                )}
               </SelectContent>
             </Select>
           </div>
+
+          {/* 회의실 선택 */}
+          {meetingForm.selectedLocation && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-foreground">회의실 선택 *</label>
+                <span className="text-xs text-muted-foreground">
+                  {meetingForm.timeSlot} 시간 기준 사용 가능한 회의실
+                </span>
+              </div>
+              <Select
+                value={meetingForm.meetingRoom}
+                onValueChange={(value) => setMeetingForm(prev => ({ ...prev, meetingRoom: value }))}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="사용 가능한 회의실을 선택하세요" />
+                </SelectTrigger>
+                <SelectContent className="bg-background border border-border z-50">
+                  {getAvailableRooms(meetingForm.timeSlot)
+                    .filter(room => room.location === meetingForm.selectedLocation)
+                    .map((room) => (
+                    <SelectItem key={room.id} value={room.id}>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{room.name}</span>
+                          <Badge variant="outline" className="text-xs px-1 py-0 bg-success/10 text-success border-success/20">
+                            사용가능
+                          </Badge>
+                        </div>
+                        <span className="text-xs text-muted-foreground">
+                          최대 {room.capacity}명
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                  {getAvailableRooms(meetingForm.timeSlot).filter(room => room.location === meetingForm.selectedLocation).length === 0 && (
+                    <div className="p-2 text-center text-muted-foreground text-sm">
+                      해당 시간에 사용 가능한 회의실이 없습니다
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* 회의 제목 */}
           <div className="space-y-2">
