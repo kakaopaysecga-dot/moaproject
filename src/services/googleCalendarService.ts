@@ -10,7 +10,7 @@ export interface CalendarEvent {
 
 export class GoogleCalendarService {
   private static readonly STORAGE_KEY = 'google_calendar_tokens';
-  private static readonly DEMO_MODE = false; // 실제 모드
+  private static readonly DEMO_MODE = false; // 실제 Google API 모드
 
   // 시연용 샘플 이벤트들
   private static readonly SAMPLE_EVENTS = [
