@@ -56,12 +56,21 @@ export const GoogleCalendarSync: React.FC = () => {
       if (result.success) {
         toast({
           title: "이벤트 생성됨",
-          description: "구글 캘린더에 테스트 이벤트가 생성되었습니다.",
+          description: GoogleCalendarService.getDemoMode() 
+            ? "시연용 구글 캘린더에 테스트 이벤트가 생성되었습니다."
+            : "구글 캘린더에 테스트 이벤트가 생성되었습니다.",
         });
         
-        // Open in Google Calendar
+        // Open in Google Calendar (시연용에서는 알림만)
         if (result.htmlLink) {
-          window.open(result.htmlLink, '_blank');
+          if (GoogleCalendarService.getDemoMode()) {
+            toast({
+              title: "🎉 시연 완료!",
+              description: "실제 환경에서는 구글 캘린더가 열립니다.",
+            });
+          } else {
+            window.open(result.htmlLink, '_blank');
+          }
         }
         
         // Refresh events
@@ -98,7 +107,9 @@ export const GoogleCalendarSync: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5 text-primary" />
-          <h3 className="font-semibold">구글 캘린더</h3>
+          <h3 className="font-semibold">
+            {GoogleCalendarService.getDemoMode() ? '구글 캘린더 (시연)' : '구글 캘린더'}
+          </h3>
           <CheckCircle className="w-4 h-4 text-success" />
         </div>
         <Button 
@@ -119,7 +130,9 @@ export const GoogleCalendarSync: React.FC = () => {
         </div>
       ) : events.length > 0 ? (
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">오늘의 구글 캘린더 일정</p>
+          <p className="text-sm text-muted-foreground">
+            {GoogleCalendarService.getDemoMode() ? '시연용 구글 캘린더 일정' : '오늘의 구글 캘린더 일정'}
+          </p>
           {events.map((event, index) => (
             <div key={index} className="p-3 bg-muted/30 rounded-lg border">
               <div className="flex items-start justify-between gap-2">
@@ -145,7 +158,16 @@ export const GoogleCalendarSync: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     className="h-auto p-1"
-                    onClick={() => window.open(event.htmlLink, '_blank')}
+                    onClick={() => {
+                      if (GoogleCalendarService.getDemoMode()) {
+                        toast({
+                          title: "시연 모드",
+                          description: "실제 환경에서는 구글 캘린더가 열립니다.",
+                        });
+                      } else {
+                        window.open(event.htmlLink, '_blank');
+                      }
+                    }}
                   >
                     <ExternalLink className="w-3 h-3" />
                   </Button>
