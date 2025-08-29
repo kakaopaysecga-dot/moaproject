@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
 import { WelcomeSection } from '@/components/home/WelcomeSection';
 import { ServiceCards } from '@/components/home/ServiceCards';
-import { TemperatureControl } from '@/components/home/TemperatureControl';
+
 import { AdminPanel } from '@/components/home/AdminPanel';
 import { QuickActions } from '@/components/home/QuickActions';
 import { RecentActivity } from '@/components/home/RecentActivity';
@@ -47,8 +47,6 @@ export default function Home() {
       
       {/* 최근 활동 - 관리자만 */}
       {user.isAdmin && <RecentActivity />}
-      
-      <TemperatureControl />
       
       {user.isAdmin && <AdminPanel />}
       
