@@ -20,26 +20,38 @@ export const GoogleIntegration: React.FC = () => {
   const handleConnect = async () => {
     setIsConnecting(true);
     try {
-      // 실제 구글 OAuth 플로우
+      console.log('Starting Google OAuth flow...');
+      
+      // 구글 OAuth 설정
       const clientId = '759409896984-a43f1m1d98aht31rmcmogud1ev7lvk6l.apps.googleusercontent.com';
-      const redirectUri = `${window.location.origin}/auth/google/callback`;
+      const currentUrl = window.location.origin;
+      const redirectUri = `${currentUrl}/auth/google/callback`;
       const scope = 'https://www.googleapis.com/auth/calendar.events';
       
+      console.log('OAuth parameters:', {
+        clientId,
+        redirectUri,
+        scope,
+        currentUrl
+      });
+      
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-        `client_id=${clientId}&` +
+        `client_id=${encodeURIComponent(clientId)}&` +
         `redirect_uri=${encodeURIComponent(redirectUri)}&` +
         `scope=${encodeURIComponent(scope)}&` +
         `response_type=code&` +
         `access_type=offline&` +
-        `prompt=consent`;
+        `prompt=consent&` +
+        `state=${Date.now()}`;
 
+      console.log('Redirecting to:', authUrl);
       sessionStorage.setItem('google_auth_callback', 'true');
       window.location.href = authUrl;
     } catch (error) {
       console.error('Google auth error:', error);
       toast({
         title: "연결 실패",
-        description: "구글 연동에 실패했습니다.",
+        description: "구글 연동에 실패했습니다. 콘솔을 확인해주세요.",
         variant: "destructive",
       });
       setIsConnecting(false);
@@ -186,18 +198,42 @@ export const GoogleIntegration: React.FC = () => {
         {showSetupGuide && (
           <Alert className="border-info/20 bg-info/5">
             <Info className="h-4 w-4 text-info" />
-            <AlertDescription className="text-sm space-y-2">
-              <div className="font-semibold">Google OAuth 설정 방법:</div>
-              <ol className="list-decimal list-inside space-y-1 text-xs">
-                <li>Google Cloud Console에서 새 프로젝트 생성</li>
-                <li>OAuth 동의 화면 설정 (테스트 모드로 시작)</li>
-                <li>사용자 이메일을 테스트 사용자로 추가</li>
-                <li>OAuth 2.0 클라이언트 ID 생성</li>
-                <li>승인된 리디렉션 URI에 현재 도메인 추가</li>
-              </ol>
+            <AlertDescription className="text-sm space-y-3">
+              <div className="font-semibold">Google OAuth 설정 단계별 가이드:</div>
+              
+              <div className="space-y-2">
+                <div className="font-medium">1. Google Cloud Console 설정</div>
+                <ol className="list-decimal list-inside space-y-1 text-xs ml-2">
+                  <li>Google Cloud Console에서 새 프로젝트 생성 또는 기존 프로젝트 선택</li>
+                  <li>Google Calendar API 활성화 (API 및 서비스 → 라이브러리)</li>
+                  <li>OAuth 동의 화면 설정 (외부 사용자 타입으로 설정)</li>
+                  <li>테스트 사용자에 본인 이메일 추가</li>
+                </ol>
+              </div>
+
+              <div className="space-y-2">
+                <div className="font-medium">2. OAuth 클라이언트 ID 생성</div>
+                <ol className="list-decimal list-inside space-y-1 text-xs ml-2">
+                  <li>사용자 인증 정보 → OAuth 2.0 클라이언트 ID 생성</li>
+                  <li>애플리케이션 유형: 웹 애플리케이션</li>
+                  <li>승인된 JavaScript 출처: <code className="bg-muted px-1 rounded">{window.location.origin}</code></li>
+                  <li>승인된 리디렉션 URI: <code className="bg-muted px-1 rounded">{window.location.origin}/auth/google/callback</code></li>
+                </ol>
+              </div>
+
+              <div className="space-y-2">
+                <div className="font-medium">3. 필수 범위(Scope) 설정</div>
+                <ul className="list-disc list-inside space-y-1 text-xs ml-2">
+                  <li>../auth/userinfo.email</li>
+                  <li>../auth/userinfo.profile</li>
+                  <li>openid</li>
+                  <li>https://www.googleapis.com/auth/calendar.events</li>
+                </ul>
+              </div>
+
               <Button
                 variant="link"
-                className="p-0 h-auto text-xs"
+                className="p-0 h-auto text-xs mt-2"
                 onClick={() => window.open('https://console.cloud.google.com/', '_blank')}
               >
                 <ExternalLink className="w-3 h-3 mr-1" />

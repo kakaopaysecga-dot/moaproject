@@ -40,7 +40,7 @@ serve(async (req) => {
           client_secret: clientSecret,
           code: code,
           grant_type: 'authorization_code',
-          redirect_uri: `${req.headers.get('origin')}/auth/google/callback`,
+          redirect_uri: `${req.headers.get('referer')?.split('?')[0] || req.headers.get('origin')}/auth/google/callback`,
         }),
       });
 
