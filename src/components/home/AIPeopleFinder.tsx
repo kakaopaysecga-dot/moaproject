@@ -143,16 +143,20 @@ const mockPeople: Person[] = [
   }
 ];
 
-// 회의실 데이터
+// 회의실 데이터 - 실제 서비스 내 회의실 정보 반영
 const meetingRooms = [
-  { id: '1', name: '산토리니회의실', location: '판교오피스', capacity: 8 },
-  { id: '2', name: '몰디브회의실', location: '판교오피스', capacity: 6 },
-  { id: '3', name: '팔로알토 스튜디오', location: '판교오피스', capacity: 12 },
-  { id: '4', name: '크리에이티브존', location: '판교오피스', capacity: 4 },
-  { id: '5', name: '기획실', location: '여의도오피스', capacity: 10 },
-  { id: '6', name: '면접실', location: '판교오피스', capacity: 4 },
-  { id: '7', name: '테스트실', location: '여의도오피스', capacity: 6 },
-  { id: '8', name: '재무실', location: '여의도오피스', capacity: 8 }
+  { id: '1', name: '산토리니회의실', location: '판교오피스', capacity: 8, floor: '3층' },
+  { id: '2', name: '몰디브회의실', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '3', name: '팔로알토 스튜디오', location: '판교오피스', capacity: 12, floor: '4층' },
+  { id: '4', name: '크리에이티브존', location: '판교오피스', capacity: 4, floor: '2층' },
+  { id: '5', name: '기획실', location: '여의도오피스', capacity: 10, floor: '3층' },
+  { id: '6', name: '면접실', location: '판교오피스', capacity: 4, floor: '2층' },
+  { id: '7', name: '테스트실', location: '여의도오피스', capacity: 6, floor: '1층' },
+  { id: '8', name: '재무실', location: '여의도오피스', capacity: 8, floor: '1층' },
+  { id: '9', name: '개발실', location: '판교오피스', capacity: 15, floor: '3층' },
+  { id: '10', name: '보안센터', location: '판교오피스', capacity: 6, floor: '1층' },
+  { id: '11', name: '디자인 스튜디오', location: '판교오피스', capacity: 8, floor: '2층' },
+  { id: '12', name: '임원회의실', location: '여의도오피스', capacity: 12, floor: '5층' }
 ];
 
 interface MeetingFormData {
@@ -210,6 +214,32 @@ export const AIPeopleFinder: React.FC = () => {
     }
   };
 
+  // 해당 시간에 사용 가능한 회의실 필터링
+  const getAvailableRooms = (timeSlot: string) => {
+    const [startTime] = timeSlot.split('-');
+    
+    // 해당 시간에 다른 사람들이 사용 중인 회의실 찾기
+    const occupiedRooms = mockPeople
+      .filter(person => person.status === 'meeting' || person.status === 'busy')
+      .map(person => {
+        if (person.currentLocation?.includes('회의실') || 
+            person.currentLocation?.includes('스튜디오') || 
+            person.currentLocation?.includes('실')) {
+          return person.currentLocation.split(' ').pop(); // 마지막 단어 (회의실명)
+        }
+        return null;
+      })
+      .filter(Boolean);
+
+    // 사용 가능한 회의실만 반환
+    return meetingRooms.filter(room => {
+      const isOccupied = occupiedRooms.some(occupiedRoom => 
+        occupiedRoom?.includes(room.name.replace('회의실', '').replace('스튜디오', '').replace('실', ''))
+      );
+      return !isOccupied;
+    });
+  };
+
   const openMeetingModal = (person: Person, timeSlot: string) => {
     setMeetingForm({
       person,
@@ -229,7 +259,7 @@ export const AIPeopleFinder: React.FC = () => {
 
     // 실제로는 회의 예약 API 호출
     const selectedRoom = meetingRooms.find(room => room.id === meetingForm.meetingRoom);
-    alert(`회의가 예약되었습니다!\n\n참석자: ${meetingForm.person.name}\n시간: ${meetingForm.timeSlot}\n회의실: ${selectedRoom?.name} (${selectedRoom?.location})\n제목: ${meetingForm.title}\n내용: ${meetingForm.content || '없음'}`);
+    alert(`회의가 예약되었습니다!\n\n참석자: ${meetingForm.person.name}\n시간: ${meetingForm.timeSlot}\n회의실: ${selectedRoom?.name} (${selectedRoom?.location} ${selectedRoom?.floor})\n제목: ${meetingForm.title}\n내용: ${meetingForm.content || '없음'}`);
     
     setIsModalOpen(false);
     setMeetingForm({
@@ -382,25 +412,40 @@ export const AIPeopleFinder: React.FC = () => {
 
           {/* 회의실 선택 */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">회의실 선택 *</label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-foreground">회의실 선택 *</label>
+              <span className="text-xs text-muted-foreground">
+                {meetingForm.timeSlot} 시간 기준 사용 가능한 회의실
+              </span>
+            </div>
             <Select
               value={meetingForm.meetingRoom}
               onValueChange={(value) => setMeetingForm(prev => ({ ...prev, meetingRoom: value }))}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="회의실을 선택하세요" />
+                <SelectValue placeholder="사용 가능한 회의실을 선택하세요" />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border z-50">
-                {meetingRooms.map((room) => (
+                {getAvailableRooms(meetingForm.timeSlot).map((room) => (
                   <SelectItem key={room.id} value={room.id}>
                     <div className="flex flex-col">
-                      <span className="font-medium">{room.name}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{room.name}</span>
+                        <Badge variant="outline" className="text-xs px-1 py-0 bg-success/10 text-success border-success/20">
+                          사용가능
+                        </Badge>
+                      </div>
                       <span className="text-xs text-muted-foreground">
-                        {room.location} · 최대 {room.capacity}명
+                        {room.location} {room.floor} · 최대 {room.capacity}명
                       </span>
                     </div>
                   </SelectItem>
                 ))}
+                {getAvailableRooms(meetingForm.timeSlot).length === 0 && (
+                  <div className="p-2 text-center text-muted-foreground text-sm">
+                    해당 시간에 사용 가능한 회의실이 없습니다
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </div>
