@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, CheckCircle, LinkIcon, Unlink, Settings, Play } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Calendar, CheckCircle, LinkIcon, Unlink, Settings, ExternalLink, AlertTriangle, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { GoogleCalendarService } from '@/services/googleCalendarService';
 
@@ -10,6 +11,7 @@ export const GoogleIntegration: React.FC = () => {
   const { toast } = useToast();
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [showSetupGuide, setShowSetupGuide] = useState(false);
 
   useEffect(() => {
     setIsConnected(GoogleCalendarService.isConnected());
@@ -40,13 +42,23 @@ export const GoogleIntegration: React.FC = () => {
         description: "구글 연동에 실패했습니다.",
         variant: "destructive",
       });
-    } finally {
       setIsConnecting(false);
     }
   };
 
+  const enableDemoMode = () => {
+    // 시연용 모드 활성화
+    localStorage.setItem('demo_google_connected', 'true');
+    setIsConnected(true);
+    toast({
+      title: "시연 모드 활성화",
+      description: "시연용 구글 연동이 활성화되었습니다.",
+    });
+  };
+
   const handleDisconnect = () => {
     GoogleCalendarService.disconnect();
+    localStorage.removeItem('demo_google_connected');
     setIsConnected(false);
     toast({
       title: "연결 해제됨",
@@ -76,6 +88,16 @@ export const GoogleIntegration: React.FC = () => {
             </Badge>
           )}
         </div>
+
+        {/* OAuth 설정 경고 */}
+        {!isConnected && (
+          <Alert className="border-warning/20 bg-warning/5">
+            <AlertTriangle className="h-4 w-4 text-warning" />
+            <AlertDescription className="text-sm">
+              구글 연동이 거부되었나요? 실제 OAuth 설정이 필요하거나 아래 시연 모드를 사용하세요.
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Connection Status */}
         <div className="space-y-3">
@@ -126,18 +148,64 @@ export const GoogleIntegration: React.FC = () => {
                 </div>
               </div>
               
-              <Button
-                onClick={handleConnect}
-                disabled={isConnecting}
-                className="w-full"
-                size="sm"
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                {isConnecting ? '연결중...' : '구글 계정 연결'}
-              </Button>
+              <div className="space-y-2">
+                <Button
+                  onClick={handleConnect}
+                  disabled={isConnecting}
+                  className="w-full"
+                  size="sm"
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  {isConnecting ? '연결중...' : '구글 계정 연결'}
+                </Button>
+                
+                <Button
+                  onClick={enableDemoMode}
+                  variant="outline"
+                  className="w-full"
+                  size="sm"
+                >
+                  🎭 시연 모드로 체험하기
+                </Button>
+                
+                <Button
+                  onClick={() => setShowSetupGuide(!showSetupGuide)}
+                  variant="ghost"
+                  className="w-full"
+                  size="sm"
+                >
+                  <Info className="w-4 h-4 mr-2" />
+                  OAuth 설정 가이드
+                </Button>
+              </div>
             </>
           )}
         </div>
+
+        {/* Setup Guide */}
+        {showSetupGuide && (
+          <Alert className="border-info/20 bg-info/5">
+            <Info className="h-4 w-4 text-info" />
+            <AlertDescription className="text-sm space-y-2">
+              <div className="font-semibold">Google OAuth 설정 방법:</div>
+              <ol className="list-decimal list-inside space-y-1 text-xs">
+                <li>Google Cloud Console에서 새 프로젝트 생성</li>
+                <li>OAuth 동의 화면 설정 (테스트 모드로 시작)</li>
+                <li>사용자 이메일을 테스트 사용자로 추가</li>
+                <li>OAuth 2.0 클라이언트 ID 생성</li>
+                <li>승인된 리디렉션 URI에 현재 도메인 추가</li>
+              </ol>
+              <Button
+                variant="link"
+                className="p-0 h-auto text-xs"
+                onClick={() => window.open('https://console.cloud.google.com/', '_blank')}
+              >
+                <ExternalLink className="w-3 h-3 mr-1" />
+                Google Cloud Console 열기
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Benefits */}
         {!isConnected && (

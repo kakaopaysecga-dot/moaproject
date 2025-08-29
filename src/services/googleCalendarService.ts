@@ -60,6 +60,11 @@ export class GoogleCalendarService {
   }
 
   static isConnected(): boolean {
+    // 시연 모드 체크
+    const demoConnected = localStorage.getItem('demo_google_connected');
+    if (demoConnected === 'true') return true;
+    
+    // 실제 토큰 체크
     if (this.DEMO_MODE) {
       const tokens = this.getStoredTokens();
       return tokens?.demo_connected === true;
@@ -98,7 +103,9 @@ export class GoogleCalendarService {
   }
 
   static async createEvent(event: CalendarEvent): Promise<{ success: boolean; eventId?: string; htmlLink?: string }> {
-    if (this.DEMO_MODE) {
+    // 시연 모드 체크
+    const demoConnected = localStorage.getItem('demo_google_connected');
+    if (demoConnected === 'true' || this.DEMO_MODE) {
       // 시연용: 가짜 이벤트 생성
       await new Promise(resolve => setTimeout(resolve, 800)); // 로딩 시뮬레이션
       
@@ -166,7 +173,9 @@ export class GoogleCalendarService {
   }
 
   static async getEvents(timeMin: string, timeMax: string): Promise<any[]> {
-    if (this.DEMO_MODE) {
+    // 시연 모드 체크
+    const demoConnected = localStorage.getItem('demo_google_connected');
+    if (demoConnected === 'true' || this.DEMO_MODE) {
       // 시연용: 샘플 이벤트 + 사용자가 생성한 이벤트 반환
       await new Promise(resolve => setTimeout(resolve, 500)); // 로딩 시뮬레이션
       
@@ -207,6 +216,7 @@ export class GoogleCalendarService {
 
   static disconnect() {
     this.clearStoredTokens();
+    localStorage.removeItem('demo_google_connected');
   }
 
   static getDemoMode(): boolean {
