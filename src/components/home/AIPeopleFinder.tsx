@@ -3,7 +3,10 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Users, Calendar, MapPin, Clock, MessageSquare } from 'lucide-react';
+import { Modal } from '@/components/ui/Modal';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X } from 'lucide-react';
 
 interface Person {
   id: string;
@@ -140,10 +143,38 @@ const mockPeople: Person[] = [
   }
 ];
 
+// 회의실 데이터
+const meetingRooms = [
+  { id: '1', name: '산토리니회의실', location: '판교오피스', capacity: 8 },
+  { id: '2', name: '몰디브회의실', location: '판교오피스', capacity: 6 },
+  { id: '3', name: '팔로알토 스튜디오', location: '판교오피스', capacity: 12 },
+  { id: '4', name: '크리에이티브존', location: '판교오피스', capacity: 4 },
+  { id: '5', name: '기획실', location: '여의도오피스', capacity: 10 },
+  { id: '6', name: '면접실', location: '판교오피스', capacity: 4 },
+  { id: '7', name: '테스트실', location: '여의도오피스', capacity: 6 },
+  { id: '8', name: '재무실', location: '여의도오피스', capacity: 8 }
+];
+
+interface MeetingFormData {
+  person: Person;
+  timeSlot: string;
+  meetingRoom: string;
+  title: string;
+  content: string;
+}
+
 export const AIPeopleFinder: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [meetingForm, setMeetingForm] = useState<MeetingFormData>({
+    person: {} as Person,
+    timeSlot: '',
+    meetingRoom: '',
+    title: '',
+    content: ''
+  });
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -179,9 +210,35 @@ export const AIPeopleFinder: React.FC = () => {
     }
   };
 
-  const scheduleMeeting = (person: Person, timeSlot: string) => {
+  const openMeetingModal = (person: Person, timeSlot: string) => {
+    setMeetingForm({
+      person,
+      timeSlot,
+      meetingRoom: '',
+      title: '',
+      content: ''
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleMeetingSubmit = () => {
+    if (!meetingForm.meetingRoom || !meetingForm.title) {
+      alert('회의실과 회의 제목을 입력해주세요.');
+      return;
+    }
+
     // 실제로는 회의 예약 API 호출
-    alert(`${person.name}님과 ${timeSlot} 시간에 회의가 예약되었습니다.`);
+    const selectedRoom = meetingRooms.find(room => room.id === meetingForm.meetingRoom);
+    alert(`회의가 예약되었습니다!\n\n참석자: ${meetingForm.person.name}\n시간: ${meetingForm.timeSlot}\n회의실: ${selectedRoom?.name} (${selectedRoom?.location})\n제목: ${meetingForm.title}\n내용: ${meetingForm.content || '없음'}`);
+    
+    setIsModalOpen(false);
+    setMeetingForm({
+      person: {} as Person,
+      timeSlot: '',
+      meetingRoom: '',
+      title: '',
+      content: ''
+    });
   };
 
   return (
@@ -265,7 +322,7 @@ export const AIPeopleFinder: React.FC = () => {
                           key={idx}
                           variant="outline"
                           size="sm"
-                          onClick={() => scheduleMeeting(person, slot)}
+                          onClick={() => openMeetingModal(person, slot)}
                           className="text-xs"
                         >
                           <MessageSquare className="h-3 w-3 mr-1" />
@@ -293,6 +350,100 @@ export const AIPeopleFinder: React.FC = () => {
           <p className="text-muted-foreground">검색 결과가 없습니다.</p>
         </Card>
       )}
+
+      {/* 회의 예약 모달 */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-foreground">회의 예약</h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsModalOpen(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* 회의 정보 요약 */}
+          <Card className="p-3 bg-muted/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-sm">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">{meetingForm.person.name}</span>
+                <span className="text-muted-foreground">({meetingForm.person.dept})</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <span className="font-medium">{meetingForm.timeSlot}</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* 회의실 선택 */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">회의실 선택 *</label>
+            <Select
+              value={meetingForm.meetingRoom}
+              onValueChange={(value) => setMeetingForm(prev => ({ ...prev, meetingRoom: value }))}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="회의실을 선택하세요" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border border-border z-50">
+                {meetingRooms.map((room) => (
+                  <SelectItem key={room.id} value={room.id}>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{room.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {room.location} · 최대 {room.capacity}명
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* 회의 제목 */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">회의 제목 *</label>
+            <Input
+              placeholder="회의 제목을 입력하세요"
+              value={meetingForm.title}
+              onChange={(e) => setMeetingForm(prev => ({ ...prev, title: e.target.value }))}
+            />
+          </div>
+
+          {/* 회의 내용 */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">회의 내용</label>
+            <Textarea
+              placeholder="회의 내용을 입력하세요 (선택사항)"
+              value={meetingForm.content}
+              onChange={(e) => setMeetingForm(prev => ({ ...prev, content: e.target.value }))}
+              rows={3}
+            />
+          </div>
+
+          {/* 버튼 */}
+          <div className="flex gap-2 pt-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsModalOpen(false)}
+              className="flex-1"
+            >
+              취소
+            </Button>
+            <Button
+              onClick={handleMeetingSubmit}
+              className="flex-1"
+            >
+              회의 예약
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </section>
   );
 };
