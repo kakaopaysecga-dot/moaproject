@@ -10,7 +10,7 @@ const quickActions = [
     title: '빠른 회의실 예약',
     subtitle: 'AI 추천 회의실',
     icon: Calendar,
-    link: '/booking/quick-meeting-room',
+    link: '/booking/quick-meeting',
     gradient: 'from-primary/90 to-accent/90',
     badge: 'AI'
   },
@@ -18,7 +18,7 @@ const quickActions = [
     title: '스마트 오피스',
     subtitle: '즉시 이용 가능',
     icon: Coffee,
-    link: '/booking/quick-smart-office',
+    link: '/booking/quick-office',
     gradient: 'from-success/90 to-success/70',
     badge: '즉시'
   },
