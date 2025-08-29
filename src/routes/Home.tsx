@@ -9,6 +9,7 @@ import { AdminPanel } from '@/components/home/AdminPanel';
 import { QuickActions } from '@/components/home/QuickActions';
 import { RecentActivity } from '@/components/home/RecentActivity';
 import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
+import { TodaySchedule } from '@/components/home/TodaySchedule';
 
 export default function Home() {
   const { user } = useAuthStore();
@@ -41,6 +42,9 @@ export default function Home() {
       
       {/* AI 사람찾기 서비스 */}
       <AIPeopleFinder />
+      
+      {/* 오늘의 일정 */}
+      <TodaySchedule />
       
       {/* 기존 서비스 카드 */}
       <ServiceCards />
