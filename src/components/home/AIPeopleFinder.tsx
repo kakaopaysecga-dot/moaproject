@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { SuccessAnimation } from '@/components/ui/SuccessAnimation';
 import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X } from 'lucide-react';
 
 interface Person {
@@ -188,6 +189,8 @@ export const AIPeopleFinder: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
+  const [successMessage, setSuccessMessage] = useState({ title: '', message: '' });
   const [meetingForm, setMeetingForm] = useState<MeetingFormData>({
     person: {} as Person,
     timeSlot: '',
@@ -275,9 +278,18 @@ export const AIPeopleFinder: React.FC = () => {
 
     // 실제로는 회의 예약 API 호출
     const selectedRoom = meetingRooms.find(room => room.id === meetingForm.meetingRoom);
-    alert(`회의가 예약되었습니다!\n\n참석자: ${meetingForm.person.name}\n시간: ${meetingForm.timeSlot}\n회의실: ${selectedRoom?.name} (${selectedRoom?.location} ${selectedRoom?.floor})\n제목: ${meetingForm.title}\n내용: ${meetingForm.content || '없음'}`);
     
+    // 모달 닫기
     setIsModalOpen(false);
+    
+    // 성공 애니메이션 표시
+    setSuccessMessage({
+      title: "회의 예약 완료!",
+      message: `${meetingForm.person.name}님과 ${meetingForm.timeSlot}에 ${selectedRoom?.name}에서 회의가 예약되었습니다.`
+    });
+    setShowSuccessAnimation(true);
+    
+    // 폼 초기화
     setMeetingForm({
       person: {} as Person,
       timeSlot: '',
@@ -505,6 +517,14 @@ export const AIPeopleFinder: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* 성공 애니메이션 */}
+      <SuccessAnimation
+        title={successMessage.title}
+        message={successMessage.message}
+        isVisible={showSuccessAnimation}
+        onComplete={() => setShowSuccessAnimation(false)}
+      />
     </section>
   );
 };
