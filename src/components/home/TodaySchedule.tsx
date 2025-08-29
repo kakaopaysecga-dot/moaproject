@@ -39,14 +39,20 @@ export const TodaySchedule: React.FC = () => {
       <section className="space-y-3 animate-fade-in">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
-          <Button variant="ghost" size="sm" className="text-muted-foreground h-7 w-7 p-0">
-            <Plus className="w-3 h-3" />
+          <Button variant="outline" size="sm" className="h-7 px-3 text-xs">
+            <Plus className="w-3 h-3 mr-1" />
+            추가
           </Button>
         </div>
-        <Card className="p-6 text-center border-dashed">
-          <Calendar className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">오늘 예정된 일정이 없습니다</p>
-        </Card>
+        <div className="relative p-8 rounded-xl bg-muted/30 border-2 border-dashed border-muted-foreground/20">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl"></div>
+          <div className="relative text-center">
+            <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-muted-foreground/10 flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-muted-foreground/60" />
+            </div>
+            <p className="text-sm text-muted-foreground">오늘 예정된 일정이 없습니다</p>
+          </div>
+        </div>
       </section>
     );
   }
@@ -54,85 +60,104 @@ export const TodaySchedule: React.FC = () => {
   return (
     <section className="space-y-3 animate-fade-in">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center gap-2">
           <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
-          <p className="text-xs text-muted-foreground">
-            {sortedSchedule.length}개 일정
-          </p>
+          <div className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
+            {sortedSchedule.length}
+          </div>
         </div>
-        <Button variant="ghost" size="sm" className="text-muted-foreground h-7 w-7 p-0">
-          <Plus className="w-3 h-3" />
-        </Button>
-      </div>
-
-      <div className="space-y-2">
-        {sortedSchedule.map((item, index) => (
-          <Card
-            key={item.id}
-            className={cn(
-              "p-3 hover:shadow-sm transition-all duration-200 cursor-pointer group border-l-2",
-              getPriorityIndicator(item.priority),
-              item.completed && "opacity-60 bg-muted/10"
-            )}
-            onClick={() => toggleScheduleItem(item.id)}
-          >
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-sm">{getTypeIcon(item.type)}</span>
-                {item.completed ? (
-                  <CheckCircle2 className="w-3 h-3 text-success" />
-                ) : (
-                  <Circle className="w-3 h-3 text-muted-foreground group-hover:text-foreground" />
-                )}
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <h3 className={cn(
-                  "font-medium text-sm text-foreground truncate",
-                  item.completed && "line-through text-muted-foreground"
-                )}>
-                  {item.title}
-                </h3>
-                <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{item.time}</span>
-                  </div>
-                  {item.location && (
-                    <div className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      <span className="truncate">{item.location}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <Badge 
-                variant="secondary" 
-                className={cn(
-                  "text-xs h-5 px-2",
-                  item.priority === 'high' && "bg-destructive/10 text-destructive border-destructive/20",
-                  item.priority === 'medium' && "bg-warning/10 text-warning border-warning/20", 
-                  item.priority === 'low' && "bg-success/10 text-success border-success/20"
-                )}
-              >
-                {item.priority === 'high' && '높음'}
-                {item.priority === 'medium' && '보통'}
-                {item.priority === 'low' && '낮음'}
-              </Badge>
-            </div>
-          </Card>
-        ))}
-      </div>
-      
-      <div className="flex justify-between items-center pt-2 text-xs text-muted-foreground">
-        <span>
-          완료: {sortedSchedule.filter(item => item.completed).length}개
-        </span>
-        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground h-6 text-xs">
+        <Button variant="outline" size="sm" className="h-7 px-3 text-xs">
           <Plus className="w-3 h-3 mr-1" />
           추가
         </Button>
+      </div>
+
+      {/* Timeline Layout */}
+      <div className="relative">
+        {/* Timeline line */}
+        <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/20 via-muted-foreground/20 to-primary/20"></div>
+        
+        <div className="space-y-3">
+          {sortedSchedule.map((item, index) => (
+            <div
+              key={item.id}
+              className="relative pl-10 group animate-scale-in"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              {/* Timeline dot */}
+              <div className={cn(
+                "absolute left-2.5 w-3 h-3 rounded-full border-2 bg-background transition-all duration-200",
+                item.completed 
+                  ? "border-success bg-success" 
+                  : "border-primary/40 group-hover:border-primary group-hover:scale-110"
+              )}>
+                {item.completed && (
+                  <CheckCircle2 className="w-2 h-2 text-white absolute -top-0.5 -left-0.5" />
+                )}
+              </div>
+
+              {/* Content card */}
+              <div
+                className={cn(
+                  "p-3 rounded-lg border transition-all duration-200 cursor-pointer hover:shadow-md hover:-translate-y-0.5",
+                  item.completed 
+                    ? "bg-muted/20 border-muted opacity-75" 
+                    : "bg-background border-border hover:border-primary/30"
+                )}
+                onClick={() => toggleScheduleItem(item.id)}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm">{getTypeIcon(item.type)}</span>
+                      <h3 className={cn(
+                        "font-medium text-sm",
+                        item.completed 
+                          ? "line-through text-muted-foreground" 
+                          : "text-foreground"
+                      )}>
+                        {item.title}
+                      </h3>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span className="font-mono">{item.time}</span>
+                      </div>
+                      {item.location && (
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3" />
+                          <span className="truncate">{item.location}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className={cn(
+                    "px-2 py-0.5 rounded text-xs font-medium shrink-0",
+                    item.priority === 'high' && "bg-destructive/10 text-destructive",
+                    item.priority === 'medium' && "bg-warning/10 text-warning", 
+                    item.priority === 'low' && "bg-success/10 text-success"
+                  )}>
+                    {item.priority === 'high' && '높음'}
+                    {item.priority === 'medium' && '보통'}
+                    {item.priority === 'low' && '낮음'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="flex justify-between items-center pt-2 text-xs">
+        <span className="text-muted-foreground">
+          완료: <span className="font-medium text-success">{sortedSchedule.filter(item => item.completed).length}</span> / {sortedSchedule.length}
+        </span>
+        <div className="text-muted-foreground">
+          {new Date().toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', weekday: 'short' })}
+        </div>
       </div>
     </section>
   );
