@@ -145,18 +145,34 @@ const mockPeople: Person[] = [
 
 // 회의실 데이터 - 실제 서비스 내 회의실 정보 반영
 const meetingRooms = [
-  { id: '1', name: '산토리니회의실', location: '판교오피스', capacity: 8, floor: '3층' },
-  { id: '2', name: '몰디브회의실', location: '판교오피스', capacity: 6, floor: '3층' },
-  { id: '3', name: '팔로알토 스튜디오', location: '판교오피스', capacity: 12, floor: '4층' },
-  { id: '4', name: '크리에이티브존', location: '판교오피스', capacity: 4, floor: '2층' },
-  { id: '5', name: '기획실', location: '여의도오피스', capacity: 10, floor: '3층' },
-  { id: '6', name: '면접실', location: '판교오피스', capacity: 4, floor: '2층' },
-  { id: '7', name: '테스트실', location: '여의도오피스', capacity: 6, floor: '1층' },
-  { id: '8', name: '재무실', location: '여의도오피스', capacity: 8, floor: '1층' },
-  { id: '9', name: '개발실', location: '판교오피스', capacity: 15, floor: '3층' },
-  { id: '10', name: '보안센터', location: '판교오피스', capacity: 6, floor: '1층' },
-  { id: '11', name: '디자인 스튜디오', location: '판교오피스', capacity: 8, floor: '2층' },
-  { id: '12', name: '임원회의실', location: '여의도오피스', capacity: 12, floor: '5층' }
+  // 판교오피스
+  { id: '1', name: '산토리니', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '2', name: '다낭', location: '판교오피스', capacity: 2, floor: '3층' },
+  { id: '3', name: '괌', location: '판교오피스', capacity: 4, floor: '3층' },
+  { id: '4', name: '모리셔스', location: '판교오피스', capacity: 20, floor: '4층' },
+  { id: '5', name: '하와이', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '6', name: '발리', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '7', name: '칸쿤', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '8', name: '이비자', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '9', name: '사이판', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '10', name: '제주', location: '판교오피스', capacity: 12, floor: '4층' },
+  { id: '11', name: '타히티', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '12', name: '몰타', location: '판교오피스', capacity: 6, floor: '3층' },
+  { id: '13', name: '몰디브', location: '판교오피스', capacity: 8, floor: '3층' },
+  { id: '14', name: '마요르카', location: '판교오피스', capacity: 4, floor: '2층' },
+  { id: '15', name: '팔라우', location: '판교오피스', capacity: 5, floor: '2층' },
+  { id: '16', name: '오키나와', location: '판교오피스', capacity: 12, floor: '4층' },
+  { id: '17', name: '니스', location: '판교오피스', capacity: 30, floor: '4층' },
+  { id: '18', name: '보홀', location: '판교오피스', capacity: 8, floor: '3층' },
+  
+  // 여의도오피스
+  { id: '19', name: '푸켓', location: '여의도오피스', capacity: 6, floor: '3층' },
+  { id: '20', name: '카프리', location: '여의도오피스', capacity: 6, floor: '3층' },
+  { id: '21', name: '포지타노', location: '여의도오피스', capacity: 6, floor: '3층' },
+  { id: '22', name: '시칠리아', location: '여의도오피스', capacity: 6, floor: '3층' },
+  { id: '23', name: '보라카이', location: '여의도오피스', capacity: 15, floor: '4층' },
+  { id: '24', name: '피지', location: '여의도오피스', capacity: 4, floor: '2층' },
+  { id: '25', name: '세부', location: '여의도오피스', capacity: 4, floor: '2층' }
 ];
 
 interface MeetingFormData {
