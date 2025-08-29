@@ -16,21 +16,11 @@ const getTypeIcon = (type: string) => {
   }
 };
 
-const getTypeColor = (type: string) => {
-  switch (type) {
-    case 'meeting': return 'bg-primary/10 text-primary border-primary/20';
-    case 'task': return 'bg-secondary/10 text-secondary-foreground border-secondary/20';
-    case 'reminder': return 'bg-accent/10 text-accent-foreground border-accent/20';
-    case 'personal': return 'bg-success/10 text-success border-success/20';
-    default: return 'bg-muted/10 text-muted-foreground border-muted/20';
-  }
-};
-
-const getPriorityColor = (priority: string) => {
+const getPriorityIndicator = (priority: string) => {
   switch (priority) {
-    case 'high': return 'border-l-destructive bg-destructive/5';
-    case 'medium': return 'border-l-warning bg-warning/5';
-    case 'low': return 'border-l-success bg-success/5';
+    case 'high': return 'border-l-destructive';
+    case 'medium': return 'border-l-warning';
+    case 'low': return 'border-l-muted';
     default: return 'border-l-muted';
   }
 };
@@ -85,8 +75,8 @@ export const TodaySchedule: React.FC = () => {
     <Card className="p-6 animate-fade-in">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-gradient-to-br from-primary to-primary-glow">
-            <Calendar className="w-5 h-5 text-white" />
+          <div className="p-2 rounded-lg bg-muted">
+            <Calendar className="w-5 h-5 text-foreground" />
           </div>
           <div>
             <h2 className="text-lg font-semibold">오늘의 일정</h2>
@@ -109,10 +99,9 @@ export const TodaySchedule: React.FC = () => {
           <div
             key={item.id}
             className={cn(
-              "p-4 rounded-xl border-l-4 transition-all duration-200 hover:shadow-md cursor-pointer group",
-              getPriorityColor(item.priority),
-              item.completed && "opacity-60",
-              isPast(item.time) && !item.completed && "ring-1 ring-muted/30"
+              "p-4 rounded-lg border-l-4 bg-card hover:bg-muted/30 transition-all duration-200 cursor-pointer",
+              getPriorityIndicator(item.priority),
+              item.completed && "opacity-60"
             )}
             onClick={() => toggleScheduleItem(item.id)}
           >
@@ -120,50 +109,34 @@ export const TodaySchedule: React.FC = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="p-0 h-6 w-6 rounded-full hover:bg-primary/10"
+                className="p-0 h-5 w-5 rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleScheduleItem(item.id);
                 }}
               >
                 {item.completed ? (
-                  <CheckCircle2 className="w-4 h-4 text-success" />
+                  <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
                 ) : (
-                  <Circle className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
+                  <Circle className="w-4 h-4 text-muted-foreground" />
                 )}
               </Button>
               
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-lg">{getTypeIcon(item.type)}</span>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm">{getTypeIcon(item.type)}</span>
                   <h3 className={cn(
                     "font-medium text-sm",
                     item.completed && "line-through text-muted-foreground"
                   )}>
                     {item.title}
                   </h3>
-                  <Badge 
-                    variant="outline" 
-                    className={cn("text-xs px-2 py-0.5", getTypeColor(item.type))}
-                  >
-                    {item.type === 'meeting' && '회의'}
-                    {item.type === 'task' && '업무'}
-                    {item.type === 'reminder' && '알림'}
-                    {item.type === 'personal' && '개인'}
-                  </Badge>
                 </div>
                 
                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    <span className={cn(
-                      isUpcoming(item.time) && "text-primary font-medium"
-                    )}>
-                      {item.time}
-                    </span>
-                    {isUpcoming(item.time) && (
-                      <AlertCircle className="w-3 h-3 text-primary" />
-                    )}
+                    <span>{item.time}</span>
                   </div>
                   
                   {item.location && (
