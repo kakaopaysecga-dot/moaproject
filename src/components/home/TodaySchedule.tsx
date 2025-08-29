@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Clock, MapPin, CheckCircle2, Circle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, CheckCircle2, Circle, Plus } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -54,114 +54,111 @@ export const TodaySchedule: React.FC = () => {
 
   if (sortedSchedule.length === 0) {
     return (
-      <Card className="p-6 animate-fade-in">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-xl bg-primary/10">
-            <Calendar className="w-5 h-5 text-primary" />
-          </div>
-          <h2 className="text-lg font-semibold">오늘의 일정</h2>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold text-foreground">오늘의 일정</h2>
+          <Button variant="ghost" size="sm" className="text-muted-foreground">
+            <Plus className="w-4 h-4" />
+          </Button>
         </div>
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-3">
-            <Calendar className="w-8 h-8 text-muted-foreground" />
-          </div>
+        <Card className="p-8 text-center border-dashed">
+          <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
           <p className="text-muted-foreground">오늘 예정된 일정이 없습니다</p>
-        </div>
-      </Card>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="p-6 animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-muted">
-            <Calendar className="w-5 h-5 text-foreground" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">오늘의 일정</h2>
-            <p className="text-sm text-muted-foreground">
-              {sortedSchedule.length}개의 일정
-            </p>
-          </div>
+    <div className="space-y-4 animate-fade-in">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-foreground">오늘의 일정</h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            {new Date().toLocaleDateString('ko-KR', { 
+              year: 'numeric',
+              month: 'long', 
+              day: 'numeric',
+              weekday: 'long'
+            })}
+          </p>
         </div>
-        <Badge variant="outline" className="text-xs">
-          {new Date().toLocaleDateString('ko-KR', { 
-            month: 'short', 
-            day: 'numeric',
-            weekday: 'short'
-          })}
-        </Badge>
+        <div className="text-right">
+          <div className="text-2xl font-bold text-foreground">{sortedSchedule.length}</div>
+          <div className="text-xs text-muted-foreground">개 일정</div>
+        </div>
       </div>
 
-      <div className="space-y-3">
-        {sortedSchedule.map((item) => (
-          <div
+      <div className="grid gap-3">
+        {sortedSchedule.map((item, index) => (
+          <Card
             key={item.id}
             className={cn(
-              "p-4 rounded-lg border-l-4 bg-card hover:bg-muted/30 transition-all duration-200 cursor-pointer",
+              "p-4 border-l-4 hover:shadow-md transition-all duration-200 cursor-pointer group",
               getPriorityIndicator(item.priority),
-              item.completed && "opacity-60"
+              item.completed && "opacity-60 bg-muted/20"
             )}
             onClick={() => toggleScheduleItem(item.id)}
           >
-            <div className="flex items-start gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-0 h-5 w-5 rounded-full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleScheduleItem(item.id);
-                }}
-              >
-                {item.completed ? (
-                  <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
-                ) : (
-                  <Circle className="w-4 h-4 text-muted-foreground" />
-                )}
-              </Button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{getTypeIcon(item.type)}</span>
+                  {item.completed ? (
+                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <Circle className="w-4 h-4 text-muted-foreground group-hover:text-foreground" />
+                  )}
+                </div>
               
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-sm">{getTypeIcon(item.type)}</span>
+                <div className="flex-1">
                   <h3 className={cn(
-                    "font-medium text-sm",
+                    "font-semibold text-foreground",
                     item.completed && "line-through text-muted-foreground"
                   )}>
                     {item.title}
                   </h3>
-                </div>
-                
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{item.time}</span>
-                  </div>
-                  
-                  {item.location && (
+                  <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      <span>{item.location}</span>
+                      <Clock className="w-3 h-3" />
+                      <span className="font-medium">{item.time}</span>
                     </div>
-                  )}
+                    {item.location && (
+                      <div className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3" />
+                        <span>{item.location}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-right">
+                <div className={cn(
+                  "text-xs px-2 py-1 rounded-full font-medium",
+                  item.priority === 'high' && "bg-red-100 text-red-700",
+                  item.priority === 'medium' && "bg-yellow-100 text-yellow-700", 
+                  item.priority === 'low' && "bg-green-100 text-green-700"
+                )}>
+                  {item.priority === 'high' && '높음'}
+                  {item.priority === 'medium' && '보통'}
+                  {item.priority === 'low' && '낮음'}
                 </div>
               </div>
             </div>
-          </div>
+          </Card>
         ))}
       </div>
-
-      <div className="mt-4 pt-4 border-t">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>
-            완료: {sortedSchedule.filter(item => item.completed).length}개
-          </span>
-          <span>
-            남은 일정: {sortedSchedule.filter(item => !item.completed).length}개
-          </span>
-        </div>
+      
+      <div className="flex justify-between items-center pt-4 border-t text-sm">
+        <span className="text-muted-foreground">
+          완료된 일정: <span className="font-semibold text-foreground">{sortedSchedule.filter(item => item.completed).length}</span>개
+        </span>
+        <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+          <Plus className="w-4 h-4 mr-1" />
+          일정 추가
+        </Button>
       </div>
-    </Card>
+    </div>
   );
 };
