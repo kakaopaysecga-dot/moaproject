@@ -21,7 +21,7 @@ export const GoogleIntegration: React.FC = () => {
     setIsConnecting(true);
     try {
       // 실제 구글 OAuth 플로우
-      const clientId = '1051442977730-v89g77dk2fh98t9t41rnj8b9q2u8emep.apps.googleusercontent.com';
+      const clientId = '759409896984-a43f1m1d98aht31rmcmogud1ev7lvk6l.apps.googleusercontent.com';
       const redirectUri = `${window.location.origin}/auth/google/callback`;
       const scope = 'https://www.googleapis.com/auth/calendar.events';
       
