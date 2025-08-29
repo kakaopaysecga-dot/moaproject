@@ -35,7 +35,7 @@ export class GoogleCalendarService {
 
   static async exchangeCodeForTokens(code: string): Promise<void> {
     try {
-      const { data, error } = await supabase.functions.invoke('google-calendar-auth', {
+      const { data, error } = await supabase.functions.invoke('google-calendar', {
         body: { code, action: 'exchange' }
       });
 
@@ -57,7 +57,7 @@ export class GoogleCalendarService {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke('google-calendar-event', {
+      const { data, error } = await supabase.functions.invoke('google-calendar', {
         body: {
           action: 'create',
           tokens,
@@ -100,7 +100,7 @@ export class GoogleCalendarService {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke('google-calendar-event', {
+      const { data, error } = await supabase.functions.invoke('google-calendar', {
         body: {
           action: 'list',
           tokens,

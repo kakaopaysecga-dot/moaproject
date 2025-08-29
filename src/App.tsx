@@ -10,6 +10,7 @@ import { useAuthStore } from "@/store/authStore";
 // Route imports
 import Login from "./routes/auth/Login";
 import Signup from "./routes/auth/Signup";
+import GoogleCallback from "./routes/auth/GoogleCallback";
 import Home from "./routes/Home";
 import NotFound from "./pages/NotFound";
 
@@ -149,6 +150,9 @@ const AppRoutes = () => {
             <AdminPage />
           </ProtectedRoute>
         } />
+
+        {/* Google Auth Callback */}
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
         {/* Catch-all route */}
         <Route path="*" element={<NotFound />} />

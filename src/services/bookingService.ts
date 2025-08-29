@@ -1,6 +1,7 @@
 import { Booking, Desk, MeetingRoom, TimeSlot } from '@/types';
 import { StorageService, STORAGE_KEYS } from './storage';
 import { generateTimeSlots, today, isDateInRange, getSmartOfficeMaxDate } from '@/lib/date';
+import { GoogleCalendarService } from './googleCalendarService';
 
 export class BookingService {
   private static bookedTimeSlots = new Set([
@@ -100,6 +101,29 @@ export class BookingService {
     this.bookedTimeSlots.add(booking.time);
     if (booking.type === 'smart-office' && booking.seatNumber) {
       this.bookedDesks.add(booking.seatNumber);
+    }
+
+    // Add to Google Calendar if connected
+    try {
+      if (GoogleCalendarService.isConnected()) {
+        const startTime = new Date(`${booking.date}T${booking.time}:00+09:00`).toISOString();
+        const endTime = new Date(new Date(startTime).getTime() + 60 * 60 * 1000).toISOString();
+        
+        const eventTitle = booking.type === 'smart-office' 
+          ? `스마트오피스 좌석 ${booking.seatNumber}번 (${booking.location === 'pangyo' ? '판교' : '여의도'})`
+          : `회의실 ${booking.roomName} (${booking.location === 'pangyo' ? '판교' : '여의도'})`;
+
+        await GoogleCalendarService.createEvent({
+          title: eventTitle,
+          description: `MOA 예약 - ${booking.type === 'smart-office' ? '스마트오피스' : '회의실'}`,
+          location: booking.location === 'pangyo' ? '판교오피스' : '여의도오피스',
+          startTime,
+          endTime
+        });
+      }
+    } catch (error) {
+      console.error('Google Calendar sync failed:', error);
+      // Don't fail the booking if calendar sync fails
     }
 
     return newBooking;

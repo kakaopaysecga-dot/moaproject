@@ -124,7 +124,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      handle_google_calendar_auth: {
+        Args: { request_body: Json }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

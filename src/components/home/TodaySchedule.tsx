@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useScheduleStore } from '@/store/scheduleStore';
 import { cn } from '@/lib/utils';
+import { GoogleCalendar } from '@/components/GoogleCalendar';
+import { GoogleCalendarService } from '@/services/googleCalendarService';
 
 const getTypeIcon = (type: string) => {
   switch (type) {
@@ -27,6 +29,11 @@ const getPriorityIndicator = (priority: string) => {
 
 export const TodaySchedule: React.FC = () => {
   const { todaySchedule, toggleScheduleItem } = useScheduleStore();
+  const [isGoogleConnected, setIsGoogleConnected] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsGoogleConnected(GoogleCalendarService.isConnected());
+  }, []);
   
   const sortedSchedule = [...todaySchedule].sort((a, b) => {
     const timeA = a.time.split(':').map(Number);
@@ -59,18 +66,28 @@ export const TodaySchedule: React.FC = () => {
 
   return (
     <section className="space-y-3 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
-          <div className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
-            {sortedSchedule.length}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
+            <div className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
+              {sortedSchedule.length}
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <GoogleCalendar 
+              isConnected={isGoogleConnected}
+              onConnect={() => setIsGoogleConnected(true)}
+              onDisconnect={() => {
+                GoogleCalendarService.disconnect();
+                setIsGoogleConnected(false);
+              }}
+            />
+            <Button variant="outline" size="sm" className="h-7 px-3 text-xs">
+              <Plus className="w-3 h-3 mr-1" />
+              추가
+            </Button>
           </div>
         </div>
-        <Button variant="outline" size="sm" className="h-7 px-3 text-xs">
-          <Plus className="w-3 h-3 mr-1" />
-          추가
-        </Button>
-      </div>
 
       {/* Timeline Layout */}
       <div className="relative">
