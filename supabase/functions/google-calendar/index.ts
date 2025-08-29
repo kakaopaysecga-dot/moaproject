@@ -12,18 +12,23 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  console.log('Google Calendar function called with method:', req.method);
+
   try {
     const { action, code, tokens, event, timeMin, timeMax } = await req.json();
+    console.log('Action requested:', action);
     
     // Use hardcoded values for demo - in production these would come from secrets
     const clientId = '1051442977730-v89g77dk2fh98t9t41rnj8b9q2u8emep.apps.googleusercontent.com';
     const clientSecret = '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';
     
     if (!clientId || !clientSecret) {
+      console.error('Google credentials missing');
       throw new Error('Google credentials not configured');
     }
 
     if (action === 'exchange') {
+      console.log('Exchanging authorization code for tokens');
       // Exchange authorization code for tokens
       const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
@@ -39,12 +44,16 @@ serve(async (req) => {
         }),
       });
 
+      console.log('Token response status:', tokenResponse.status);
       const tokenData = await tokenResponse.json();
+      console.log('Token data received:', tokenData);
       
       if (!tokenResponse.ok) {
+        console.error('Token exchange failed:', tokenData);
         throw new Error(`Token exchange failed: ${tokenData.error_description}`);
       }
 
+      console.log('Token exchange successful');
       return new Response(JSON.stringify({ tokens: tokenData }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -105,7 +114,10 @@ serve(async (req) => {
     
   } catch (error) {
     console.error('Google Calendar API error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      details: error.toString()
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

@@ -35,13 +35,20 @@ export class GoogleCalendarService {
 
   static async exchangeCodeForTokens(code: string): Promise<void> {
     try {
+      console.log('Exchanging code for tokens...');
       const { data, error } = await supabase.functions.invoke('google-calendar', {
         body: { code, action: 'exchange' }
       });
 
-      if (error) throw error;
+      console.log('Response:', { data, error });
+      
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
       
       if (data?.tokens) {
+        console.log('Tokens received successfully');
         this.setStoredTokens(data.tokens);
       }
     } catch (error) {
