@@ -8,56 +8,27 @@ import { useToast } from '@/hooks/use-toast';
 
 interface SmartOffice {
   id: string;
-  name: string;
-  building: string;
-  floor: string;
-  features: string[];
+  seatNumber: number;
+  building: '판교오피스' | '여의도오피스';
   status: 'available' | 'occupied';
-  occupancy: number;
-  maxCapacity: number;
 }
 
+// 판교오피스 1-10번, 여의도오피스 1-10번 총 20석
 const mockOffices: SmartOffice[] = [
-  {
-    id: '1',
-    name: '집중 워크스페이스',
-    building: 'A동',
-    floor: '4층',
-    features: ['고속 WiFi', '무선충전', '개인사물함', '조용한 환경'],
-    status: 'available',
-    occupancy: 3,
-    maxCapacity: 20
-  },
-  {
-    id: '2',
-    name: '협업 라운지',
-    building: 'B동',
-    floor: '3층',
-    features: ['대형 모니터', '화이트보드', '커피머신', '편안한 소파'],
-    status: 'available',
-    occupancy: 8,
-    maxCapacity: 15
-  },
-  {
-    id: '3',
-    name: '크리에이티브 스튜디오',
-    building: 'C동',
-    floor: '2층',
-    features: ['창의적 공간', 'VR 장비', '디자인 툴', '브레인스토밍 보드'],
-    status: 'available',
-    occupancy: 2,
-    maxCapacity: 12
-  },
-  {
-    id: '4',
-    name: '힐링 스페이스',
-    building: 'D동',
-    floor: '1층',
-    features: ['자연광', '식물', '안마의자', '명상 공간'],
-    status: 'occupied',
-    occupancy: 10,
-    maxCapacity: 10
-  }
+  // 판교오피스 (1-10번)
+  ...Array.from({ length: 10 }, (_, i) => ({
+    id: `pangyo-${i + 1}`,
+    seatNumber: i + 1,
+    building: '판교오피스' as const,
+    status: Math.random() > 0.3 ? 'available' as const : 'occupied' as const
+  })),
+  // 여의도오피스 (1-10번)
+  ...Array.from({ length: 10 }, (_, i) => ({
+    id: `yeouido-${i + 1}`,
+    seatNumber: i + 1,
+    building: '여의도오피스' as const,
+    status: Math.random() > 0.3 ? 'available' as const : 'occupied' as const
+  }))
 ];
 
 export default function QuickSmartOffice() {
@@ -76,22 +47,16 @@ export default function QuickSmartOffice() {
   const useOffice = (office: SmartOffice) => {
     toast({
       title: "이용 시작! ✨",
-      description: `${office.name} 이용이 시작되었습니다. 즐거운 시간 보내세요!`,
+      description: `${office.building} ${office.seatNumber}번석 이용이 시작되었습니다. 즐거운 시간 보내세요!`,
     });
   };
 
-  const getOccupancyColor = (occupancy: number, maxCapacity: number) => {
-    const ratio = occupancy / maxCapacity;
-    if (ratio < 0.5) return 'text-success';
-    if (ratio < 0.8) return 'text-warning';
-    return 'text-destructive';
+  const getAvailableCount = (building: string) => {
+    return offices.filter(office => office.building === building && office.status === 'available').length;
   };
 
-  const getFeatureIcon = (feature: string) => {
-    if (feature.includes('WiFi')) return <Wifi className="h-3 w-3" />;
-    if (feature.includes('모니터')) return <Monitor className="h-3 w-3" />;
-    if (feature.includes('커피')) return <Coffee className="h-3 w-3" />;
-    return <Zap className="h-3 w-3" />;
+  const getTotalCount = (building: string) => {
+    return offices.filter(office => office.building === building).length;
   };
 
   return (
@@ -124,72 +89,54 @@ export default function QuickSmartOffice() {
           </div>
         )}
 
-        {/* 스마트 오피스 목록 */}
+        {/* 빌딩별 현황 */}
         {!isLoading && (
-          <div className="space-y-4">
-            {offices.map((office, index) => (
-              <Card 
-                key={office.id} 
-                className="p-4 hover:shadow-lg transition-all duration-300 animate-fade-in border-l-4 border-l-primary"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="space-y-3">
-                  {/* 기본 정보 */}
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-lg">{office.name}</h3>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <MapPin className="h-4 w-4" />
-                        {office.building} {office.floor}
-                      </div>
-                    </div>
-                    <Badge className={office.status === 'available' ? 'bg-success/10 text-success border-success/20' : 'bg-destructive/10 text-destructive border-destructive/20'}>
-                      {office.status === 'available' ? '이용 가능' : '만석'}
-                    </Badge>
-                  </div>
-
-                  {/* 현재 이용률 */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">현재 이용률</span>
-                      <span className={getOccupancyColor(office.occupancy, office.maxCapacity)}>
-                        {office.occupancy}/{office.maxCapacity}명
-                      </span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div 
-                        className="bg-primary rounded-full h-2 transition-all duration-300"
-                        style={{ width: `${(office.occupancy / office.maxCapacity) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* 특징 */}
-                  <div className="grid grid-cols-2 gap-2">
-                    {office.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-1 text-xs text-muted-foreground">
-                        {getFeatureIcon(feature)}
-                        <span>{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* 이용 버튼 */}
-                  {office.status === 'available' ? (
-                    <Button 
-                      onClick={() => useOffice(office)} 
-                      className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      즉시 이용하기
-                    </Button>
-                  ) : (
-                    <Button variant="outline" disabled className="w-full">
-                      현재 만석입니다
-                    </Button>
-                  )}
+          <div className="space-y-6">
+            {['판교오피스', '여의도오피스'].map(building => (
+              <div key={building} className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">{building}</h3>
+                  <Badge variant="outline">
+                    {getAvailableCount(building)}/{getTotalCount(building)} 사용 가능
+                  </Badge>
                 </div>
-              </Card>
+                
+                <div className="grid grid-cols-5 gap-2">
+                  {offices
+                    .filter(office => office.building === building)
+                    .map((office, index) => (
+                      <Card 
+                        key={office.id}
+                        className={`relative p-3 text-center hover:shadow-lg transition-all duration-300 animate-scale-in ${
+                          office.status === 'available' 
+                            ? 'hover:border-primary cursor-pointer' 
+                            : 'opacity-60'
+                        }`}
+                        style={{ animationDelay: `${index * 50}ms` }}
+                        onClick={() => office.status === 'available' && useOffice(office)}
+                      >
+                        <div className="space-y-2">
+                          <div className="text-sm font-medium">
+                            {office.seatNumber}번
+                          </div>
+                          <div className={`w-3 h-3 rounded-full mx-auto ${
+                            office.status === 'available' 
+                              ? 'bg-success animate-pulse' 
+                              : 'bg-destructive'
+                          }`} />
+                          <div className="text-xs text-muted-foreground">
+                            {office.status === 'available' ? '사용가능' : '사용중'}
+                          </div>
+                        </div>
+                        
+                        {office.status === 'available' && (
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                        )}
+                      </Card>
+                    ))
+                  }
+                </div>
+              </div>
             ))}
           </div>
         )}
