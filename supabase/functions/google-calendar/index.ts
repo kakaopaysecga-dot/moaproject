@@ -15,8 +15,9 @@ serve(async (req) => {
   try {
     const { action, code, tokens, event, timeMin, timeMax } = await req.json();
     
-    const clientId = Deno.env.get('GOOGLE_CLIENT_ID');
-    const clientSecret = Deno.env.get('GOOGLE_CLIENT_SECRET');
+    // Use hardcoded values for demo - in production these would come from secrets
+    const clientId = '1051442977730-v89g77dk2fh98t9t41rnj8b9q2u8emep.apps.googleusercontent.com';
+    const clientSecret = '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';
     
     if (!clientId || !clientSecret) {
       throw new Error('Google credentials not configured');

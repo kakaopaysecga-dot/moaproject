@@ -27,7 +27,7 @@ export const GoogleCalendar: React.FC<GoogleCalendarProps> = ({
     setIsConnecting(true);
     try {
       // Create OAuth URL
-      const clientId = 'YOUR_GOOGLE_CLIENT_ID'; // 사용자가 실제 ID로 교체
+      const clientId = '1051442977730-v89g77dk2fh98t9t41rnj8b9q2u8emep.apps.googleusercontent.com';
       const redirectUri = `${window.location.origin}/auth/google/callback`;
       const scope = 'https://www.googleapis.com/auth/calendar.events';
       

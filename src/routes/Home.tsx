@@ -10,6 +10,8 @@ import { QuickActions } from '@/components/home/QuickActions';
 import { RecentActivity } from '@/components/home/RecentActivity';
 import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
 import { TodaySchedule } from '@/components/home/TodaySchedule';
+import { GoogleIntegration } from '@/components/home/GoogleIntegration';
+import { GoogleCalendarSync } from '@/components/home/GoogleCalendarSync';
 
 export default function Home() {
   const { user } = useAuthStore();
@@ -45,6 +47,12 @@ export default function Home() {
       
       {/* 오늘의 일정 */}
       <TodaySchedule />
+      
+      {/* 구글 연동 */}
+      <GoogleIntegration />
+      
+      {/* 구글 캘린더 동기화 */}
+      <GoogleCalendarSync />
       
       {/* 기존 서비스 카드 */}
       <ServiceCards />
