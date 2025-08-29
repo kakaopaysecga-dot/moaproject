@@ -45,9 +45,15 @@ export default function QuickSmartOffice() {
   }, []);
 
   const useOffice = (office: SmartOffice) => {
+    const now = new Date();
+    const endTime = new Date();
+    endTime.setHours(18, 0, 0, 0); // 퇴근시간 6시로 설정
+    
+    const formatTime = (date: Date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    
     toast({
       title: "이용 시작! ✨",
-      description: `${office.building} ${office.seatNumber}번석 이용이 시작되었습니다. 즐거운 시간 보내세요!`,
+      description: `${office.building} ${office.seatNumber}번석 이용 시작 (${formatTime(now)} ~ ${formatTime(endTime)})`,
     });
   };
 
@@ -101,9 +107,12 @@ export default function QuickSmartOffice() {
                   </Badge>
                 </div>
                 
-                <div className="grid grid-cols-5 gap-2">
+                
+                {/* 홀수 자리 (1, 3, 5, 7, 9) */}
+                <div className="grid grid-cols-5 gap-2 mb-2">
                   {offices
-                    .filter(office => office.building === building)
+                    .filter(office => office.building === building && office.seatNumber % 2 === 1)
+                    .sort((a, b) => a.seatNumber - b.seatNumber)
                     .map((office, index) => (
                       <Card 
                         key={office.id}
@@ -113,6 +122,44 @@ export default function QuickSmartOffice() {
                             : 'opacity-60'
                         }`}
                         style={{ animationDelay: `${index * 50}ms` }}
+                        onClick={() => office.status === 'available' && useOffice(office)}
+                      >
+                        <div className="space-y-2">
+                          <div className="text-sm font-medium">
+                            {office.seatNumber}번
+                          </div>
+                          <div className={`w-3 h-3 rounded-full mx-auto ${
+                            office.status === 'available' 
+                              ? 'bg-success animate-pulse' 
+                              : 'bg-destructive'
+                          }`} />
+                          <div className="text-xs text-muted-foreground">
+                            {office.status === 'available' ? '사용가능' : '사용중'}
+                          </div>
+                        </div>
+                        
+                        {office.status === 'available' && (
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                        )}
+                      </Card>
+                    ))
+                  }
+                </div>
+                
+                {/* 짝수 자리 (2, 4, 6, 8, 10) */}
+                <div className="grid grid-cols-5 gap-2">
+                  {offices
+                    .filter(office => office.building === building && office.seatNumber % 2 === 0)
+                    .sort((a, b) => a.seatNumber - b.seatNumber)
+                    .map((office, index) => (
+                      <Card 
+                        key={office.id}
+                        className={`relative p-3 text-center hover:shadow-lg transition-all duration-300 animate-scale-in ${
+                          office.status === 'available' 
+                            ? 'hover:border-primary cursor-pointer' 
+                            : 'opacity-60'
+                        }`}
+                        style={{ animationDelay: `${(index + 5) * 50}ms` }}
                         onClick={() => office.status === 'available' && useOffice(office)}
                       >
                         <div className="space-y-2">
@@ -155,9 +202,10 @@ export default function QuickSmartOffice() {
           <div className="p-4 text-center space-y-2">
             <div className="text-sm font-medium">💡 즉시예약 안내</div>
             <div className="text-xs text-muted-foreground space-y-1">
-              <div>• 클릭 한 번으로 바로 이용 시작</div>
-              <div>• 실시간 이용률 확인 가능</div>
+              <div>• 클릭 한 번으로 지금부터 퇴근시간(18:00)까지 이용</div>
+              <div>• 실시간 이용현황 확인 가능</div>
               <div>• 다양한 편의시설 제공</div>
+              <div>• 홀수석(1,3,5,7,9) / 짝수석(2,4,6,8,10) 배치</div>
             </div>
           </div>
         </Card>
