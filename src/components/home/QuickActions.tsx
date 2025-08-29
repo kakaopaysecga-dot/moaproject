@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Coffee, Thermometer, CreditCard, Zap } from 'lucide-react';
+import { Calendar, Coffee, CreditCard, Zap } from 'lucide-react';
 
 const quickActions = [
   {
@@ -21,14 +21,6 @@ const quickActions = [
     link: '/booking/quick-office',
     gradient: 'from-success/90 to-success/70',
     badge: '즉시'
-  },
-  {
-    title: '온도 조절 요청',
-    subtitle: '실시간 반영',
-    icon: Thermometer,
-    link: '/requests/environment',
-    gradient: 'from-warning/90 to-warning/70',
-    badge: '실시간'
   },
   {
     title: '명함 신청',
