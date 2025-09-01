@@ -54,7 +54,7 @@ export const QuickActions: React.FC = () => {
           return (
             <Card 
               key={action.title}
-              className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 animate-scale-in"
+              className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 animate-scale-in rounded-full aspect-square"
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <Link to={action.link}>
