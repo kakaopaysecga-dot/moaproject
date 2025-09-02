@@ -17,18 +17,34 @@ serve(async (req) => {
   try {
     const { action, code, tokens, event, timeMin, timeMax } = await req.json();
     console.log('Action requested:', action);
+    console.log('Request data:', { action, hasCode: !!code, hasTokens: !!tokens });
     
     // Get credentials from environment secrets
     const clientId = '759409896984-a43f1m1d98aht31rmcmogud1ev7lvk6l.apps.googleusercontent.com';
     const clientSecret = Deno.env.get('GOOGLE_CLIENT_SECRET');
     
+    console.log('Credentials check:', {
+      clientId: clientId.substring(0, 10) + '...',
+      clientSecretExists: !!clientSecret,
+      clientSecretLength: clientSecret?.length || 0
+    });
+    
     if (!clientId || !clientSecret) {
-      console.error('Google credentials missing');
+      console.error('Google credentials missing - clientId:', !!clientId, 'clientSecret:', !!clientSecret);
       throw new Error('Google credentials not configured');
     }
 
     if (action === 'exchange') {
       console.log('Exchanging authorization code for tokens');
+      
+      const redirectUri = `${req.headers.get('referer')?.split('?')[0] || req.headers.get('origin')}/auth/google/callback`;
+      console.log('OAuth exchange details:', {
+        code: code?.substring(0, 10) + '...',
+        redirectUri,
+        referer: req.headers.get('referer'),
+        origin: req.headers.get('origin')
+      });
+      
       // Exchange authorization code for tokens
       const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
@@ -40,17 +56,23 @@ serve(async (req) => {
           client_secret: clientSecret,
           code: code,
           grant_type: 'authorization_code',
-          redirect_uri: `${req.headers.get('referer')?.split('?')[0] || req.headers.get('origin')}/auth/google/callback`,
+          redirect_uri: redirectUri,
         }),
       });
 
       console.log('Token response status:', tokenResponse.status);
       const tokenData = await tokenResponse.json();
-      console.log('Token data received:', tokenData);
+      console.log('Token data received:', {
+        hasAccessToken: !!tokenData.access_token,
+        hasRefreshToken: !!tokenData.refresh_token,
+        error: tokenData.error,
+        errorDescription: tokenData.error_description
+      });
       
       if (!tokenResponse.ok) {
         console.error('Token exchange failed:', tokenData);
-        throw new Error(`Token exchange failed: ${tokenData.error_description}`);
+        const errorMsg = tokenData.error_description || tokenData.error || 'Unknown token exchange error';
+        throw new Error(`Token exchange failed (${tokenResponse.status}): ${errorMsg}`);
       }
 
       console.log('Token exchange successful');
@@ -114,11 +136,22 @@ serve(async (req) => {
     
   } catch (error) {
     console.error('Google Calendar API error:', error);
+    
+    // 에러 타입별 상세 로깅
+    if (error.message?.includes('403')) {
+      console.error('403 에러 - OAuth 설정 문제 또는 권한 부족');
+    } else if (error.message?.includes('400')) {
+      console.error('400 에러 - 잘못된 요청 파라미터');
+    } else if (error.message?.includes('Token exchange failed')) {
+      console.error('토큰 교환 실패 - OAuth 설정 확인 필요');
+    }
+    
     return new Response(JSON.stringify({ 
-      error: error.message,
-      details: error.toString()
+      error: error.message || 'Unknown error',
+      details: error.toString(),
+      timestamp: new Date().toISOString()
     }), {
-      status: 500,
+      status: error.message?.includes('403') ? 403 : 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
