@@ -15,7 +15,7 @@ const quickActions = [
     badge: 'AI'
   },
   {
-    title: '사무실 자리 이용',
+    title: '스마트오피스 자리 예약',
     subtitle: '즉시 이용 가능',
     icon: Building2,
     link: '/booking/quick-office',
