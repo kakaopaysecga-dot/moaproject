@@ -74,17 +74,17 @@ export const ServiceCards: React.FC = () => {
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground px-1">자주 사용하는 서비스</h3>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {frequentServices.map((service) => (
+          {frequentServices.map((service, index) => (
             <Link key={service.path} to={service.path} className="group">
-              <Card className="relative overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300 min-h-[90px] group-hover:-translate-y-1">
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-90`} />
-                <CardContent className="relative p-4 flex items-center gap-3 text-white h-full">
-                  <div className="p-2 rounded-xl bg-white/20 backdrop-blur-sm">
+              <Card className="relative overflow-hidden border border-border/50 bg-card hover:shadow-xl transition-all duration-300 min-h-[80px] group-hover:scale-[1.02] animate-fade-in" 
+                style={{ animationDelay: `${index * 100}ms` }}>
+                <CardContent className="relative p-4 flex items-center gap-3">
+                  <div className={`p-3 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <service.icon className="h-5 w-5 text-white" />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="font-semibold text-sm">{service.title}</h4>
-                    <p className="text-xs text-white/80">{service.description}</p>
+                    <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
+                    <p className="text-xs text-muted-foreground">{service.description}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -97,17 +97,17 @@ export const ServiceCards: React.FC = () => {
       <section className="space-y-4">
         <h3 className="text-lg font-semibold text-foreground px-1">전체 서비스</h3>
         <div className="grid grid-cols-2 gap-3">
-          {allServices.map((service) => (
+          {allServices.map((service, index) => (
             <Link key={service.path} to={service.path} className="group">
-              <Card className="relative overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300 min-h-[110px] group-hover:-translate-y-1">
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-90`} />
-                <CardContent className="relative p-4 text-center space-y-3 text-white h-full flex flex-col justify-center">
-                  <div className="mx-auto p-2 rounded-xl bg-white/20 backdrop-blur-sm w-fit">
+              <Card className="relative overflow-hidden border border-border/50 bg-card hover:shadow-xl transition-all duration-300 min-h-[120px] group-hover:scale-[1.02] animate-scale-in"
+                style={{ animationDelay: `${(index + 2) * 100}ms` }}>
+                <CardContent className="relative p-4 text-center space-y-3 h-full flex flex-col justify-center">
+                  <div className={`mx-auto p-3 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg group-hover:scale-110 transition-transform duration-300 w-fit`}>
                     <service.icon className="h-5 w-5 text-white" />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="font-semibold text-sm leading-tight">{service.title}</h4>
-                    <p className="text-xs text-white/80 leading-relaxed">{service.description}</p>
+                    <h4 className="font-semibold text-sm leading-tight text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{service.description}</p>
                   </div>
                 </CardContent>
               </Card>

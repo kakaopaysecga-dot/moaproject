@@ -42,6 +42,9 @@ export default function Home() {
       {/* 빠른 예약 */}
       <QuickActions />
       
+      {/* 서비스 메뉴 */}
+      <ServiceCards />
+      
       {/* 오늘의 중요 정보 */}
       <div className="grid gap-4">
         <TodaySchedule />
@@ -49,16 +52,10 @@ export default function Home() {
       </div>
       
       {/* 통합 서비스 */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground px-1">통합 서비스</h2>
-        <div className="grid gap-4">
-          <GoogleIntegration />
-          <GoogleCalendarSync />
-        </div>
+      <div className="grid gap-4">
+        <GoogleIntegration />
+        <GoogleCalendarSync />
       </div>
-      
-      {/* 서비스 메뉴 */}
-      <ServiceCards />
       
       {/* 관리자 전용 */}
       {user.isAdmin && (
