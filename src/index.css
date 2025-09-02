@@ -241,4 +241,53 @@ All colors MUST be HSL.
       padding-bottom: max(env(safe-area-inset-bottom), 0px);
     }
   }
+  }
+  
+  /* Dynamic Welcome Section Animations */
+  @keyframes gradient-shift {
+    0% { 
+      background: linear-gradient(45deg, hsl(var(--primary) / 0.05), hsl(var(--accent) / 0.03));
+    }
+    33% { 
+      background: linear-gradient(45deg, hsl(var(--accent) / 0.06), hsl(var(--primary) / 0.04));
+    }
+    66% { 
+      background: linear-gradient(45deg, hsl(var(--primary) / 0.04), hsl(var(--accent) / 0.06));
+    }
+    100% { 
+      background: linear-gradient(45deg, hsl(var(--primary) / 0.05), hsl(var(--accent) / 0.03));
+    }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { 
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% { 
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+  }
+  
+  @keyframes float-elements {
+    0%, 100% { 
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% { 
+      transform: translateY(-10px) rotate(5deg);
+    }
+  }
+  
+  .animate-gradient-shift {
+    animation: gradient-shift 8s ease-in-out infinite;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float-elements 6s ease-in-out infinite;
+  }
 }
