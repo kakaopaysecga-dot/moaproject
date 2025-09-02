@@ -32,7 +32,12 @@ export default function Home() {
 
   return (
     <div className="space-y-6 pb-6">
-      <WelcomeSection userEnglishName={user.englishName} />
+      <WelcomeSection 
+        userEnglishName={user.englishName}
+        userDept={user.dept}
+        userBuilding={user.building}
+        userWorkArea={user.workArea}
+      />
       
       {/* 핵심 기능 - 퀵 액션 */}
       <QuickActions />

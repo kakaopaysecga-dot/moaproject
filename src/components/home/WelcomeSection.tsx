@@ -2,10 +2,16 @@ import React from 'react';
 
 interface WelcomeSectionProps {
   userEnglishName: string;
+  userDept: string;
+  userBuilding: string;
+  userWorkArea: string;
 }
 
 export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
   userEnglishName,
+  userDept,
+  userBuilding,
+  userWorkArea,
 }) => {
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? '좋은 아침이에요' : currentHour < 18 ? '오늘도 수고하세요' : '오늘 하루 고생했어요';
@@ -25,12 +31,16 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
           <span className="text-kakao-dark font-bold text-2xl">{userEnglishName?.charAt(0)?.toUpperCase() || '?'}</span>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-3">
           <h1 className="text-xl font-bold text-white drop-shadow-lg">
             {greeting}, {userEnglishName}님
           </h1>
+          <div className="flex items-center justify-center gap-2 text-white/90 text-sm font-medium">
+            <span className="px-2 py-1 bg-white/20 rounded-full">{userDept}</span>
+            <span className="px-2 py-1 bg-white/20 rounded-full">{userBuilding}</span>
+          </div>
           <p className="text-white/80 text-sm">
-            오늘도 MOA와 함께 효율적인 하루 보내세요
+            {userWorkArea}
           </p>
         </div>
       </div>
