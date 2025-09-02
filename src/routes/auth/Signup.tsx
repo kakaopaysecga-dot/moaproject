@@ -5,9 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { FormField, Input, Select } from '@/components/ui/FormField';
 import { SuccessAnimation } from '@/components/ui/SuccessAnimation';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Signup() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { signup, isLoading, error, clearError } = useAuthStore();
   const [formData, setFormData] = useState({
     email: '',
@@ -128,9 +130,17 @@ export default function Signup() {
 
     try {
       await signup(formData);
+      toast({
+        title: "회원가입 성공!",
+        description: "환영합니다! 로그인 페이지로 이동합니다.",
+      });
       setShowSuccess(true);
     } catch (error) {
-      // Error handled by store
+      toast({
+        title: "회원가입 실패",
+        description: "잠시 후 다시 시도해주세요.",
+        variant: "destructive",
+      });
     }
   };
 
