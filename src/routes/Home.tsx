@@ -39,7 +39,7 @@ export default function Home() {
         userWorkArea={user.workArea}
       />
       
-      {/* 핵심 기능 - 퀵 액션 */}
+      {/* 빠른 예약 */}
       <QuickActions />
       
       {/* 오늘의 중요 정보 */}
@@ -57,11 +57,8 @@ export default function Home() {
         </div>
       </div>
       
-      {/* 전체 서비스 목록 */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold text-foreground px-1">전체 서비스</h2>
-        <ServiceCards />
-      </div>
+      {/* 서비스 메뉴 */}
+      <ServiceCards />
       
       {/* 관리자 전용 */}
       {user.isAdmin && (

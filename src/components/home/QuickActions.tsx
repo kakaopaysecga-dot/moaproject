@@ -11,7 +11,7 @@ const quickActions = [
     subtitle: 'AI 추천 회의실',
     icon: Calendar,
     link: '/booking/quick-meeting',
-    gradient: 'from-primary/90 to-accent/90',
+    gradient: 'from-primary to-accent',
     badge: 'AI'
   },
   {
@@ -19,24 +19,8 @@ const quickActions = [
     subtitle: '즉시 이용 가능',
     icon: Coffee,
     link: '/booking/quick-office',
-    gradient: 'from-success/90 to-success/70',
+    gradient: 'from-success to-emerald-400',
     badge: '즉시'
-  },
-  {
-    title: '온도 조절 요청',
-    subtitle: '실시간 반영',
-    icon: Thermometer,
-    link: '/requests/environment',
-    gradient: 'from-warning/90 to-warning/70',
-    badge: '실시간'
-  },
-  {
-    title: '명함 신청',
-    subtitle: '디지털 명함 포함',
-    icon: CreditCard,
-    link: '/requests/business-card',
-    gradient: 'from-corporate-blue/90 to-corporate-blue/70',
-    badge: '디지털'
   }
 ];
 
@@ -44,42 +28,43 @@ export const QuickActions: React.FC = () => {
   return (
     <section className="space-y-4 animate-fade-in">
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-foreground">퀵 실행</h2>
+        <h2 className="text-lg font-semibold text-foreground">빠른 예약</h2>
         <Zap className="h-4 w-4 text-primary animate-bounce-subtle" />
       </div>
       
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {quickActions.map((action, index) => {
           const Icon = action.icon;
           return (
             <Card 
               key={action.title}
-              className="relative overflow-hidden group hover:shadow-xl transition-all duration-300 animate-scale-in"
+              className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 min-h-[100px]"
               style={{ animationDelay: `${index * 150}ms` }}
             >
-              <Link to={action.link}>
-                <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`} />
+              <Link to={action.link} className="block h-full">
+                <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-90`} />
                 
-                <div className="relative p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className={`p-2 rounded-xl bg-gradient-to-br ${action.gradient} shadow-lg`}>
-                      <Icon className="h-5 w-5 text-white" />
+                <div className="relative p-5 h-full flex items-center gap-4 text-white">
+                  <div className="flex items-start justify-between w-full">
+                    <div className="flex items-center gap-3">
+                      <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
+                        <Icon className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="font-semibold text-base text-white">
+                          {action.title}
+                        </h3>
+                        <p className="text-sm text-white/80">
+                          {action.subtitle}
+                        </p>
+                      </div>
                     </div>
                     <Badge 
                       variant="secondary" 
-                      className="text-xs bg-primary/10 text-primary border-primary/20"
+                      className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm"
                     >
                       {action.badge}
                     </Badge>
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">
-                      {action.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      {action.subtitle}
-                    </p>
                   </div>
                 </div>
 
