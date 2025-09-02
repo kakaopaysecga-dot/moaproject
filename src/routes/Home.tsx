@@ -42,20 +42,14 @@ export default function Home() {
       {/* 빠른 예약 */}
       <QuickActions />
       
+      {/* AI 사람찾기 */}
+      <AIPeopleFinder />
+      
       {/* 서비스 메뉴 */}
       <ServiceCards />
       
-      {/* 오늘의 중요 정보 */}
-      <div className="grid gap-4">
-        <TodaySchedule />
-        <AIPeopleFinder />
-      </div>
-      
-      {/* 통합 서비스 */}
-      <div className="grid gap-4">
-        <GoogleIntegration />
-        <GoogleCalendarSync />
-      </div>
+      {/* 오늘의 일정 */}
+      <TodaySchedule />
       
       {/* 관리자 전용 */}
       {user.isAdmin && (
