@@ -11,7 +11,7 @@ const quickActions = [
     subtitle: 'AI 추천 회의실',
     icon: Calendar,
     link: '/booking/quick-meeting',
-    gradient: 'from-blue-500 to-blue-600',
+    gradient: 'from-slate-600 to-slate-700',
     badge: 'AI'
   },
   {
@@ -19,7 +19,7 @@ const quickActions = [
     subtitle: '즉시 이용 가능',
     icon: Building2,
     link: '/booking/quick-office',
-    gradient: 'from-emerald-500 to-emerald-600',
+    gradient: 'from-rose-500 to-pink-600',
     badge: '즉시'
   }
 ];
