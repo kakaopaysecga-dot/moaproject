@@ -146,7 +146,14 @@ export default function Signup() {
 
   const handleSuccessComplete = () => {
     setShowSuccess(false);
-    navigate('/login');
+    // 회원가입한 이메일과 패스워드를 로그인 페이지로 전달
+    navigate('/login', { 
+      state: { 
+        email: formData.email, 
+        password: formData.password,
+        autoLogin: true
+      } 
+    });
   };
 
   return (

@@ -26,25 +26,25 @@ export const SuccessAnimation: React.FC<SuccessAnimationProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 animate-fade-in">
-      <div className="bg-background border border-border rounded-lg p-8 max-w-sm mx-4 text-center animate-scale-in">
-        <div className="mb-4 flex justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in">
+      <div className="bg-background border border-border rounded-2xl p-12 max-w-md w-full mx-4 text-center animate-scale-in shadow-2xl">
+        <div className="mb-8 flex justify-center">
           <div className="relative">
-            <CheckCircle className="h-16 w-16 text-success animate-scale-in" />
+            <CheckCircle className="h-24 w-24 text-success animate-scale-in" />
             <div className="absolute inset-0 rounded-full bg-success/20 animate-ping"></div>
           </div>
         </div>
         
-        <h3 className="text-lg font-semibold text-foreground mb-2 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <h3 className="text-2xl font-bold text-foreground mb-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
           {title}
         </h3>
         
-        <p className="text-sm text-muted-foreground animate-fade-in" style={{ animationDelay: '0.4s' }}>
+        <p className="text-base text-muted-foreground animate-fade-in mb-6" style={{ animationDelay: '0.4s' }}>
           {message}
         </p>
         
-        <div className="mt-4 h-1 bg-muted rounded-full overflow-hidden">
-          <div className="h-full bg-success rounded-full animate-[slide-in-right_2s_ease-out]"></div>
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
+          <div className="h-full bg-success rounded-full animate-[slide-in-right_2.5s_ease-out]"></div>
         </div>
       </div>
     </div>

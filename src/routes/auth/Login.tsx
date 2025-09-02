@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormField, Input } from '@/components/ui/FormField';
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     login,
     isLoading,
@@ -16,6 +17,29 @@ export default function Login() {
     email: '',
     password: ''
   });
+  
+  // 회원가입에서 전달된 정보로 자동 로그인
+  useEffect(() => {
+    if (location.state?.autoLogin && location.state?.email && location.state?.password) {
+      setFormData({
+        email: location.state.email,
+        password: location.state.password
+      });
+      
+      // 자동 로그인 실행
+      const autoLogin = async () => {
+        try {
+          await login(location.state.email, location.state.password);
+          navigate('/');
+        } catch (error) {
+          // 자동 로그인 실패 시 폼에 정보만 채워놓기
+        }
+      };
+      
+      autoLogin();
+    }
+  }, [location.state, login, navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
       name,
