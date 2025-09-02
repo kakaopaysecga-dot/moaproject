@@ -26,33 +26,18 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-3">
             {/* User Info - Desktop */}
             <div className="hidden lg:flex items-center gap-3">
-              <div className="flex flex-col items-end">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-foreground">{user.englishName || user.name}</span>
-                  <div className="flex items-center gap-1">
-                    <Circle className="h-2 w-2 fill-success text-success" />
-                    <span className="text-xs text-success font-medium">온라인</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5 mt-1">
-                  <Badge variant="secondary" className="text-xs px-2 py-0.5 h-5">
-                    {user.dept}
-                  </Badge>
-                  <Badge variant="outline" className="text-xs px-2 py-0.5 h-5">
-                    {user.building}
-                  </Badge>
-                  {user.workArea && (
-                    <Badge variant="outline" className="text-xs px-2 py-0.5 h-5">
-                      {user.workArea}
-                    </Badge>
-                  )}
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-foreground">{user.englishName || user.name}</span>
+                <div className="flex items-center gap-1">
+                  <Circle className="h-2 w-2 fill-success text-success" />
+                  <span className="text-xs text-success font-medium">온라인</span>
                 </div>
               </div>
             </div>
 
             {/* User Info - Mobile/Tablet */}
             <div className="lg:hidden flex items-center gap-2">
-              <div className="flex flex-col items-end">
+              <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-foreground">{user.name}</span>
                 <div className="flex items-center gap-1">
                   <Circle className="h-2 w-2 fill-success text-success" />
