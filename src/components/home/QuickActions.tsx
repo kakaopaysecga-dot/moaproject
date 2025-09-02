@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Coffee, Thermometer, CreditCard, Zap } from 'lucide-react';
+import { Calendar, Building2, Zap } from 'lucide-react';
 
 const quickActions = [
   {
@@ -11,15 +11,15 @@ const quickActions = [
     subtitle: 'AI 추천 회의실',
     icon: Calendar,
     link: '/booking/quick-meeting',
-    gradient: 'from-primary to-accent',
+    gradient: 'from-blue-500 to-blue-600',
     badge: 'AI'
   },
   {
-    title: '스마트 오피스',
+    title: '사무실 자리 이용',
     subtitle: '즉시 이용 가능',
-    icon: Coffee,
+    icon: Building2,
     link: '/booking/quick-office',
-    gradient: 'from-success to-emerald-400',
+    gradient: 'from-emerald-500 to-emerald-600',
     badge: '즉시'
   }
 ];
@@ -42,15 +42,15 @@ export const QuickActions: React.FC = () => {
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <Link to={action.link} className="block h-full">
-                <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-90`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient}`} />
                 
-                <div className="relative p-5 h-full flex items-center gap-4 text-white">
-                  <div className="flex items-start justify-between w-full">
-                    <div className="flex items-center gap-3">
+                <div className="relative p-5 h-full flex items-center text-white">
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-4">
                       <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
                         <Icon className="h-6 w-6 text-white" />
                       </div>
-                      <div className="space-y-1">
+                      <div className="space-y-1 text-left">
                         <h3 className="font-semibold text-base text-white">
                           {action.title}
                         </h3>
@@ -61,7 +61,7 @@ export const QuickActions: React.FC = () => {
                     </div>
                     <Badge 
                       variant="secondary" 
-                      className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm"
+                      className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm shrink-0"
                     >
                       {action.badge}
                     </Badge>
