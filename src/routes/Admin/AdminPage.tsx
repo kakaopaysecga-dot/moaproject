@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
-import { Settings, Filter } from 'lucide-react';
-import { RequestStatus } from '@/types';
+import { useAuthStore } from '@/store/authStore';
+import { AdminService } from '@/services/adminService';
+import { Settings, Filter, Shield } from 'lucide-react';
+import { RequestStatus, RequestItem } from '@/types';
 
 export default function AdminPage() {
-  const { requests, updateRequestStatus } = useRequestsStore();
+  const { user } = useAuthStore();
   const { toast } = useToast();
+  const [requests, setRequests] = useState<RequestItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<RequestStatus | 'all'>('all');
 
   const filteredRequests = filter === 'all' 
@@ -28,12 +32,52 @@ export default function AdminPage() {
     }
   };
 
-  const handleStatusUpdate = (requestId: string, newStatus: RequestStatus) => {
-    updateRequestStatus(requestId, newStatus);
-    toast({
-      title: "상태 변경",
-      description: "요청 상태가 변경되었습니다."
-    });
+  useEffect(() => {
+    if (!user) {
+      setError('로그인이 필요합니다.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!user.isAdmin) {
+      setError('관리자 권한이 필요합니다.');
+      setIsLoading(false);
+      return;
+    }
+
+    loadAllRequests();
+  }, [user]);
+
+  const loadAllRequests = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const requests = await AdminService.getAllRequests(filter);
+      setRequests(requests);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '요청을 불러올 수 없습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (requestId: string, newStatus: RequestStatus) => {
+    try {
+      await AdminService.updateRequestStatus(requestId, newStatus);
+      setRequests(prev => prev.map(req => 
+        req.id === requestId ? { ...req, status: newStatus } : req
+      ));
+      toast({
+        title: "상태 변경",
+        description: "요청 상태가 변경되었습니다."
+      });
+    } catch (error) {
+      toast({
+        title: "오류",
+        description: error instanceof Error ? error.message : '상태 변경에 실패했습니다.',
+        variant: "destructive"
+      });
+    }
   };
 
   const getStatusCounts = () => {
@@ -45,6 +89,54 @@ export default function AdminPage() {
     };
     return counts;
   };
+
+  const handleFilterChange = (newFilter: RequestStatus | 'all') => {
+    setFilter(newFilter);
+    // Reload requests with new filter
+    setTimeout(() => loadAllRequests(), 0);
+  };
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <Shield className="h-16 w-16 text-muted-foreground" />
+        <h2 className="text-xl font-semibold">로그인 필요</h2>
+        <p className="text-muted-foreground">관리자 페이지에 접근하려면 로그인이 필요합니다.</p>
+      </div>
+    );
+  }
+
+  if (!user.isAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <Shield className="h-16 w-16 text-muted-foreground" />
+        <h2 className="text-xl font-semibold">접근 권한 없음</h2>
+        <p className="text-muted-foreground">관리자 권한이 필요합니다.</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">요청을 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+        <Shield className="h-16 w-16 text-destructive" />
+        <h2 className="text-xl font-semibold text-destructive">오류 발생</h2>
+        <p className="text-muted-foreground">{error}</p>
+        <Button onClick={loadAllRequests}>다시 시도</Button>
+      </div>
+    );
+  }
 
   const counts = getStatusCounts();
 
@@ -93,7 +185,7 @@ export default function AdminPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs value={filter} onValueChange={(value) => setFilter(value as RequestStatus | 'all')}>
+            <Tabs value={filter} onValueChange={handleFilterChange}>
               <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="all">전체 ({counts.all})</TabsTrigger>
                 <TabsTrigger value="pending">대기중 ({counts.pending})</TabsTrigger>
