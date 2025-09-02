@@ -32,35 +32,40 @@ export default function Home() {
 
   return (
     <div className="space-y-6 pb-6">
-      <WelcomeSection 
-        userEnglishName={user.englishName}
-        userDept={user.dept}
-        userBuilding={user.building}
-        userWorkArea={user.workArea}
-      />
+      <WelcomeSection userEnglishName={user.englishName} />
       
-      {/* 퀵 실행 */}
+      {/* 핵심 기능 - 퀵 액션 */}
       <QuickActions />
       
-      {/* AI 사람찾기 서비스 */}
-      <AIPeopleFinder />
+      {/* 오늘의 중요 정보 */}
+      <div className="grid gap-4">
+        <TodaySchedule />
+        <AIPeopleFinder />
+      </div>
       
-      {/* 오늘의 일정 */}
-      <TodaySchedule />
+      {/* 통합 서비스 */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold text-foreground px-1">통합 서비스</h2>
+        <div className="grid gap-4">
+          <GoogleIntegration />
+          <GoogleCalendarSync />
+        </div>
+      </div>
       
-      {/* 구글 연동 */}
-      <GoogleIntegration />
+      {/* 전체 서비스 목록 */}
+      <div className="space-y-4">
+        <h2 className="text-lg font-semibold text-foreground px-1">전체 서비스</h2>
+        <ServiceCards />
+      </div>
       
-      {/* 구글 캘린더 동기화 */}
-      <GoogleCalendarSync />
-      
-      {/* 기존 서비스 카드 */}
-      <ServiceCards />
-      
-      {/* 최근 활동 - 관리자만 */}
-      {user.isAdmin && <RecentActivity />}
-      
-      {user.isAdmin && <AdminPanel />}
+      {/* 관리자 전용 */}
+      {user.isAdmin && (
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-foreground px-1">관리자 도구</h2>
+          <RecentActivity />
+          <AdminPanel />
+        </div>
+      )}
       
       {/* Footer Space for Mobile Navigation */}
       <div className="h-6" />
