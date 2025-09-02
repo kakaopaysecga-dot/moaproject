@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/authStore';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormField, Input, Select } from '@/components/ui/FormField';
+import { SuccessAnimation } from '@/components/ui/SuccessAnimation';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function Signup() {
   });
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const validateForm = () => {
     const errors: Record<string, string> = {};
@@ -97,14 +99,20 @@ export default function Signup() {
 
     try {
       await signup(formData);
-      navigate('/login');
+      setShowSuccess(true);
     } catch (error) {
       // Error handled by store
     }
   };
 
+  const handleSuccessComplete = () => {
+    setShowSuccess(false);
+    navigate('/login');
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
+    <>
+      <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
           <div className="flex flex-col items-center space-y-4">
@@ -280,5 +288,13 @@ export default function Signup() {
         </CardContent>
       </Card>
     </div>
+    
+    <SuccessAnimation
+      title="회원가입이 완료되었습니다!"
+      message="로그인 페이지로 이동합니다."
+      isVisible={showSuccess}
+      onComplete={handleSuccessComplete}
+    />
+    </>
   );
 }
