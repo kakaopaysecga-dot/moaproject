@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User, Circle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuthStore();
@@ -24,9 +25,40 @@ export const Header: React.FC = () => {
           {/* User Section */}
           <div className="flex items-center space-x-4">
             {/* User Info */}
-            <div className="hidden md:flex flex-col items-end text-right">
-              <span className="text-sm font-semibold text-foreground">{user.englishName || user.name}</span>
-              <span className="text-xs text-muted-foreground">{user.dept}</span>
+            <div className="hidden md:flex items-center space-x-3">
+              <div className="flex flex-col items-end text-right">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-semibold text-foreground">{user.englishName || user.name}</span>
+                  <div className="flex items-center space-x-1">
+                    <Circle className="h-2 w-2 fill-green-500 text-green-500" />
+                    <span className="text-xs text-green-600 font-medium">온라인</span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2 mt-1">
+                  <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                    {user.dept}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs px-2 py-0.5">
+                    {user.building}
+                  </Badge>
+                  {user.workArea && (
+                    <Badge variant="outline" className="text-xs px-2 py-0.5">
+                      {user.workArea}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile User Info */}
+            <div className="md:hidden flex items-center space-x-2">
+              <div className="flex flex-col items-end text-right">
+                <span className="text-sm font-semibold text-foreground">{user.name}</span>
+                <div className="flex items-center space-x-1">
+                  <Circle className="h-2 w-2 fill-green-500 text-green-500" />
+                  <span className="text-xs text-green-600">온라인</span>
+                </div>
+              </div>
             </div>
             
             {/* Action Buttons */}
