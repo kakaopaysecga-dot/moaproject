@@ -26,16 +26,10 @@ export const GoogleCalendar: React.FC<GoogleCalendarProps> = ({
 
     setIsConnecting(true);
     try {
-      // Create OAuth URL with improved error handling
-      const clientId = '759409896984-a43f1m1d98aht31rmcmogud1ev7lvk6l.apps.googleusercontent.com';
+      // Create OAuth URL
+      const clientId = '1051442977730-v89g77dk2fh98t9t41rnj8b9q2u8emep.apps.googleusercontent.com';
       const redirectUri = `${window.location.origin}/auth/google/callback`;
       const scope = 'https://www.googleapis.com/auth/calendar.events';
-      
-      console.log('OAuth 설정:', {
-        clientId,
-        redirectUri,
-        currentOrigin: window.location.origin
-      });
       
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${clientId}&` +
@@ -45,11 +39,8 @@ export const GoogleCalendar: React.FC<GoogleCalendarProps> = ({
         `access_type=offline&` +
         `prompt=consent`;
 
-      console.log('Google OAuth URL:', authUrl);
-
       // Save callback state
       sessionStorage.setItem('google_auth_callback', 'true');
-      sessionStorage.setItem('google_auth_origin', window.location.origin);
       
       // Redirect to Google
       window.location.href = authUrl;
@@ -57,7 +48,7 @@ export const GoogleCalendar: React.FC<GoogleCalendarProps> = ({
       console.error('Google auth error:', error);
       toast({
         title: "연결 실패",
-        description: `구글 캘린더 연결에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`,
+        description: "구글 캘린더 연결에 실패했습니다.",
         variant: "destructive",
       });
       setIsConnecting(false);
