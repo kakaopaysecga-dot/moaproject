@@ -19,6 +19,7 @@ export default function Signup() {
     building: '판교오피스' as '판교오피스' | '여의도오피스',
     workArea: '',
     phone: '',
+    hasCar: false,
     car: ''
   });
 
@@ -57,7 +58,7 @@ export default function Signup() {
       errors.phone = '전화번호를 입력해주세요.';
     }
 
-    if (!formData.car.trim()) {
+    if (formData.hasCar && !formData.car.trim()) {
       errors.car = '차량번호를 입력해주세요.';
     }
 
@@ -65,13 +66,41 @@ export default function Signup() {
     return Object.keys(errors).length === 0;
   };
 
+  const formatPhoneNumber = (value: string) => {
+    // 숫자만 추출
+    const numbersOnly = value.replace(/[^\d]/g, '');
+    
+    // 11자리 제한
+    const limited = numbersOnly.slice(0, 11);
+    
+    // 자동 하이픈 추가
+    if (limited.length <= 3) {
+      return limited;
+    } else if (limited.length <= 7) {
+      return `${limited.slice(0, 3)}-${limited.slice(3)}`;
+    } else {
+      return `${limited.slice(0, 3)}-${limited.slice(3, 7)}-${limited.slice(7)}`;
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
+    
+    let newValue = value;
+    
+    // 전화번호 포맷팅
+    if (name === 'phone') {
+      newValue = formatPhoneNumber(value);
+    }
+    
     setFormData(prev => ({ 
       ...prev, 
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : newValue,
       // Reset work area when building changes
-      ...(name === 'building' ? { workArea: '' } : {})
+      ...(name === 'building' ? { workArea: '' } : {}),
+      // Reset car number when hasCar is unchecked
+      ...(name === 'hasCar' && !checked ? { car: '' } : {})
     }));
     
     // Clear validation errors when user types
@@ -246,26 +275,46 @@ export default function Signup() {
 
             <FormField label="전화번호" error={validationErrors.phone} required>
               <Input
-                type="tel"
+                type="text"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="010-1234-5678"
                 error={!!validationErrors.phone}
                 disabled={isLoading}
+                maxLength={13}
               />
             </FormField>
 
-            <FormField label="차량번호" error={validationErrors.car} required>
-              <Input
-                type="text"
-                name="car"
-                value={formData.car}
-                onChange={handleChange}
-                placeholder="11가1111"
-                error={!!validationErrors.car}
-                disabled={isLoading}
-              />
+            <FormField label="차량정보" error={validationErrors.car} required>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="hasCar"
+                    name="hasCar"
+                    checked={formData.hasCar}
+                    onChange={handleChange}
+                    disabled={isLoading}
+                    className="rounded border-input"
+                  />
+                  <label htmlFor="hasCar" className="text-sm font-medium">
+                    차량 있음
+                  </label>
+                </div>
+                
+                {formData.hasCar && (
+                  <Input
+                    type="text"
+                    name="car"
+                    value={formData.car}
+                    onChange={handleChange}
+                    placeholder="11가1111"
+                    error={!!validationErrors.car}
+                    disabled={isLoading}
+                  />
+                )}
+              </div>
             </FormField>
 
             <Button 
