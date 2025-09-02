@@ -23,26 +23,26 @@ export const Header: React.FC = () => {
           </div>
 
           {/* User Section */}
-          <div className="flex items-center space-x-4">
-            {/* User Info */}
-            <div className="hidden md:flex items-center space-x-3">
-              <div className="flex flex-col items-end text-right">
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-semibold text-foreground">{user.englishName || user.name}</span>
-                  <div className="flex items-center space-x-1">
-                    <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-                    <span className="text-xs text-green-600 font-medium">온라인</span>
+          <div className="flex items-center gap-3">
+            {/* User Info - Desktop */}
+            <div className="hidden lg:flex items-center gap-3">
+              <div className="flex flex-col items-end">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-foreground">{user.englishName || user.name}</span>
+                  <div className="flex items-center gap-1">
+                    <Circle className="h-2 w-2 fill-success text-success" />
+                    <span className="text-xs text-success font-medium">온라인</span>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2 mt-1">
-                  <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                <div className="flex items-center gap-1.5 mt-1">
+                  <Badge variant="secondary" className="text-xs px-2 py-0.5 h-5">
                     {user.dept}
                   </Badge>
-                  <Badge variant="outline" className="text-xs px-2 py-0.5">
+                  <Badge variant="outline" className="text-xs px-2 py-0.5 h-5">
                     {user.building}
                   </Badge>
                   {user.workArea && (
-                    <Badge variant="outline" className="text-xs px-2 py-0.5">
+                    <Badge variant="outline" className="text-xs px-2 py-0.5 h-5">
                       {user.workArea}
                     </Badge>
                   )}
@@ -50,24 +50,24 @@ export const Header: React.FC = () => {
               </div>
             </div>
 
-            {/* Mobile User Info */}
-            <div className="md:hidden flex items-center space-x-2">
-              <div className="flex flex-col items-end text-right">
-                <span className="text-sm font-semibold text-foreground">{user.name}</span>
-                <div className="flex items-center space-x-1">
-                  <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-                  <span className="text-xs text-green-600">온라인</span>
+            {/* User Info - Mobile/Tablet */}
+            <div className="lg:hidden flex items-center gap-2">
+              <div className="flex flex-col items-end">
+                <span className="text-sm font-medium text-foreground">{user.name}</span>
+                <div className="flex items-center gap-1">
+                  <Circle className="h-2 w-2 fill-success text-success" />
+                  <span className="text-xs text-success">온라인</span>
                 </div>
               </div>
             </div>
             
             {/* Action Buttons */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <Link to="/settings">
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="flex items-center space-x-2 hover:bg-muted/50 h-9 px-3 rounded-lg transition-colors"
+                  className="flex items-center gap-2 hover:bg-muted/50 h-9 px-3 rounded-lg transition-colors"
                 >
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline text-sm font-medium">마이페이지</span>
@@ -78,7 +78,7 @@ export const Header: React.FC = () => {
                 variant="ghost" 
                 size="sm"
                 onClick={logout}
-                className="flex items-center space-x-2 hover:bg-muted/50 h-9 px-3 rounded-lg transition-colors"
+                className="flex items-center gap-2 hover:bg-muted/50 h-9 px-3 rounded-lg transition-colors"
               >
                 <LogOut className="h-4 w-4" />
                 <span className="hidden sm:inline text-sm font-medium">로그아웃</span>
