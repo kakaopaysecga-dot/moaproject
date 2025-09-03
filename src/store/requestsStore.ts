@@ -22,7 +22,7 @@ interface RequestsState {
   updateRequestStatus: (id: string, status: RequestItem['status']) => Promise<void>;
   
   setFilter: (filter: 'all' | 'pending' | 'processing' | 'completed') => void;
-  updateCooldowns: () => Promise<void>;
+  updateCooldowns: () => void;
   clearError: () => void;
 }
 
@@ -158,9 +158,9 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
     get().loadRequests(filter);
   },
 
-  updateCooldowns: async () => {
-    const coldCooldown = await RequestService.getTemperatureCooldownAsync('cold');
-    const hotCooldown = await RequestService.getTemperatureCooldownAsync('hot');
+  updateCooldowns: () => {
+    const coldCooldown = RequestService.getTemperatureCooldown('cold');
+    const hotCooldown = RequestService.getTemperatureCooldown('hot');
     set({ coldCooldown, hotCooldown });
   },
 

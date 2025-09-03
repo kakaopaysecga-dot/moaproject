@@ -1,27 +1,50 @@
 import { User } from '@/types';
-import { supabase } from '@/integrations/supabase/client';
+import { StorageService, STORAGE_KEYS } from './storage';
 
 export class AuthService {
+  private static testUser: User = {
+    email: '1',
+    name: 'Master.Admin',
+    dept: '총무팀',
+    building: '판교오피스',
+    phone: '010-1234-5678',
+    car: '11가1111',
+    isAdmin: true,
+    adminLevel: 'supreme'
+  };
+
   static async login(email: string, password: string): Promise<User> {
+    // Test account
+    if (email === '1' && password === '1') {
+      StorageService.set(STORAGE_KEYS.USER, this.testUser);
+      return this.testUser;
+    }
+
+    // Regular account validation
     if (!email.endsWith('@kakaopaysec.com')) {
       throw new Error('카카오페이증권 이메일(@kakaopaysec.com)만 사용 가능합니다.');
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const emailPrefix = email.split('@')[0];
+    if (!emailPrefix.includes('.')) {
+      throw new Error('이메일 형식이 올바르지 않습니다. (firstname.lastname 형식)');
+    }
+
+    // Mock user creation for regular accounts
+    const [firstName, lastName] = emailPrefix.split('.');
+    const user: User = {
       email,
-      password,
-    });
+      name: `${firstName}.${lastName}`,
+      dept: '개발팀', // Default department
+      building: '판교오피스',
+      phone: '010-0000-0000',
+      car: '',
+      isAdmin: emailPrefix.startsWith('admin'),
+      adminLevel: emailPrefix.startsWith('admin') ? 'part' : null
+    };
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    if (!data.user) {
-      throw new Error('로그인에 실패했습니다.');
-    }
-
-    const profile = await this.getProfile(data.user.id);
-    return profile;
+    StorageService.set(STORAGE_KEYS.USER, user);
+    return user;
   }
 
   static async signup(userData: Partial<User> & { email: string; password: string }): Promise<User> {
@@ -37,119 +60,47 @@ export class AuthService {
     }
 
     const [firstName, lastName] = emailPrefix.split('.');
-    const redirectUrl = `${window.location.origin}/`;
-
-    const { data, error } = await supabase.auth.signUp({
+    const user: User = {
       email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          name: rest.name || `${firstName}.${lastName}`,
-          englishName: rest.englishName || `${firstName} ${lastName}`,
-          dept: rest.dept || '개발팀',
-          building: rest.building || '판교오피스',
-          workArea: rest.workArea || '',
-          phone: rest.phone || '010-0000-0000',
-          car_number: rest.car || '',
-        }
-      }
-    });
+      name: rest.name || `${firstName}.${lastName}`,
+      englishName: rest.englishName || `${firstName} ${lastName}`,
+      dept: rest.dept || '개발팀',
+      building: rest.building || '판교오피스',
+      workArea: rest.workArea || '',
+      phone: rest.phone || '010-0000-0000',
+      car: rest.car || '',
+      isAdmin: emailPrefix.startsWith('admin'),
+      adminLevel: emailPrefix.startsWith('admin') ? 'part' : null
+    };
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    if (!data.user) {
-      throw new Error('회원가입에 실패했습니다.');
-    }
-
-    // Wait for profile to be created by trigger
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const profile = await this.getProfile(data.user.id);
-    return profile;
+    StorageService.set(STORAGE_KEYS.USER, user);
+    return user;
   }
 
   static async updateProfile(profileData: Partial<User>): Promise<User> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
+    const currentUser = this.getCurrentUser();
+    if (!currentUser) {
       throw new Error('로그인이 필요합니다.');
     }
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        name: profileData.name,
-        dept: profileData.dept,
-        building: profileData.building,
-        work_area: profileData.workArea,
-        phone: profileData.phone,
-        car_number: profileData.car,
-      })
-      .eq('user_id', user.id);
-
-    if (error) {
-      throw new Error('프로필 업데이트에 실패했습니다.');
-    }
-
-    return this.getProfile(user.id);
-  }
-
-  static async getProfile(userId: string): Promise<User> {
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
-
-    if (profileError || !profile) {
-      throw new Error('프로필을 찾을 수 없습니다.');
-    }
-
-    // Get user role
-    const { data: userRole } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .single();
-
-    const isAdmin = userRole?.role === 'admin';
-
-    return {
-      email: profile.email,
-      name: profile.name,
-      englishName: profile.english_name || '',
-      dept: profile.dept,
-      building: profile.building,
-      workArea: profile.work_area || '',
-      phone: profile.phone || '',
-      car: profile.car_number || '',
-      isAdmin,
-      adminLevel: isAdmin ? 'part' : null
+    const updatedUser: User = {
+      ...currentUser,
+      ...profileData,
+      email: currentUser.email // 이메일은 변경 불가
     };
+
+    StorageService.set(STORAGE_KEYS.USER, updatedUser);
+    return updatedUser;
+  }
+  static getCurrentUser(): User | null {
+    return StorageService.get<User>(STORAGE_KEYS.USER);
   }
 
-  static async getCurrentUser(): Promise<User | null> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      return null;
-    }
-
-    try {
-      return await this.getProfile(user.id);
-    } catch {
-      return null;
-    }
+  static logout(): void {
+    StorageService.remove(STORAGE_KEYS.USER);
   }
 
-  static async logout(): Promise<void> {
-    await supabase.auth.signOut();
-  }
-
-  static async isAuthenticated(): Promise<boolean> {
-    const { data: { user } } = await supabase.auth.getUser();
-    return !!user;
+  static isAuthenticated(): boolean {
+    return this.getCurrentUser() !== null;
   }
 }
