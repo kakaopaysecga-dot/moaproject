@@ -17,7 +17,13 @@ interface Person {
   currentLocation?: string;
   currentActivity?: string;
   availableSlots: string[];
-  status: 'available' | 'busy' | 'meeting' | 'away';
+  status: 'available' | 'busy' | 'meeting' | 'away' | 'vacation';
+  vacationInfo?: {
+    startDate: string;
+    endDate: string;
+    type: 'annual' | 'sick' | 'personal' | 'parental';
+    reason?: string;
+  };
 }
 
 // Mock data - 실제로는 API에서 가져올 데이터
@@ -201,6 +207,87 @@ const mockPeople: Person[] = [
     currentActivity: '서버 구축 작업',
     availableSlots: ['09:30-10:30', '15:30-16:30'],
     status: 'available'
+  },
+  // 휴가중인 직원들
+  {
+    id: '19',
+    name: '신동현',
+    englishName: 'Ocean.vacation',
+    dept: '개발팀',
+    currentLocation: '연차휴가',
+    currentActivity: '가족여행',
+    availableSlots: [],
+    status: 'vacation',
+    vacationInfo: {
+      startDate: '2025-01-06',
+      endDate: '2025-01-10',
+      type: 'annual',
+      reason: '가족여행 및 개인휴식'
+    }
+  },
+  {
+    id: '20',
+    name: '최은영',
+    englishName: 'Luna.off',
+    dept: '마케팅팀',
+    currentLocation: '병가',
+    currentActivity: '치료 및 회복',
+    availableSlots: [],
+    status: 'vacation',
+    vacationInfo: {
+      startDate: '2025-01-02',
+      endDate: '2025-01-07',
+      type: 'sick',
+      reason: '몸살감기 치료'
+    }
+  },
+  {
+    id: '21',
+    name: '김도윤',
+    englishName: 'Sky.parental',
+    dept: '인사팀',
+    currentLocation: '육아휴직',
+    currentActivity: '신생아 돌봄',
+    availableSlots: [],
+    status: 'vacation',
+    vacationInfo: {
+      startDate: '2024-12-15',
+      endDate: '2025-03-15',
+      type: 'parental',
+      reason: '둘째 아이 출산 및 육아'
+    }
+  },
+  {
+    id: '22',
+    name: '이예진',
+    englishName: 'Bloom.personal',
+    dept: '디자인팀', 
+    currentLocation: '개인사유 휴가',
+    currentActivity: '개인 일정',
+    availableSlots: [],
+    status: 'vacation',
+    vacationInfo: {
+      startDate: '2025-01-08',
+      endDate: '2025-01-12',
+      type: 'personal',
+      reason: '이사 및 개인 업무'
+    }
+  },
+  {
+    id: '23',
+    name: '강민호',
+    englishName: 'Storm.annual',
+    dept: '영업팀',
+    currentLocation: '연차휴가',
+    currentActivity: '국내여행',
+    availableSlots: [],
+    status: 'vacation',
+    vacationInfo: {
+      startDate: '2025-01-09',
+      endDate: '2025-01-15',
+      type: 'annual',
+      reason: '연말연시 휴식 및 재충전'
+    }
   }
 ];
 
@@ -304,6 +391,7 @@ export const AIPeopleFinder: React.FC = () => {
       case 'busy': return 'bg-warning/10 text-warning border-warning/20';
       case 'meeting': return 'bg-destructive/10 text-destructive border-destructive/20';
       case 'away': return 'bg-muted text-muted-foreground border-muted';
+      case 'vacation': return 'bg-purple-100 text-purple-700 border-purple-200';
     }
   };
 
@@ -313,6 +401,7 @@ export const AIPeopleFinder: React.FC = () => {
       case 'busy': return '바쁨';
       case 'meeting': return '회의중';
       case 'away': return '부재중';
+      case 'vacation': return '휴가중';
     }
   };
 
@@ -479,10 +568,40 @@ export const AIPeopleFinder: React.FC = () => {
                     <span className="text-muted-foreground">현재:</span>
                     <span className="font-medium">{person.currentActivity}</span>
                   </div>
+                  
+                  {/* 휴가 정보 표시 */}
+                  {person.status === 'vacation' && person.vacationInfo && (
+                    <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-sm">
+                          <Calendar className="h-4 w-4 text-purple-600" />
+                          <span className="text-purple-700 font-medium">휴가 기간:</span>
+                          <span className="text-purple-900 font-semibold">
+                            {person.vacationInfo.startDate} ~ {person.vacationInfo.endDate}
+                          </span>
+                        </div>
+                        <div className="text-sm">
+                          <span className="text-purple-700 font-medium">휴가 유형:</span>
+                          <span className="ml-2 text-purple-900">
+                            {person.vacationInfo.type === 'annual' && '연차휴가'}
+                            {person.vacationInfo.type === 'sick' && '병가'}
+                            {person.vacationInfo.type === 'personal' && '개인사유'}
+                            {person.vacationInfo.type === 'parental' && '육아휴직'}
+                          </span>
+                        </div>
+                        {person.vacationInfo.reason && (
+                          <div className="text-sm">
+                            <span className="text-purple-700 font-medium">사유:</span>
+                            <span className="ml-2 text-purple-900">{person.vacationInfo.reason}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* 비어있는 시간 */}
-                {person.availableSlots.length > 0 && (
+                {person.availableSlots.length > 0 && person.status !== 'vacation' && (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-sm">
                       <Clock className="h-4 w-4 text-muted-foreground" />
