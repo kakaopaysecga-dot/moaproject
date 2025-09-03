@@ -9,7 +9,6 @@ import { AdminPanel } from '@/components/home/AdminPanel';
 import { QuickActions } from '@/components/home/QuickActions';
 import { RecentActivity } from '@/components/home/RecentActivity';
 import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
-import { AllEmployeesList } from '@/components/home/AllEmployeesList';
 import { TodaySchedule } from '@/components/home/TodaySchedule';
 import { GoogleIntegration } from '@/components/home/GoogleIntegration';
 import { GoogleCalendarSync } from '@/components/home/GoogleCalendarSync';
@@ -45,9 +44,6 @@ export default function Home() {
       
       {/* AI 사람찾기 */}
       <AIPeopleFinder />
-      
-      {/* 전체 직원 현황 */}
-      <AllEmployeesList />
       
       {/* 서비스 메뉴 */}
       <ServiceCards />

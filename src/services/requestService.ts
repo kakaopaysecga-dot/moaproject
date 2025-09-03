@@ -1,160 +1,227 @@
 import { RequestItem, TemperatureRequest, BusinessCardRequest, EventsRequest } from '@/types';
-import { StorageService, STORAGE_KEYS } from './storage';
+import { supabase } from '@/integrations/supabase/client';
 import { isWithinCooldown, getCooldownRemaining } from '@/lib/date';
 
 export class RequestService {
   static async createEnvironmentRequest(data: { image: File | null; note: string }): Promise<RequestItem> {
-    const request: RequestItem = {
-      id: Date.now().toString(),
-      title: '사무환경 개선 요청',
-      content: data.note,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-      type: 'environment',
-      image: data.image ? URL.createObjectURL(data.image) : undefined,
-      metadata: { 
-        note: data.note,
-        hasImage: !!data.image
-      }
-    };
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('로그인이 필요합니다.');
 
-    const existingRequests = StorageService.get<RequestItem[]>(STORAGE_KEYS.REQUESTS) || [];
-    existingRequests.push(request);
-    StorageService.set(STORAGE_KEYS.REQUESTS, existingRequests);
+    let imageUrl = null;
+    if (data.image) {
+      // In a real implementation, you would upload to Supabase Storage
+      // For now, we'll store a placeholder
+      imageUrl = URL.createObjectURL(data.image);
+    }
 
-    return request;
+    const { data: request, error } = await supabase
+      .from('requests')
+      .insert({
+        user_id: user.id,
+        type: 'environment',
+        title: '사무환경 개선 요청',
+        description: data.note,
+        status: 'pending',
+        metadata: { 
+          note: data.note,
+          hasImage: !!data.image
+        },
+        image_url: imageUrl
+      })
+      .select()
+      .single();
+
+    if (error) throw new Error('요청 생성에 실패했습니다.');
+
+    return this.mapRequestFromDB(request);
   }
 
   static async createTempRequest(type: 'cold' | 'hot'): Promise<RequestItem> {
-    // Check cooldown
-    const tempRequests = StorageService.get<TemperatureRequest[]>(STORAGE_KEYS.TEMPERATURE_REQUESTS) || [];
-    const lastRequest = tempRequests
-      .filter(req => req.type === type)
-      .sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime())[0];
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('로그인이 필요합니다.');
 
-    if (lastRequest && isWithinCooldown(lastRequest.requestedAt)) {
-      const remainingMinutes = getCooldownRemaining(lastRequest.requestedAt);
-      throw new Error(`${remainingMinutes}분 후에 다시 요청할 수 있습니다.`);
+    // Check for recent temperature requests to enforce cooldown
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const { data: recentRequests } = await supabase
+      .from('requests')
+      .select('created_at, metadata')
+      .eq('user_id', user.id)
+      .eq('type', 'temperature')
+      .gte('created_at', oneHourAgo)
+      .order('created_at', { ascending: false });
+
+    if (recentRequests && recentRequests.length > 0) {
+      const lastRequest = recentRequests.find(req => 
+        req.metadata && (req.metadata as any).temperatureType === type
+      );
+      
+      if (lastRequest && isWithinCooldown(lastRequest.created_at)) {
+        const remainingMinutes = getCooldownRemaining(lastRequest.created_at);
+        throw new Error(`${remainingMinutes}분 후에 다시 요청할 수 있습니다.`);
+      }
     }
 
-    const now = new Date().toISOString();
-    const tempRequest: TemperatureRequest = {
-      type,
-      requestedAt: now,
-      cooldownUntil: new Date(Date.now() + 60 * 60 * 1000).toISOString() // 1 hour cooldown
-    };
+    const { data: request, error } = await supabase
+      .from('requests')
+      .insert({
+        user_id: user.id,
+        type: 'temperature',
+        title: `실내 온도 조절 요청 (${type === 'cold' ? '추위' : '더위'})`,
+        description: type === 'cold' ? '너무 추워요, 온도를 높여주세요.' : '너무 더워요, 온도를 낮춰주세요.',
+        status: 'pending',
+        metadata: { temperatureType: type }
+      })
+      .select()
+      .single();
 
-    tempRequests.push(tempRequest);
-    StorageService.set(STORAGE_KEYS.TEMPERATURE_REQUESTS, tempRequests);
+    if (error) throw new Error('온도 조절 요청에 실패했습니다.');
 
-    const request: RequestItem = {
-      id: Date.now().toString(),
-      title: `실내 온도 조절 요청 (${type === 'cold' ? '추위' : '더위'})`,
-      content: type === 'cold' ? '너무 추워요, 온도를 높여주세요.' : '너무 더워요, 온도를 낮춰주세요.',
-      status: 'pending',
-      createdAt: now,
-      type: 'temperature',
-      metadata: { temperatureType: type }
-    };
-
-    const existingRequests = StorageService.get<RequestItem[]>(STORAGE_KEYS.REQUESTS) || [];
-    existingRequests.push(request);
-    StorageService.set(STORAGE_KEYS.REQUESTS, existingRequests);
-
-    return request;
+    return this.mapRequestFromDB(request);
   }
 
   static async createBusinessCardRequest(data: BusinessCardRequest): Promise<RequestItem> {
-    const request: RequestItem = {
-      id: Date.now().toString(),
-      title: '명함 신청',
-      content: `${data.koreanName} (${data.englishName}) ${data.position ? `· ${data.position}` : ''} 명함 신청`,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-      type: 'business-card',
-      metadata: data
-    };
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('로그인이 필요합니다.');
 
-    const existingRequests = StorageService.get<RequestItem[]>(STORAGE_KEYS.REQUESTS) || [];
-    existingRequests.push(request);
-    StorageService.set(STORAGE_KEYS.REQUESTS, existingRequests);
+    const { data: request, error } = await supabase
+      .from('requests')
+      .insert({
+        user_id: user.id,
+        type: 'business-card',
+        title: '명함 신청',
+        description: `${data.koreanName} (${data.englishName}) ${data.position ? `· ${data.position}` : ''} 명함 신청`,
+        status: 'pending',
+        metadata: data
+      })
+      .select()
+      .single();
 
-    return request;
+    if (error) throw new Error('명함 신청에 실패했습니다.');
+
+    return this.mapRequestFromDB(request);
   }
 
   static async createParkingRequest(carNumber: string): Promise<RequestItem> {
-    const request: RequestItem = {
-      id: Date.now().toString(),
-      title: '주차 등록 신청',
-      content: `차량번호: ${carNumber}`,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-      type: 'parking',
-      metadata: { carNumber }
-    };
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('로그인이 필요합니다.');
 
-    const existingRequests = StorageService.get<RequestItem[]>(STORAGE_KEYS.REQUESTS) || [];
-    existingRequests.push(request);
-    StorageService.set(STORAGE_KEYS.REQUESTS, existingRequests);
+    const { data: request, error } = await supabase
+      .from('requests')
+      .insert({
+        user_id: user.id,
+        type: 'parking',
+        title: '주차 등록 신청',
+        description: `차량번호: ${carNumber}`,
+        status: 'pending',
+        metadata: { carNumber }
+      })
+      .select()
+      .single();
 
-    return request;
+    if (error) throw new Error('주차 등록 신청에 실패했습니다.');
+
+    return this.mapRequestFromDB(request);
   }
 
   static async createEventsRequest(data: EventsRequest): Promise<RequestItem> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('로그인이 필요합니다.');
+
     const title = data.type === 'marriage' ? '결혼 축하 지원' : '장례 조의 지원';
-    const content = data.type === 'marriage' 
+    const description = data.type === 'marriage' 
       ? `${data.date} ${data.time} ${data.venue}`
       : `고인: ${data.deceasedName}, 관계: ${data.relationship}`;
 
-    const request: RequestItem = {
-      id: Date.now().toString(),
-      title,
-      content,
-      status: 'pending',
-      createdAt: new Date().toISOString(),
-      type: 'events',
-      metadata: data
-    };
+    const { data: request, error } = await supabase
+      .from('requests')
+      .insert({
+        user_id: user.id,
+        type: 'events',
+        title,
+        description,
+        status: 'pending',
+        metadata: data
+      })
+      .select()
+      .single();
 
-    const existingRequests = StorageService.get<RequestItem[]>(STORAGE_KEYS.REQUESTS) || [];
-    existingRequests.push(request);
-    StorageService.set(STORAGE_KEYS.REQUESTS, existingRequests);
+    if (error) throw new Error('경조사 지원 신청에 실패했습니다.');
 
-    return request;
+    return this.mapRequestFromDB(request);
   }
 
   static async listRequests(filter?: 'all' | 'pending' | 'processing' | 'completed'): Promise<RequestItem[]> {
-    const requests = StorageService.get<RequestItem[]>(STORAGE_KEYS.REQUESTS) || [];
-    
-    if (!filter || filter === 'all') {
-      return requests.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('로그인이 필요합니다.');
+
+    let query = supabase
+      .from('requests')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (filter && filter !== 'all') {
+      query = query.eq('status', filter);
     }
 
-    return requests
-      .filter(request => request.status === filter)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    const { data: requests, error } = await query;
+
+    if (error) throw new Error('요청 목록을 불러올 수 없습니다.');
+
+    return requests?.map(this.mapRequestFromDB) || [];
   }
 
   static async updateRequestStatus(id: string, status: RequestItem['status']): Promise<void> {
-    const requests = StorageService.get<RequestItem[]>(STORAGE_KEYS.REQUESTS) || [];
-    const requestIndex = requests.findIndex(req => req.id === id);
-    
-    if (requestIndex !== -1) {
-      requests[requestIndex].status = status;
-      StorageService.set(STORAGE_KEYS.REQUESTS, requests);
-    }
+    const { error } = await supabase
+      .from('requests')
+      .update({ status })
+      .eq('id', id);
+
+    if (error) throw new Error('상태 업데이트에 실패했습니다.');
   }
 
   static getTemperatureCooldown(type: 'cold' | 'hot'): number {
-    const tempRequests = StorageService.get<TemperatureRequest[]>(STORAGE_KEYS.TEMPERATURE_REQUESTS) || [];
-    const lastRequest = tempRequests
-      .filter(req => req.type === type)
-      .sort((a, b) => new Date(b.requestedAt).getTime() - new Date(a.requestedAt).getTime())[0];
+    // For backward compatibility, return 0
+    // The async version will be called directly when needed
+    return 0;
+  }
 
-    if (!lastRequest || !isWithinCooldown(lastRequest.requestedAt)) {
+  static async getTemperatureCooldownAsync(type: 'cold' | 'hot'): Promise<number> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return 0;
+
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const { data: recentRequests } = await supabase
+      .from('requests')
+      .select('created_at, metadata')
+      .eq('user_id', user.id)
+      .eq('type', 'temperature')
+      .gte('created_at', oneHourAgo)
+      .order('created_at', { ascending: false });
+
+    if (!recentRequests || recentRequests.length === 0) return 0;
+
+    const lastRequest = recentRequests.find(req => 
+      req.metadata && (req.metadata as any).temperatureType === type
+    );
+
+    if (!lastRequest || !isWithinCooldown(lastRequest.created_at)) {
       return 0;
     }
 
-    return getCooldownRemaining(lastRequest.requestedAt);
+    return getCooldownRemaining(lastRequest.created_at);
+  }
+
+  private static mapRequestFromDB(dbRequest: any): RequestItem {
+    return {
+      id: dbRequest.id,
+      title: dbRequest.title,
+      content: dbRequest.description || '',
+      status: dbRequest.status,
+      createdAt: dbRequest.created_at,
+      type: dbRequest.type,
+      metadata: dbRequest.metadata || {},
+      image: dbRequest.image_url
+    };
   }
 }

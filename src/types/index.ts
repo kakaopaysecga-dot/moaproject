@@ -25,6 +25,11 @@ export interface RequestItem {
   type: 'environment' | 'temperature' | 'business-card' | 'parking' | 'events';
   image?: string;
   metadata?: Record<string, any>;
+  userInfo?: {
+    name: string;
+    email: string;
+    dept: string;
+  };
 }
 
 export interface Booking {
