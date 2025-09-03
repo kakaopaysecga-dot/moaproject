@@ -1,27 +1,68 @@
 import { User } from '@/types';
-import { supabase } from '@/integrations/supabase/client';
+
+// 더미 데이터베이스 (로컬스토리지 사용)
+const USERS_KEY = 'moa_users';
+const CURRENT_USER_KEY = 'moa_current_user';
+
+// 더미 사용자 목록 가져오기
+const getUsers = (): Array<User & { password: string }> => {
+  const users = localStorage.getItem(USERS_KEY);
+  return users ? JSON.parse(users) : [
+    {
+      email: '1',
+      password: '1',
+      name: '테스트 관리자',
+      englishName: 'Test Admin',
+      dept: '개발팀',
+      building: '판교오피스',
+      workArea: '실리콘밸리',
+      phone: '010-1234-5678',
+      car: '11가1111',
+      isAdmin: true,
+      adminLevel: 'part' as const
+    }
+  ];
+};
+
+// 사용자 목록 저장
+const saveUsers = (users: Array<User & { password: string }>) => {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+};
+
+// 현재 사용자 저장
+const saveCurrentUser = (user: User | null) => {
+  if (user) {
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(CURRENT_USER_KEY);
+  }
+};
+
+// 현재 사용자 가져오기
+const getCurrentUserFromStorage = (): User | null => {
+  const user = localStorage.getItem(CURRENT_USER_KEY);
+  return user ? JSON.parse(user) : null;
+};
 
 export class AuthService {
   static async login(email: string, password: string): Promise<User> {
-    if (!email.endsWith('@kakaopaysec.com')) {
+    // 이메일 또는 아이디로 로그인 가능
+    const isEmail = email.includes('@');
+    
+    if (isEmail && !email.endsWith('@kakaopaysec.com')) {
       throw new Error('카카오페이증권 이메일(@kakaopaysec.com)만 사용 가능합니다.');
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const users = getUsers();
+    const user = users.find(u => u.email === email && u.password === password);
 
-    if (error) {
-      throw new Error(error.message);
+    if (!user) {
+      throw new Error('이메일 또는 비밀번호가 올바르지 않습니다.');
     }
 
-    if (!data.user) {
-      throw new Error('로그인에 실패했습니다.');
-    }
-
-    const profile = await this.getProfile(data.user.id);
-    return profile;
+    const { password: _, ...userWithoutPassword } = user;
+    saveCurrentUser(userWithoutPassword);
+    return userWithoutPassword;
   }
 
   static async signup(userData: Partial<User> & { email: string; password: string }): Promise<User> {
@@ -36,120 +77,72 @@ export class AuthService {
       throw new Error('이메일 형식이 올바르지 않습니다. (firstname.lastname 형식)');
     }
 
-    const [firstName, lastName] = emailPrefix.split('.');
-    const redirectUrl = `${window.location.origin}/`;
+    const users = getUsers();
+    const existingUser = users.find(u => u.email === email);
 
-    const { data, error } = await supabase.auth.signUp({
+    if (existingUser) {
+      throw new Error('이미 존재하는 이메일입니다.');
+    }
+
+    const [firstName, lastName] = emailPrefix.split('.');
+    const newUser: User & { password: string } = {
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          name: rest.name || `${firstName}.${lastName}`,
-          englishName: rest.englishName || `${firstName} ${lastName}`,
-          dept: rest.dept || '개발팀',
-          building: rest.building || '판교오피스',
-          workArea: rest.workArea || '',
-          phone: rest.phone || '010-0000-0000',
-          car_number: rest.car || '',
-        }
-      }
-    });
+      name: rest.name || `${firstName}.${lastName}`,
+      englishName: rest.englishName || `${firstName} ${lastName}`,
+      dept: rest.dept || '개발팀',
+      building: rest.building || '판교오피스',
+      workArea: rest.workArea || '',
+      phone: rest.phone || '010-0000-0000',
+      car: rest.car || '',
+      isAdmin: false,
+      adminLevel: null
+    };
 
-    if (error) {
-      throw new Error(error.message);
-    }
+    users.push(newUser);
+    saveUsers(users);
 
-    if (!data.user) {
-      throw new Error('회원가입에 실패했습니다.');
-    }
-
-    // Wait for profile to be created by trigger
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const profile = await this.getProfile(data.user.id);
-    return profile;
+    const { password: _, ...userWithoutPassword } = newUser;
+    saveCurrentUser(userWithoutPassword);
+    return userWithoutPassword;
   }
 
   static async updateProfile(profileData: Partial<User>): Promise<User> {
-    const { data: { user } } = await supabase.auth.getUser();
+    const currentUser = getCurrentUserFromStorage();
     
-    if (!user) {
+    if (!currentUser) {
       throw new Error('로그인이 필요합니다.');
     }
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        name: profileData.name,
-        dept: profileData.dept,
-        building: profileData.building,
-        work_area: profileData.workArea,
-        phone: profileData.phone,
-        car_number: profileData.car,
-      })
-      .eq('user_id', user.id);
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.email === currentUser.email);
 
-    if (error) {
-      throw new Error('프로필 업데이트에 실패했습니다.');
+    if (userIndex === -1) {
+      throw new Error('사용자를 찾을 수 없습니다.');
     }
 
-    return this.getProfile(user.id);
-  }
-
-  static async getProfile(userId: string): Promise<User> {
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
-
-    if (profileError || !profile) {
-      throw new Error('프로필을 찾을 수 없습니다.');
-    }
-
-    // Get user role
-    const { data: userRole } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId)
-      .single();
-
-    const isAdmin = userRole?.role === 'admin';
-
-    return {
-      email: profile.email,
-      name: profile.name,
-      englishName: profile.english_name || '',
-      dept: profile.dept,
-      building: profile.building,
-      workArea: profile.work_area || '',
-      phone: profile.phone || '',
-      car: profile.car_number || '',
-      isAdmin,
-      adminLevel: isAdmin ? 'part' : null
+    const updatedUser = {
+      ...users[userIndex],
+      ...profileData,
     };
+
+    users[userIndex] = updatedUser;
+    saveUsers(users);
+
+    const { password: _, ...userWithoutPassword } = updatedUser;
+    saveCurrentUser(userWithoutPassword);
+    return userWithoutPassword;
   }
 
   static async getCurrentUser(): Promise<User | null> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      return null;
-    }
-
-    try {
-      return await this.getProfile(user.id);
-    } catch {
-      return null;
-    }
+    return getCurrentUserFromStorage();
   }
 
   static async logout(): Promise<void> {
-    await supabase.auth.signOut();
+    saveCurrentUser(null);
   }
 
   static async isAuthenticated(): Promise<boolean> {
-    const { data: { user } } = await supabase.auth.getUser();
-    return !!user;
+    return getCurrentUserFromStorage() !== null;
   }
 }
