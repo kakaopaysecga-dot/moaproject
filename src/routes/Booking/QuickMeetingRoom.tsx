@@ -19,6 +19,7 @@ export default function QuickMeetingRoom() {
   const { toast } = useToast();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedOffice, setSelectedOffice] = useState<'판교오피스' | '여의도오피스'>('판교오피스');
+  const [bookedRooms, setBookedRooms] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -64,7 +65,7 @@ export default function QuickMeetingRoom() {
   };
 
   const availableRooms = meetingRooms.filter(room => 
-    room.available && room.location === selectedOffice
+    room.available && room.location === selectedOffice && !bookedRooms.has(room.id)
   );
 
   const handleQuickBooking = (room: MeetingRoom) => {
@@ -78,11 +79,23 @@ export default function QuickMeetingRoom() {
       return;
     }
 
+    // 회의실을 예약된 상태로 표시
+    setBookedRooms(prev => new Set([...prev, room.id]));
+
     const endTime = timeSlots[timeSlots.indexOf(nextSlot) + 1];
     toast({
       title: "퀵 예약 완료! ⚡",
-      description: `${room.name} 회의실이 ${nextSlot}-${endTime}에 예약되었습니다.`,
+      description: `${room.name} 회의실이 ${nextSlot}-${endTime}에 예약되었습니다. 30분 후 자동으로 해제됩니다.`,
     });
+
+    // 30분 후 자동으로 예약 해제 (실제로는 서버에서 관리해야 함)
+    setTimeout(() => {
+      setBookedRooms(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(room.id);
+        return newSet;
+      });
+    }, 30 * 60 * 1000); // 30분
   };
 
   return (
@@ -186,42 +199,60 @@ export default function QuickMeetingRoom() {
           <CardContent>
             {availableRooms.length > 0 ? (
               <div className="space-y-3">
-                {availableRooms.map((room) => (
-                  <Card key={room.id} className="border border-border/50">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <h4 className="font-semibold">{room.name}</h4>
-                          <p className="text-sm text-muted-foreground">{room.location}</p>
+                {availableRooms.map((room) => {
+                  const isBooked = bookedRooms.has(room.id);
+                  return (
+                    <Card key={room.id} className={`border ${isBooked ? 'border-destructive/50 bg-destructive/5' : 'border-border/50'}`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h4 className={`font-semibold ${isBooked ? 'text-muted-foreground' : ''}`}>
+                              {room.name}
+                            </h4>
+                            <p className="text-sm text-muted-foreground">{room.location}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Badge variant="outline">
+                              {room.capacity}인
+                            </Badge>
+                            {isBooked && (
+                              <Badge variant="destructive">
+                                사용중
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                        <Badge variant="outline">
-                          {room.capacity}인
-                        </Badge>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 mb-3">
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">
-                          {room.amenities.join(', ')}
-                        </span>
-                      </div>
+                        
+                        <div className="flex items-center gap-2 mb-3">
+                          <Users className="h-4 w-4 text-muted-foreground" />
+                          <span className={`text-sm ${isBooked ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
+                            {room.amenities.join(', ')}
+                          </span>
+                        </div>
 
-                      <Button 
-                        className="w-full"
-                        onClick={() => handleQuickBooking(room)}
-                        disabled={!getNextAvailableSlot()}
-                      >
-                        <Zap className="h-4 w-4 mr-2" />
-                        바로 예약하기
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
+                        <Button 
+                          className="w-full"
+                          onClick={() => handleQuickBooking(room)}
+                          disabled={!getNextAvailableSlot() || isBooked}
+                          variant={isBooked ? "secondary" : "default"}
+                        >
+                          <Zap className="h-4 w-4 mr-2" />
+                          {isBooked ? "사용중" : "바로 예약하기"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">현재 {selectedOffice}에서 사용 가능한 회의실이 없습니다</p>
+                <p className="text-sm">
+                  {meetingRooms.filter(room => room.location === selectedOffice).length === bookedRooms.size 
+                    ? "모든 회의실이 사용중입니다" 
+                    : `현재 ${selectedOffice}에서 사용 가능한 회의실이 없습니다`
+                  }
+                </p>
               </div>
             )}
           </CardContent>
