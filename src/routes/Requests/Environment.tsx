@@ -62,7 +62,7 @@ export default function Environment() {
     setNote('');
   };
 
-  const handleTempRequest = (type: 'cold' | 'hot') => {
+  const handleTempRequest = async (type: 'cold' | 'hot') => {
     if (cooldownMinutes > 0) {
       toast({
         title: "요청이 제한되었습니다",
@@ -72,12 +72,23 @@ export default function Environment() {
       return;
     }
 
-    createTempRequest(type);
-    
-    toast({
-      title: "요청이 완료되었습니다",
-      description: `실내 온도 ${type === 'cold' ? '높이기' : '낮추기'} 요청이 성공적으로 접수되었습니다.`
-    });
+    try {
+      await createTempRequest(type);
+      
+      // 요청 후 즉시 쿨다운 상태 업데이트
+      await updateCooldowns();
+      
+      toast({
+        title: "요청이 완료되었습니다",
+        description: `실내 온도 ${type === 'cold' ? '높이기' : '낮추기'} 요청이 성공적으로 접수되었습니다. 1시간 후에 다시 요청하실 수 있습니다.`
+      });
+    } catch (error) {
+      toast({
+        title: "요청 실패",
+        description: "온도 조절 요청에 실패했습니다. 다시 시도해주세요.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
