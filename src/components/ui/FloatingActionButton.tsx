@@ -23,9 +23,31 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         break;
       case 'colleagues':
         // AIPeopleFinder 기능 (홈페이지의 해당 섹션으로 스크롤)
-        const peopleFinderElement = document.getElementById('ai-people-finder');
-        if (peopleFinderElement) {
-          peopleFinderElement.scrollIntoView({ behavior: 'smooth' });
+        if (window.location.pathname !== '/') {
+          navigate('/');
+          setTimeout(() => {
+            const peopleFinderElement = document.getElementById('ai-people-finder');
+            if (peopleFinderElement) {
+              peopleFinderElement.scrollIntoView({ behavior: 'smooth' });
+              // 애니메이션 효과 추가
+              peopleFinderElement.classList.add('animate-pulse');
+              setTimeout(() => {
+                peopleFinderElement.classList.remove('animate-pulse');
+                peopleFinderElement.classList.add('animate-scale-in');
+              }, 500);
+            }
+          }, 100);
+        } else {
+          const peopleFinderElement = document.getElementById('ai-people-finder');
+          if (peopleFinderElement) {
+            peopleFinderElement.scrollIntoView({ behavior: 'smooth' });
+            // 애니메이션 효과 추가
+            peopleFinderElement.classList.add('animate-pulse');
+            setTimeout(() => {
+              peopleFinderElement.classList.remove('animate-pulse');
+              peopleFinderElement.classList.add('animate-scale-in');
+            }, 500);
+          }
         }
         break;
       case 'service':
