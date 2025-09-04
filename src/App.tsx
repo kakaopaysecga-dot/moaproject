@@ -36,6 +36,9 @@ import AdminPage from "./routes/Admin/AdminPage";
 // Settings route
 import Settings from "./routes/Settings";
 
+// Lunch Roulette route
+import LunchRoulette from "./routes/LunchRoulette";
+
 const queryClient = new QueryClient();
 
 // Protected Route Component
@@ -142,6 +145,13 @@ const AppRoutes = () => {
         <Route path="/settings" element={
           <ProtectedRoute>
             <Settings />
+          </ProtectedRoute>
+        } />
+
+        {/* Lunch Roulette Route */}
+        <Route path="/lunch-roulette" element={
+          <ProtectedRoute>
+            <LunchRoulette />
           </ProtectedRoute>
         } />
 

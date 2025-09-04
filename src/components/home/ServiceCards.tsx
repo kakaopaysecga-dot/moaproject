@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, FileText, CreditCard, Car, Heart, Thermometer, Settings, Search, X, ChevronRight, LucideIcon } from 'lucide-react';
+import { Calendar, FileText, CreditCard, Car, Heart, Thermometer, Settings, Search, X, ChevronRight, LucideIcon, Utensils } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -61,6 +61,12 @@ const allServices: ServiceCard[] = [{
   icon: Heart,
   path: '/requests/events',
   color: 'from-pink-500 to-pink-400'
+}, {
+  title: '점심 메뉴 룰렛',
+  description: '오늘 점심 뭘 먹을까?',
+  icon: Utensils,
+  path: '/lunch-roulette',
+  color: 'from-orange-400 to-red-400'
 }];
 export const ServiceCards: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
