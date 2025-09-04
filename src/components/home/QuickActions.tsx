@@ -26,10 +26,10 @@ const quickActions = [
 
 export const QuickActions: React.FC = () => {
   return (
-    <section className="space-y-4 animate-fade-in">
+    <section className="spacing-items animate-fade-in">
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-foreground">빠른 예약</h2>
-        <Zap className="h-4 w-4 text-primary animate-bounce-subtle" />
+        <h2 className="text-xl font-semibold text-foreground">빠른 예약</h2>
+        <Zap className="h-5 w-5 text-primary animate-bounce-subtle" />
       </div>
       
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -44,24 +44,24 @@ export const QuickActions: React.FC = () => {
               <Link to={action.link} className="block h-full">
                 <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient}`} />
                 
-                <div className="relative p-5 h-full flex items-center text-white">
+                <div className="relative p-5 md:p-6 h-full flex items-center text-white">
                   <div className="flex items-center justify-between w-full">
                     <div className="flex items-center gap-4">
                       <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
-                        <Icon className="h-6 w-6 text-white" />
+                        <Icon className="h-6 w-6 md:h-7 md:w-7 text-white" />
                       </div>
-                      <div className="space-y-1 text-left">
-                        <h3 className="font-semibold text-base text-white">
+                      <div className="spacing-tight text-left">
+                        <h3 className="font-semibold text-base md:text-lg text-white">
                           {action.title}
                         </h3>
-                        <p className="text-sm text-white/80">
+                        <p className="text-sm md:text-base text-white/80">
                           {action.subtitle}
                         </p>
                       </div>
                     </div>
                     <Badge 
                       variant="secondary" 
-                      className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm shrink-0"
+                      className="text-xs md:text-sm bg-white/20 text-white border-white/30 backdrop-blur-sm shrink-0"
                     >
                       {action.badge}
                     </Badge>

@@ -44,9 +44,9 @@ export const TodaySchedule: React.FC = () => {
 
   if (sortedSchedule.length === 0) {
     return (
-      <section className="space-y-3 animate-fade-in">
+      <section className="spacing-items animate-fade-in">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
+          <h2 className="text-xl font-semibold text-foreground">오늘의 일정</h2>
           <AddScheduleModal />
         </div>
         <div className="relative p-8 rounded-xl bg-muted/30 border-2 border-dashed border-muted-foreground/20">
@@ -55,7 +55,7 @@ export const TodaySchedule: React.FC = () => {
             <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-muted-foreground/10 flex items-center justify-center">
               <Calendar className="w-6 h-6 text-muted-foreground/60" />
             </div>
-            <p className="text-sm text-muted-foreground">오늘 예정된 일정이 없습니다</p>
+            <p className="text-base text-muted-foreground">오늘 예정된 일정이 없습니다</p>
           </div>
         </div>
       </section>
@@ -63,11 +63,11 @@ export const TodaySchedule: React.FC = () => {
   }
 
   return (
-    <section className="space-y-3 animate-fade-in">
+    <section className="spacing-items animate-fade-in">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
-            <div className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
+            <h2 className="text-xl font-semibold text-foreground">오늘의 일정</h2>
+            <div className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
               {sortedSchedule.length}
             </div>
           </div>
@@ -123,7 +123,7 @@ export const TodaySchedule: React.FC = () => {
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm">{getTypeIcon(item.type)}</span>
                       <h3 className={cn(
-                        "font-medium text-sm",
+                        "font-medium text-base md:text-lg",
                         item.completed 
                           ? "line-through text-muted-foreground" 
                           : "text-foreground"
@@ -132,7 +132,7 @@ export const TodaySchedule: React.FC = () => {
                       </h3>
                     </div>
                     
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-3 text-sm md:text-base text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         <span className="font-mono">{item.time}</span>

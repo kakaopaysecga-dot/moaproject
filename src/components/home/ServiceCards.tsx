@@ -104,7 +104,7 @@ export const ServiceCards: React.FC = () => {
   const hasSearchResults = filteredFrequentServices.length > 0 || filteredAllServices.length > 0;
 
   return (
-    <div className="space-y-6">
+    <div className="spacing-content">
       {/* 검색 기능 */}
       <div className="flex items-center gap-2">
         {showSearch ? (
@@ -115,7 +115,7 @@ export const ServiceCards: React.FC = () => {
                 placeholder="서비스 검색..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 min-h-[44px]"
                 autoFocus
               />
             </div>
@@ -126,18 +126,19 @@ export const ServiceCards: React.FC = () => {
                 setShowSearch(false);
                 setSearchTerm('');
               }}
+              className="min-h-[44px] min-w-[44px]"
             >
               <X className="h-4 w-4" />
             </Button>
           </div>
         ) : (
           <div className="flex items-center justify-between w-full">
-            <h3 className="text-lg font-semibold text-foreground">서비스</h3>
+            <h3 className="text-xl font-semibold text-foreground">서비스</h3>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowSearch(true)}
-              className="h-8 w-8 p-0"
+              className="min-h-[44px] min-w-[44px] p-0"
             >
               <Search className="h-4 w-4" />
             </Button>
@@ -148,19 +149,19 @@ export const ServiceCards: React.FC = () => {
       {/* 검색 결과가 없을 때 */}
       {searchTerm && !hasSearchResults && (
         <div className="text-center py-8">
-          <p className="text-muted-foreground">'{searchTerm}'에 대한 검색 결과가 없습니다</p>
+          <p className="text-base text-muted-foreground">'{searchTerm}'에 대한 검색 결과가 없습니다</p>
         </div>
       )}
 
       {/* 자주 사용하는 서비스 - 모바일 캐러셀 */}
       {(!searchTerm || filteredFrequentServices.length > 0) && (
-        <section className="space-y-4">
-          <div className="flex items-center justify-between px-1">
-            <h3 className="text-lg font-semibold text-foreground">
+        <section className="spacing-items">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-foreground">
               {searchTerm ? '자주 사용하는 서비스 검색 결과' : '자주 사용하는 서비스'}
             </h3>
             {!searchTerm && filteredFrequentServices.length > 1 && (
-              <div className="text-xs text-muted-foreground hidden sm:block">
+              <div className="text-sm text-muted-foreground hidden sm:block">
                 스와이프하여 더 보기
               </div>
             )}
@@ -198,8 +199,8 @@ export const ServiceCards: React.FC = () => {
 
       {/* 전체 서비스 - 모바일 최적화 그리드 */}
       {(!searchTerm || filteredAllServices.length > 0) && (
-        <section className="space-y-4">
-          <h3 className="text-lg font-semibold text-foreground px-1">
+        <section className="spacing-items">
+          <h3 className="text-xl font-semibold text-foreground">
             {searchTerm ? '전체 서비스 검색 결과' : '전체 서비스'}
           </h3>
           <div className="grid grid-cols-2 gap-3 md:gap-4">
@@ -212,10 +213,10 @@ export const ServiceCards: React.FC = () => {
                       <service.icon className="h-4 w-4 md:h-5 md:w-5 text-white" />
                     </div>
                     <div className="space-y-1">
-                      <h4 className="font-semibold text-xs md:text-sm leading-tight text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
-                      <p className="text-2xs md:text-xs text-muted-foreground leading-relaxed">{service.description}</p>
+                      <h4 className="font-semibold text-sm md:text-base leading-tight text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{service.description}</p>
                     </div>
-                    <ChevronRight className="absolute top-2 right-2 h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    <ChevronRight className="absolute top-2 right-2 h-3 w-3 md:h-4 md:w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   </CardContent>
                 </Card>
               </Link>
@@ -244,9 +245,9 @@ const ServiceCard: React.FC<{
         <div className={`p-3 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
           <service.icon className="h-5 w-5 text-white" />
         </div>
-        <div className="space-y-1 flex-1">
-          <h4 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
-          <p className="text-xs text-muted-foreground">{service.description}</p>
+        <div className="spacing-tight flex-1">
+          <h4 className="font-semibold text-base md:text-lg text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
+          <p className="text-sm md:text-base text-muted-foreground">{service.description}</p>
         </div>
         {isMobile && (
           <ChevronRight className="h-4 w-4 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />
