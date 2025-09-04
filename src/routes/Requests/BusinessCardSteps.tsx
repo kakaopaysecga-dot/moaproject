@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,14 +9,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAuthStore } from '@/store/authStore';
 import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
+import { SuccessAnimation } from '@/components/ui/SuccessAnimation';
 import { CreditCard, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 
 export default function BusinessCardSteps() {
   const { user } = useAuthStore();
   const { createBusinessCardRequest } = useRequestsStore();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   const [currentStep, setCurrentStep] = useState(1);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState<{
     englishName: string;
     koreanName: string;
@@ -74,10 +77,7 @@ export default function BusinessCardSteps() {
       style: formData.design as 'character' | 'normal'
     });
 
-    toast({
-      title: "신청이 완료되었습니다",
-      description: "명함 제작 신청이 성공적으로 접수되었습니다."
-    });
+    setShowSuccess(true);
   };
 
   const nextStep = () => {
@@ -99,7 +99,8 @@ export default function BusinessCardSteps() {
   if (!user) return null;
 
   return (
-    <div className="py-6 space-y-8">
+    <>
+      <div className="py-6 space-y-8">
       {/* 헤더 */}
       <div className="flex items-center gap-4 px-2">
         <Link to="/">
@@ -420,6 +421,14 @@ export default function BusinessCardSteps() {
           </Card>
         )}
       </div>
-    </div>
+      </div>
+
+      <SuccessAnimation 
+        title="명함 신청 완료!"
+        message="명함 제작 신청이 성공적으로 접수되었습니다. 곧 처리 결과를 안내해 드리겠습니다."
+        isVisible={showSuccess}
+        onComplete={() => navigate('/')}
+      />
+    </>
   );
 }
