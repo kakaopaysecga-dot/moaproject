@@ -7,6 +7,7 @@ import {
   Car, 
   Heart, 
   Thermometer,
+  Settings,
   LucideIcon
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -52,8 +53,15 @@ const allServices: ServiceCard[] = [
     color: 'from-accent to-yellow-400'
   },
   {
+    title: '사무환경 개선',
+    description: '사진 첨부하여 개선 요청',
+    icon: Settings,
+    path: '/requests/environment',
+    color: 'from-orange-500 to-orange-400'
+  },
+  {
     title: '주차 등록',
-    description: '주차장 이용 등록',
+    description: '1일권 주차 등록',
     icon: Car,
     path: '/requests/parking',
     color: 'from-purple-500 to-purple-400'

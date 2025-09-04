@@ -40,7 +40,7 @@ export class RequestService {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('로그인이 필요합니다.');
 
-    // Check for recent temperature requests to enforce cooldown
+    // Check for recent temperature requests to enforce 60-minute cooldown
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { data: recentRequests } = await supabase
       .from('requests')

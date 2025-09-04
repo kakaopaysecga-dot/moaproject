@@ -62,3 +62,13 @@ export const getCooldownRemaining = (requestedAt: string, cooldownHours = 1): nu
   
   return Math.ceil((cooldownTime.getTime() - now.getTime()) / (1000 * 60));
 };
+
+export const getCooldownRemainingHours = (requestedAt: string, cooldownHours = 1): number => {
+  const now = new Date();
+  const requestTime = new Date(requestedAt);
+  const cooldownTime = new Date(requestTime.getTime() + cooldownHours * 60 * 60 * 1000);
+  
+  if (now >= cooldownTime) return 0;
+  
+  return Math.ceil((cooldownTime.getTime() - now.getTime()) / (1000 * 60 * 60));
+};

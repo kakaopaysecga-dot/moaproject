@@ -17,17 +17,16 @@ export default function Parking() {
   
   const [formData, setFormData] = useState({
     carNumber: user?.car || '',
-    carModel: '',
     location: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.carNumber || !formData.carModel || !formData.location) {
+    if (!formData.carNumber || !formData.location) {
       toast({
         title: "입력 정보가 부족합니다",
-        description: "모든 항목을 입력해주세요.",
+        description: "차량번호와 주차위치를 입력해주세요.",
         variant: "destructive"
       });
       return;
@@ -40,7 +39,7 @@ export default function Parking() {
       description: "주차 등록 신청이 성공적으로 접수되었습니다."
     });
 
-    setFormData({ carNumber: '', carModel: '', location: '' });
+    setFormData({ carNumber: '', location: '' });
   };
 
   return (
@@ -53,9 +52,9 @@ export default function Parking() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">주차 등록 신청</h1>
+          <h1 className="text-2xl font-bold tracking-tight">주차 등록 신청 (1일권)</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            회사 주차장 이용을 신청하세요
+            하루 단위 주차권을 신청하세요
           </p>
         </div>
       </div>
@@ -84,17 +83,6 @@ export default function Parking() {
               />
             </div>
 
-            <div className="space-y-3">
-              <Label htmlFor="carModel" className="text-base font-semibold">차량 모델</Label>
-              <Input 
-                id="carModel"
-                value={formData.carModel}
-                onChange={(e) => setFormData(prev => ({ ...prev, carModel: e.target.value }))}
-                placeholder="예: 아반떼, 쏘나타, K5"
-                className="h-12 text-base"
-                required
-              />
-            </div>
 
             <div className="space-y-3">
               <Label htmlFor="location" className="text-base font-semibold">희망 주차 위치</Label>
@@ -111,16 +99,17 @@ export default function Parking() {
             </div>
 
             <div className="bg-muted/30 p-4 rounded-lg">
-              <h4 className="font-semibold mb-2">신청 안내</h4>
+              <h4 className="font-semibold mb-2">1일권 안내</h4>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• 주차 등록은 승인 후 이용 가능합니다</li>
+                <li>• 1일권은 당일 오후 6시까지 유효합니다</li>
                 <li>• 차량 번호는 정확히 입력해주세요</li>
-                <li>• 승인까지 1-2일 소요됩니다</li>
+                <li>• 승인까지 30분-1시간 소요됩니다</li>
+                <li>• 연장이 필요한 경우 재신청 해주세요</li>
               </ul>
             </div>
 
             <Button type="submit" className="w-full h-14 text-lg font-semibold">
-              주차 등록 신청하기
+              1일권 신청하기
             </Button>
           </form>
         </CardContent>

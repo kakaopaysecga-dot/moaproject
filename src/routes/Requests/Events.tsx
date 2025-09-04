@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
-import { Heart, ChevronLeft } from 'lucide-react';
+import { Heart, ChevronLeft, Paperclip, Link as LinkIcon, X } from 'lucide-react';
 
 export default function Events() {
   const { createEventsRequest } = useRequestsStore();
@@ -19,7 +19,9 @@ export default function Events() {
     time: '',
     location: '',
     address: '',
-    memo: ''
+    memo: '',
+    invitationLink: '',
+    attachments: [] as File[]
   });
 
   const [funeralForm, setFuneralForm] = useState({
@@ -29,7 +31,9 @@ export default function Events() {
     funeralDate: '',
     location: '',
     address: '',
-    contact: ''
+    contact: '',
+    noticeLink: '',
+    attachments: [] as File[]
   });
 
   const handleMarriageSubmit = (e: React.FormEvent) => {
@@ -49,7 +53,7 @@ export default function Events() {
       description: "결혼 경조사 지원 신청이 성공적으로 접수되었습니다."
     });
 
-    setMarriageForm({ date: '', time: '', location: '', address: '', memo: '' });
+    setMarriageForm({ date: '', time: '', location: '', address: '', memo: '', invitationLink: '', attachments: [] });
   };
 
   const handleFuneralSubmit = (e: React.FormEvent) => {
@@ -71,7 +75,7 @@ export default function Events() {
       description: "장례 경조사 지원 신청이 성공적으로 접수되었습니다."
     });
 
-    setFuneralForm({ relationship: '', deceased: '', deathDate: '', funeralDate: '', location: '', address: '', contact: '' });
+    setFuneralForm({ relationship: '', deceased: '', deathDate: '', funeralDate: '', location: '', address: '', contact: '', noticeLink: '', attachments: [] });
   };
 
   return (
@@ -156,6 +160,60 @@ export default function Events() {
                     <Button type="button" variant="outline" size="sm">
                       주소찾기
                     </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="marriage-link">청첩장 링크 (선택사항)</Label>
+                  <div className="relative">
+                    <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="marriage-link"
+                      value={marriageForm.invitationLink}
+                      onChange={(e) => setMarriageForm(prev => ({ ...prev, invitationLink: e.target.value }))}
+                      placeholder="온라인 청첩장 URL을 입력하세요"
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="marriage-files">첨부파일 (선택사항)</Label>
+                  <div className="space-y-3">
+                    <Input 
+                      id="marriage-files"
+                      type="file"
+                      multiple
+                      accept="image/*,.pdf,.doc,.docx"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        setMarriageForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
+                      }}
+                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                    />
+                    {marriageForm.attachments.length > 0 && (
+                      <div className="space-y-2">
+                        {marriageForm.attachments.map((file, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <Paperclip className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-sm">{file.name}</span>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setMarriageForm(prev => ({ 
+                                ...prev, 
+                                attachments: prev.attachments.filter((_, i) => i !== index) 
+                              }))}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -259,6 +317,60 @@ export default function Events() {
                     placeholder="010-1234-5678"
                     required
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="funeral-link">부고장 링크 (선택사항)</Label>
+                  <div className="relative">
+                    <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="funeral-link"
+                      value={funeralForm.noticeLink}
+                      onChange={(e) => setFuneralForm(prev => ({ ...prev, noticeLink: e.target.value }))}
+                      placeholder="온라인 부고장 URL을 입력하세요"
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="funeral-files">첨부파일 (선택사항)</Label>
+                  <div className="space-y-3">
+                    <Input 
+                      id="funeral-files"
+                      type="file"
+                      multiple
+                      accept="image/*,.pdf,.doc,.docx"
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        setFuneralForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
+                      }}
+                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                    />
+                    {funeralForm.attachments.length > 0 && (
+                      <div className="space-y-2">
+                        {funeralForm.attachments.map((file, index) => (
+                          <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <Paperclip className="h-4 w-4 text-muted-foreground" />
+                              <span className="text-sm">{file.name}</span>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setFuneralForm(prev => ({ 
+                                ...prev, 
+                                attachments: prev.attachments.filter((_, i) => i !== index) 
+                              }))}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <Button type="submit" className="w-full">

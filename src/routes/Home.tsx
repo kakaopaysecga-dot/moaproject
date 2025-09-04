@@ -12,6 +12,7 @@ import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
 import { TodaySchedule } from '@/components/home/TodaySchedule';
 import { GoogleIntegration } from '@/components/home/GoogleIntegration';
 import { GoogleCalendarSync } from '@/components/home/GoogleCalendarSync';
+import { TemperatureControl } from '@/components/home/TemperatureControl';
 
 export default function Home() {
   const { user } = useAuthStore();
@@ -41,6 +42,9 @@ export default function Home() {
       
       {/* 빠른 예약 */}
       <QuickActions />
+      
+      {/* 온도 조절 */}
+      <TemperatureControl />
       
       {/* AI 사람찾기 */}
       <AIPeopleFinder />

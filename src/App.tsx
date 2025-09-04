@@ -25,6 +25,7 @@ import QuickSmartOffice from "./routes/Booking/QuickSmartOffice";
 // Request routes
 import RequestStatus from "./routes/Requests/RequestStatus";
 import BusinessCard from "./routes/Requests/BusinessCard";
+import BusinessCardSteps from "./routes/Requests/BusinessCardSteps";
 import Parking from "./routes/Requests/Parking";
 import Events from "./routes/Requests/Events";
 import Environment from "./routes/Requests/Environment";
@@ -118,7 +119,7 @@ const AppRoutes = () => {
         } />
         <Route path="/requests/business-card" element={
           <ProtectedRoute>
-            <BusinessCard />
+            <BusinessCardSteps />
           </ProtectedRoute>
         } />
         <Route path="/requests/parking" element={
