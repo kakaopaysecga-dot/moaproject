@@ -24,34 +24,36 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
     setIsSpinning(true);
     setSelectedOption(null);
 
-    // 랜덤하게 선택할 옵션 인덱스
-    const randomIndex = Math.floor(Math.random() * options.length);
-    const selectedOpt = options[randomIndex];
-
-    // 애니메이션 설정
-    const segmentAngle = 360 / options.length;
+    // 완전히 랜덤한 회전 설정
     const minSpins = 3; // 최소 회전 수
     const maxSpins = 6; // 최대 회전 수
     const randomSpins = minSpins + Math.random() * (maxSpins - minSpins);
+    const randomAngle = Math.random() * 360; // 0-360도 사이의 랜덤 각도
     
-    // 목표 각도 계산 (선택된 옵션이 포인터(12시 방향)에 정확히 오도록)
-    const segmentStart = randomIndex * segmentAngle;
-    const segmentCenter = segmentStart + segmentAngle / 2;
-    // 포인터가 12시 방향이므로 0도에서 해당 세그먼트까지의 각도를 계산
-    const targetAngle = 360 - segmentCenter;
-    const totalRotation = randomSpins * 360 + targetAngle;
+    const totalRotation = randomSpins * 360 + randomAngle;
+    const finalRotation = rotation + totalRotation;
 
-    setRotation(prev => prev + totalRotation);
+    setRotation(finalRotation);
     setSpinCount(prev => prev + 1);
 
-    // 애니메이션 완료 후 결과 처리
+    // 애니메이션 완료 후 결과 계산
     const duration = 3000 + Math.random() * 2000; // 3-5초 랜덤 지속시간
     setTimeout(() => {
+      // 최종 회전 각도에서 포인터(12시 방향)가 가리키는 세그먼트 계산
+      const normalizedAngle = finalRotation % 360;
+      const segmentAngle = 360 / options.length;
+      
+      // 포인터는 12시 방향(0도)에 있고, 시계방향으로 세그먼트가 배치됨
+      // 회전된 각도를 고려해서 어떤 세그먼트가 포인터에 위치하는지 계산
+      let pointerAngle = (360 - normalizedAngle) % 360;
+      const selectedIndex = Math.floor(pointerAngle / segmentAngle) % options.length;
+      
+      const selectedOpt = options[selectedIndex];
       setSelectedOption(selectedOpt);
       setIsSpinning(false);
       onSpinComplete?.(selectedOpt);
     }, duration);
-  }, [isSpinning, options, onSpinComplete]);
+  }, [isSpinning, options, onSpinComplete, rotation]);
 
   const reset = useCallback(() => {
     setRotation(0);
