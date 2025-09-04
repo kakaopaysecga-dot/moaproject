@@ -10,7 +10,7 @@ interface MeetingRoom {
   id: string;
   name: string;
   capacity: number;
-  location: '판교오피스' | '여의도오피스';
+  location: '판교아지트' | '여의도오피스';
   amenities: string[];
   available: boolean;
 }
@@ -18,7 +18,7 @@ interface MeetingRoom {
 export default function QuickMeetingRoom() {
   const { toast } = useToast();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [selectedOffice, setSelectedOffice] = useState<'판교오피스' | '여의도오피스'>('판교오피스');
+  const [selectedOffice, setSelectedOffice] = useState<'판교아지트' | '여의도오피스'>('판교아지트');
   const [bookedRooms, setBookedRooms] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -35,12 +35,12 @@ export default function QuickMeetingRoom() {
   ];
 
   const meetingRooms: MeetingRoom[] = [
-    // 판교오피스
-    { id: 'pg1', name: '산토리니', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg2', name: '다낭', capacity: 2, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'pg3', name: '괌', capacity: 4, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg4', name: '칸쿤', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg5', name: '이비자', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
+    // 판교아지트
+    { id: 'pg1', name: '산토리니', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg2', name: '다낭', capacity: 2, location: '판교아지트', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg3', name: '괌', capacity: 4, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg4', name: '칸쿤', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg5', name: '이비자', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
     
     // 여의도오피스
     { id: 'yd1', name: '시칠리아', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi'], available: true },
@@ -168,11 +168,11 @@ export default function QuickMeetingRoom() {
           <CardContent>
             <div className="grid grid-cols-2 gap-3">
               <Button
-                variant={selectedOffice === '판교오피스' ? 'default' : 'outline'}
+                variant={selectedOffice === '판교아지트' ? 'default' : 'outline'}
                 className="h-12"
-                onClick={() => setSelectedOffice('판교오피스')}
+                onClick={() => setSelectedOffice('판교아지트')}
               >
-                판교오피스
+                판교아지트
               </Button>
               <Button
                 variant={selectedOffice === '여의도오피스' ? 'default' : 'outline'}

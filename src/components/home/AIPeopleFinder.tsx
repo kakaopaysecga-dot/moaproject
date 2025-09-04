@@ -477,8 +477,8 @@ export const AIPeopleFinder: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-sm flex items-center gap-1">
-                        <span>{person.name}</span>
-                        <span className="text-muted-foreground">/ {person.englishName}</span>
+                        <span>{person.englishName}</span>
+                        <span className="text-muted-foreground">({person.name})</span>
                       </div>
                       <div className="text-xs text-muted-foreground">{person.dept}</div>
                     </div>
@@ -522,8 +522,8 @@ export const AIPeopleFinder: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-foreground">{person.name}</h3>
-                      <span className="text-sm text-muted-foreground">/ {person.englishName}</span>
+                      <h3 className="font-semibold text-foreground">{person.englishName}</h3>
+                      <span className="text-sm text-muted-foreground">({person.name})</span>
                     </div>
                     <p className="text-sm text-muted-foreground">{person.dept}</p>
                   </div>

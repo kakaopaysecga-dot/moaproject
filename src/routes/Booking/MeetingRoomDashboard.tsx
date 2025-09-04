@@ -26,7 +26,7 @@ interface MeetingRoom {
   id: string;
   name: string;
   capacity: number;
-  location: '판교오피스' | '여의도오피스';
+  location: '판교아지트' | '여의도오피스';
   amenities: string[];
   available: boolean;
   currentBooking?: {
@@ -47,7 +47,7 @@ interface TimeSlot {
 
 export default function MeetingRoomDashboard() {
   const { toast } = useToast();
-  const [selectedLocation, setSelectedLocation] = useState<'판교오피스' | '여의도오피스' | 'all'>('all');
+  const [selectedLocation, setSelectedLocation] = useState<'판교아지트' | '여의도오피스' | 'all'>('all');
   const [capacityFilter, setCapacityFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -61,25 +61,25 @@ export default function MeetingRoomDashboard() {
   }, []);
 
   const meetingRooms: MeetingRoom[] = [
-    // 판교오피스
-    { id: 'pg1', name: '산토리니', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: false, currentBooking: { time: '09:00-11:00', user: '김*진', purpose: '프로젝트 회의', status: 'ongoing' } },
-    { id: 'pg2', name: '다낭', capacity: 2, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'pg3', name: '괌', capacity: 4, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg4', name: '모리셔스', capacity: 20, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: false, currentBooking: { time: '14:00-16:00', user: '이*수', purpose: '전체 회의', status: 'upcoming' } },
-    { id: 'pg5', name: '하와이', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: false, currentBooking: { time: '10:00-12:00', user: '박*영', purpose: '팀 미팅', status: 'ongoing' } },
-    { id: 'pg6', name: '발리', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: false, currentBooking: { time: '11:00-13:00', user: '정*호', purpose: '기획 회의', status: 'ongoing' } },
-    { id: 'pg7', name: '칸쿤', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg8', name: '이비자', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg9', name: '사이판', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg10', name: '제주', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: false, currentBooking: { time: '15:00-17:00', user: '최*미', purpose: '워크샵', status: 'upcoming' } },
-    { id: 'pg11', name: '타히티', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg12', name: '몰타', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg13', name: '몰디브', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg14', name: '마요르카', capacity: 4, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'pg15', name: '팔라우', capacity: 5, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg16', name: '오키나와', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg17', name: '니스', capacity: 30, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
-    { id: 'pg18', name: '보홀', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    // 판교아지트
+    { id: 'pg1', name: '산토리니', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: false, currentBooking: { time: '09:00-11:00', user: '김*진', purpose: '프로젝트 회의', status: 'ongoing' } },
+    { id: 'pg2', name: '다낭', capacity: 2, location: '판교아지트', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg3', name: '괌', capacity: 4, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg4', name: '모리셔스', capacity: 20, location: '판교아지트', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: false, currentBooking: { time: '14:00-16:00', user: '이*수', purpose: '전체 회의', status: 'upcoming' } },
+    { id: 'pg5', name: '하와이', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: false, currentBooking: { time: '10:00-12:00', user: '박*영', purpose: '팀 미팅', status: 'ongoing' } },
+    { id: 'pg6', name: '발리', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: false, currentBooking: { time: '11:00-13:00', user: '정*호', purpose: '기획 회의', status: 'ongoing' } },
+    { id: 'pg7', name: '칸쿤', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg8', name: '이비자', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg9', name: '사이판', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg10', name: '제주', capacity: 12, location: '판교아지트', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: false, currentBooking: { time: '15:00-17:00', user: '최*미', purpose: '워크샵', status: 'upcoming' } },
+    { id: 'pg11', name: '타히티', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg12', name: '몰타', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg13', name: '몰디브', capacity: 8, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg14', name: '마요르카', capacity: 4, location: '판교아지트', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg15', name: '팔라우', capacity: 5, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg16', name: '오키나와', capacity: 12, location: '판교아지트', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg17', name: '니스', capacity: 30, location: '판교아지트', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
+    { id: 'pg18', name: '보홀', capacity: 8, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
     
     // 여의도오피스
     { id: 'yd1', name: '푸켓', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: false, currentBooking: { time: '09:30-11:30', user: '강*희', purpose: '기획 회의', status: 'ongoing' } },
@@ -302,13 +302,13 @@ export default function MeetingRoomDashboard() {
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <Select value={selectedLocation} onValueChange={(value: string) => setSelectedLocation(value as '판교오피스' | '여의도오피스' | 'all')}>
+              <Select value={selectedLocation} onValueChange={(value: string) => setSelectedLocation(value as '판교아지트' | '여의도오피스' | 'all')}>
                 <SelectTrigger>
                   <SelectValue placeholder="위치" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">전체 위치</SelectItem>
-                  <SelectItem value="판교오피스">판교오피스</SelectItem>
+                  <SelectItem value="판교아지트">판교아지트</SelectItem>
                   <SelectItem value="여의도오피스">여의도오피스</SelectItem>
                 </SelectContent>
               </Select>

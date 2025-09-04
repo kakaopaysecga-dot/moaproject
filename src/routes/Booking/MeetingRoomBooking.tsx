@@ -15,14 +15,14 @@ interface MeetingRoom {
   id: string;
   name: string;
   capacity: number;
-  location: '판교오피스' | '여의도오피스';
+  location: '판교아지트' | '여의도오피스';
   amenities: string[];
   available: boolean;
 }
 
 export default function MeetingRoomBooking() {
   const { toast } = useToast();
-  const [selectedOffice, setSelectedOffice] = useState<'판교오피스' | '여의도오피스' | null>(null);
+  const [selectedOffice, setSelectedOffice] = useState<'판교아지트' | '여의도오피스' | null>(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedEndTime, setSelectedEndTime] = useState('');
@@ -32,25 +32,25 @@ export default function MeetingRoomBooking() {
   const [showReservationStatus, setShowReservationStatus] = useState(false);
 
   const meetingRooms: MeetingRoom[] = [
-    // 판교오피스
-    { id: 'pg1', name: '산토리니 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg2', name: '다낭 (2인)', capacity: 2, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'pg3', name: '괌 (4인)', capacity: 4, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg4', name: '모리셔스 (20인)', capacity: 20, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
-    { id: 'pg5', name: '하와이 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg6', name: '발리 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg7', name: '칸쿤 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg8', name: '이비자 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg9', name: '사이판 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg10', name: '제주 (12인)', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg11', name: '타히티 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg12', name: '몰타 (6인)', capacity: 6, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
-    { id: 'pg13', name: '몰디브 (8인)', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg14', name: '마요르카 (4인)', capacity: 4, location: '판교오피스', amenities: ['모니터', 'WiFi'], available: true },
-    { id: 'pg15', name: '팔라우 (5인)', capacity: 5, location: '판교오피스', amenities: ['프로젝터', 'WiFi'], available: true },
-    { id: 'pg16', name: '오키나와 (12인)', capacity: 12, location: '판교오피스', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
-    { id: 'pg17', name: '니스 (최대30인)', capacity: 30, location: '판교오피스', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
-    { id: 'pg18', name: '보홀 (8인)', capacity: 8, location: '판교오피스', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    // 판교아지트
+    { id: 'pg1', name: '산토리니 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg2', name: '다낭 (2인)', capacity: 2, location: '판교아지트', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg3', name: '괌 (4인)', capacity: 4, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg4', name: '모리셔스 (20인)', capacity: 20, location: '판교아지트', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
+    { id: 'pg5', name: '하와이 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg6', name: '발리 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg7', name: '칸쿤 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg8', name: '이비자 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg9', name: '사이판 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg10', name: '제주 (12인)', capacity: 12, location: '판교아지트', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg11', name: '타히티 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg12', name: '몰타 (6인)', capacity: 6, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
+    { id: 'pg13', name: '몰디브 (8인)', capacity: 8, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg14', name: '마요르카 (4인)', capacity: 4, location: '판교아지트', amenities: ['모니터', 'WiFi'], available: true },
+    { id: 'pg15', name: '팔라우 (5인)', capacity: 5, location: '판교아지트', amenities: ['프로젝터', 'WiFi'], available: true },
+    { id: 'pg16', name: '오키나와 (12인)', capacity: 12, location: '판교아지트', amenities: ['대형 모니터', 'WiFi', '화상회의'], available: true },
+    { id: 'pg17', name: '니스 (최대30인)', capacity: 30, location: '판교아지트', amenities: ['대형 프로젝터', 'WiFi', '화상회의', '음향시설'], available: true },
+    { id: 'pg18', name: '보홀 (8인)', capacity: 8, location: '판교아지트', amenities: ['프로젝터', 'WiFi', '화상회의'], available: true },
     
     // 여의도오피스
     { id: 'yd1', name: '푸켓 (6인)', capacity: 6, location: '여의도오피스', amenities: ['프로젝터', 'WiFi', '화이트보드'], available: true },
@@ -64,7 +64,7 @@ export default function MeetingRoomBooking() {
 
   // Mock reservation data
   const meetingRoomReservations = {
-    '판교오피스': [
+    '판교아지트': [
       { room: '산토리니', time: '09:00-11:00', user: '김*진', purpose: '프로젝트 회의', status: 'ongoing' },
       { room: '모리셔스', time: '14:00-16:00', user: '이*수', purpose: '전체 회의', status: 'upcoming' },
       { room: '하와이', time: '10:00-12:00', user: '박*영', purpose: '팀 미팅', status: 'ongoing' },
@@ -232,9 +232,9 @@ export default function MeetingRoomBooking() {
                 <Card className="border-0 bg-gradient-to-br from-primary/5 to-primary/10">
                   <CardContent className="p-6 text-center">
                     <div className="text-3xl font-bold text-primary mb-2">
-                      {meetingRoomReservations['판교오피스'].length}
+                      {meetingRoomReservations['판교아지트'].length}
                     </div>
-                    <div className="text-sm text-muted-foreground font-medium">판교오피스</div>
+                    <div className="text-sm text-muted-foreground font-medium">판교아지트</div>
                     <div className="text-xs text-muted-foreground mt-1">회의실 예약</div>
                   </CardContent>
                 </Card>
@@ -269,13 +269,13 @@ export default function MeetingRoomBooking() {
             <div className="space-y-4">
               <Label className="text-base font-semibold">오피스 위치</Label>
               <RadioGroup value={selectedOffice || ''} onValueChange={(value) => {
-                setSelectedOffice(value as '판교오피스' | '여의도오피스');
+                setSelectedOffice(value as '판교아지트' | '여의도오피스');
                 setSelectedRoom(null); // Reset room selection when office changes
               }}>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary/50 transition-colors">
-                    <RadioGroupItem value="판교오피스" id="pangyo" />
-                    <Label htmlFor="pangyo" className="text-base font-medium cursor-pointer">판교오피스</Label>
+                    <RadioGroupItem value="판교아지트" id="pangyo" />
+                    <Label htmlFor="pangyo" className="text-base font-medium cursor-pointer">판교아지트</Label>
                   </div>
                   <div className="flex items-center space-x-3 p-4 rounded-lg border-2 border-border hover:border-primary/50 transition-colors">
                     <RadioGroupItem value="여의도오피스" id="yeouido" />
