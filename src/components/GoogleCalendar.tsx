@@ -45,37 +45,5 @@ export const GoogleCalendar: React.FC<GoogleCalendarProps> = ({
       setIsConnecting(false);
     }
   };
-  return (
-    <div className="flex items-center gap-3 p-4 border rounded-lg">
-      <div className="flex items-center gap-2">
-        <Calendar className="h-5 w-5 text-primary" />
-        <span className="font-medium">구글 캘린더</span>
-        {isConnected && (
-          <Badge variant="secondary" className="gap-1">
-            <CheckCircle className="h-3 w-3" />
-            연결됨
-          </Badge>
-        )}
-      </div>
-      
-      <Button
-        onClick={handleGoogleAuth}
-        variant={isConnected ? "outline" : "default"}
-        size="sm"
-        disabled={isConnecting}
-        className="ml-auto"
-      >
-        {isConnecting ? (
-          "연결 중..."
-        ) : isConnected ? (
-          "연결 해제"
-        ) : (
-          <>
-            연결하기
-            <ExternalLink className="h-3 w-3 ml-1" />
-          </>
-        )}
-      </Button>
-    </div>
-  );
+  return null;
 };
