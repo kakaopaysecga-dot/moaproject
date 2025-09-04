@@ -40,13 +40,12 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
     const duration = 3000 + Math.random() * 2000; // 3-5초 랜덤 지속시간
     setTimeout(() => {
       // 최종 회전 각도에서 포인터(12시 방향)가 가리키는 세그먼트 계산
-      const normalizedAngle = finalRotation % 360;
+      const normalizedAngle = (finalRotation % 360 + 360) % 360; // 항상 양수로 만들기
       const segmentAngle = 360 / options.length;
       
-      // 포인터는 12시 방향(0도)에 있고, 시계방향으로 세그먼트가 배치됨
-      // 회전된 각도를 고려해서 어떤 세그먼트가 포인터에 위치하는지 계산
-      let pointerAngle = (360 - normalizedAngle) % 360;
-      const selectedIndex = Math.floor(pointerAngle / segmentAngle) % options.length;
+      // 포인터는 12시 방향(0도)에 있음
+      // 첫 번째 세그먼트는 0도에서 시작하므로 직접 계산
+      const selectedIndex = Math.floor(normalizedAngle / segmentAngle) % options.length;
       
       const selectedOpt = options[selectedIndex];
       setSelectedOption(selectedOpt);
