@@ -30,12 +30,15 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
 
     // 애니메이션 설정
     const segmentAngle = 360 / options.length;
-    const minSpins = 5; // 최소 회전 수
-    const maxSpins = 8; // 최대 회전 수
+    const minSpins = 3; // 최소 회전 수
+    const maxSpins = 6; // 최대 회전 수
     const randomSpins = minSpins + Math.random() * (maxSpins - minSpins);
     
-    // 목표 각도 계산 (선택된 옵션이 포인터(12시 방향)에 오도록)
-    const targetAngle = 360 - (segmentAngle * randomIndex + segmentAngle / 2);
+    // 목표 각도 계산 (선택된 옵션이 포인터(12시 방향)에 정확히 오도록)
+    const segmentStart = randomIndex * segmentAngle;
+    const segmentCenter = segmentStart + segmentAngle / 2;
+    // 포인터가 12시 방향이므로 0도에서 해당 세그먼트까지의 각도를 계산
+    const targetAngle = 360 - segmentCenter;
     const totalRotation = randomSpins * 360 + targetAngle;
 
     setRotation(prev => prev + totalRotation);

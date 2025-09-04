@@ -38,7 +38,6 @@ const defaultMenuOptions: RouletteOption[] = [
 export default function LunchRoulette() {
   const [menuOptions, setMenuOptions] = useLocalStorage<RouletteOption[]>('lunch-roulette-menus', defaultMenuOptions);
   const [showCustomizer, setShowCustomizer] = useState(false);
-  const [showResult, setShowResult] = useState(false);
   const [wheelSize, setWheelSize] = useState<'small' | 'medium' | 'large'>('medium');
 
   const {
@@ -51,10 +50,8 @@ export default function LunchRoulette() {
     reset
   } = useRoulette({
     options: menuOptions,
-    onSpinComplete: () => {
-      setShowResult(true);
-      // 결과 표시 후 5초 뒤에 자동으로 닫기
-      setTimeout(() => setShowResult(false), 5000);
+    onSpinComplete: (option) => {
+      // 결과 표시만 처리, 별도 모달 없음
     }
   });
 
@@ -108,6 +105,24 @@ export default function LunchRoulette() {
           />
         </div>
 
+        {/* 결과 표시 - 인라인 */}
+        {selectedOption && (
+          <Card className="max-w-md mx-auto animate-scale-in border-primary/50 bg-gradient-to-r from-primary/10 to-accent/10">
+            <CardContent className="p-6 text-center space-y-3">
+              <div className="text-lg font-medium text-muted-foreground">
+                🎯 선택된 메뉴
+              </div>
+              <div className="text-3xl font-bold text-foreground">
+                {selectedOption.label}
+              </div>
+              <div className="w-16 h-0.5 bg-primary/30 mx-auto"></div>
+              <div className="text-sm text-muted-foreground">
+                맛있게 드세요! 🍽️
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* 컨트롤 버튼들 */}
         <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
           <RouletteControls
@@ -138,28 +153,6 @@ export default function LunchRoulette() {
             </div>
           </CardContent>
         </Card>
-
-        {/* 결과 모달 */}
-        <Dialog open={showResult} onOpenChange={setShowResult}>
-          <DialogContent className="max-w-sm mx-auto border-0 bg-card/95 backdrop-blur-sm">
-            <div className="text-center py-8 space-y-6">
-              <div className="space-y-3">
-                <div className="text-lg font-medium text-muted-foreground">
-                  오늘의 점심 메뉴
-                </div>
-                <div className="text-4xl font-bold text-foreground animate-scale-in">
-                  {selectedOption?.label}
-                </div>
-              </div>
-              
-              <div className="w-16 h-0.5 bg-primary/30 mx-auto animate-fade-in"></div>
-              
-              <div className="text-sm text-muted-foreground">
-                맛있게 드세요!
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
 
         {/* 메뉴 커스터마이저 모달 */}
         <Dialog open={showCustomizer} onOpenChange={setShowCustomizer}>
