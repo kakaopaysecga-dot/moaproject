@@ -20,20 +20,12 @@ export const GoogleIntegration: React.FC = () => {
   const handleConnect = async () => {
     setIsConnecting(true);
     try {
-      console.log('Starting Google OAuth flow...');
-      
       // 구글 OAuth 설정
       const clientId = '759409896984-a43f1m1d98aht31rmcmogud1ev7lvk6l.apps.googleusercontent.com';
       const currentUrl = window.location.origin;
       const redirectUri = `${currentUrl}/auth/google/callback`;
       const scope = 'https://www.googleapis.com/auth/calendar.events';
       
-      console.log('OAuth parameters:', {
-        clientId,
-        redirectUri,
-        scope,
-        currentUrl
-      });
       
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${encodeURIComponent(clientId)}&` +
@@ -44,7 +36,6 @@ export const GoogleIntegration: React.FC = () => {
         `prompt=consent&` +
         `state=${Date.now()}`;
 
-      console.log('Redirecting to:', authUrl);
       sessionStorage.setItem('google_auth_callback', 'true');
       window.location.href = authUrl;
     } catch (error) {
