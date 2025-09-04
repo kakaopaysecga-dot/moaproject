@@ -50,14 +50,45 @@ export default function RequestStatus() {
               <div className="space-y-3">
                 <h3 className="text-xl font-semibold text-foreground">아직 신청한 요청이 없습니다</h3>
                 <p className="text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                  홈 화면에서 다양한 서비스를 신청해보세요
+                  자주 사용하는 서비스를 바로 신청해보세요
                 </p>
               </div>
-              <Link to="/">
-                <Button className="mt-4">
-                  홈으로 돌아가기
-                </Button>
-              </Link>
+              
+              {/* Quick Actions */}
+              <div className="space-y-4 mt-6">
+                <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+                  <Link to="/requests/business-card">
+                    <Button variant="outline" className="w-full h-12 text-sm flex items-center gap-2">
+                      <span>💳</span>
+                      명함 신청
+                    </Button>
+                  </Link>
+                  <Link to="/requests/environment">
+                    <Button variant="outline" className="w-full h-12 text-sm flex items-center gap-2">
+                      <span>🌡️</span>
+                      온도 조절
+                    </Button>
+                  </Link>
+                  <Link to="/requests/parking">
+                    <Button variant="outline" className="w-full h-12 text-sm flex items-center gap-2">
+                      <span>🚗</span>
+                      주차 등록
+                    </Button>
+                  </Link>
+                  <Link to="/booking">
+                    <Button variant="outline" className="w-full h-12 text-sm flex items-center gap-2">
+                      <span>📅</span>
+                      예약 현황
+                    </Button>
+                  </Link>
+                </div>
+                
+                <Link to="/">
+                  <Button className="mt-4">
+                    홈으로 돌아가기
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
         ) : (

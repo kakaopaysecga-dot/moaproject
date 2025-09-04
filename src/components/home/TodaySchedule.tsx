@@ -7,6 +7,7 @@ import { useScheduleStore } from '@/store/scheduleStore';
 import { cn } from '@/lib/utils';
 import { GoogleCalendar } from '@/components/GoogleCalendar';
 import { GoogleCalendarService } from '@/services/googleCalendarService';
+import { AddScheduleModal } from './AddScheduleModal';
 
 const getTypeIcon = (type: string) => {
   switch (type) {
@@ -46,10 +47,7 @@ export const TodaySchedule: React.FC = () => {
       <section className="space-y-3 animate-fade-in">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
-          <Button variant="outline" size="sm" className="h-7 px-3 text-xs">
-            <Plus className="w-3 h-3 mr-1" />
-            추가
-          </Button>
+          <AddScheduleModal />
         </div>
         <div className="relative p-8 rounded-xl bg-muted/30 border-2 border-dashed border-muted-foreground/20">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl"></div>
@@ -82,10 +80,7 @@ export const TodaySchedule: React.FC = () => {
                 setIsGoogleConnected(false);
               }}
             />
-            <Button variant="outline" size="sm" className="h-7 px-3 text-xs">
-              <Plus className="w-3 h-3 mr-1" />
-              추가
-            </Button>
+            <AddScheduleModal />
           </div>
         </div>
 

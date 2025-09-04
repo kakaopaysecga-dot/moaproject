@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, 
@@ -8,9 +8,13 @@ import {
   Heart, 
   Thermometer,
   Settings,
+  Search,
+  X,
   LucideIcon
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface ServiceCard {
   title: string;
@@ -76,13 +80,78 @@ const allServices: ServiceCard[] = [
 ];
 
 export const ServiceCards: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+
+  const filteredFrequentServices = frequentServices.filter(service =>
+    service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    service.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredAllServices = allServices.filter(service =>
+    service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    service.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const hasSearchResults = filteredFrequentServices.length > 0 || filteredAllServices.length > 0;
+
   return (
     <div className="space-y-6">
+      {/* 검색 기능 */}
+      <div className="flex items-center gap-2">
+        {showSearch ? (
+          <div className="flex items-center gap-2 flex-1">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="서비스 검색..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+                autoFocus
+              />
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setShowSearch(false);
+                setSearchTerm('');
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between w-full">
+            <h3 className="text-lg font-semibold text-foreground">서비스</h3>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSearch(true)}
+              className="h-8 w-8 p-0"
+            >
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* 검색 결과가 없을 때 */}
+      {searchTerm && !hasSearchResults && (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">'{searchTerm}'에 대한 검색 결과가 없습니다</p>
+        </div>
+      )}
+
       {/* 자주 사용하는 서비스 */}
-      <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-foreground px-1">자주 사용하는 서비스</h3>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {frequentServices.map((service, index) => (
+      {(!searchTerm || filteredFrequentServices.length > 0) && (
+        <section className="space-y-4">
+          <h3 className="text-lg font-semibold text-foreground px-1">
+            {searchTerm ? '자주 사용하는 서비스 검색 결과' : '자주 사용하는 서비스'}
+          </h3>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {filteredFrequentServices.map((service, index) => (
             <Link key={service.path} to={service.path} className="group">
               <Card className="relative overflow-hidden border border-border/50 bg-card hover:shadow-xl transition-all duration-300 min-h-[80px] group-hover:scale-[1.02] animate-fade-in" 
                 style={{ animationDelay: `${index * 100}ms` }}>
@@ -97,15 +166,19 @@ export const ServiceCards: React.FC = () => {
                 </CardContent>
               </Card>
             </Link>
-          ))}
-        </div>
-      </section>
+              ))}
+            </div>
+        </section>
+      )}
 
       {/* 전체 서비스 */}
-      <section className="space-y-4">
-        <h3 className="text-lg font-semibold text-foreground px-1">전체 서비스</h3>
-        <div className="grid grid-cols-2 gap-3">
-          {allServices.map((service, index) => (
+      {(!searchTerm || filteredAllServices.length > 0) && (
+        <section className="space-y-4">
+          <h3 className="text-lg font-semibold text-foreground px-1">
+            {searchTerm ? '전체 서비스 검색 결과' : '전체 서비스'}
+          </h3>
+          <div className="grid grid-cols-2 gap-3">
+            {filteredAllServices.map((service, index) => (
             <Link key={service.path} to={service.path} className="group">
               <Card className="relative overflow-hidden border border-border/50 bg-card hover:shadow-xl transition-all duration-300 min-h-[120px] group-hover:scale-[1.02] animate-scale-in"
                 style={{ animationDelay: `${(index + 2) * 100}ms` }}>
@@ -120,9 +193,10 @@ export const ServiceCards: React.FC = () => {
                 </CardContent>
               </Card>
             </Link>
-          ))}
-        </div>
-      </section>
+              ))}
+            </div>
+        </section>
+      )}
     </div>
   );
 };
