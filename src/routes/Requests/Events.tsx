@@ -182,24 +182,26 @@ export default function Events() {
                 <div className="spacing-tight">
                   <Label htmlFor="marriage-files">첨부파일 (선택사항)</Label>
                   <div className="spacing-tight">
-                    <Input 
-                      id="marriage-files"
-                      type="file"
-                      multiple
-                      accept="image/*,.pdf,.doc,.docx"
-                      onChange={(e) => {
-                        const files = Array.from(e.target.files || []);
-                        setMarriageForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
-                      }}
-                      className="min-h-[44px] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
-                    />
+                    <div className="w-full">
+                      <Input 
+                        id="marriage-files"
+                        type="file"
+                        multiple
+                        accept="image/*,.pdf,.doc,.docx"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files || []);
+                          setMarriageForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
+                        }}
+                        className="w-full min-h-[48px] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                      />
+                    </div>
                     {marriageForm.attachments.length > 0 && (
                       <div className="spacing-tight">
                         {marriageForm.attachments.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                            <div className="flex items-center spacing-items">
-                              <Paperclip className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-sm">{file.name}</span>
+                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
+                            <div className="flex items-center spacing-items min-w-0 flex-1">
+                              <Paperclip className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                              <span className="text-sm truncate">{file.name}</span>
                             </div>
                             <Button
                               type="button"
@@ -209,7 +211,7 @@ export default function Events() {
                                 ...prev, 
                                 attachments: prev.attachments.filter((_, i) => i !== index) 
                               }))}
-                              className="min-h-[44px] min-w-[44px] p-0"
+                              className="min-h-[44px] min-w-[44px] p-0 flex-shrink-0 ml-2"
                             >
                               <X className="h-4 w-4" />
                             </Button>
@@ -347,24 +349,26 @@ export default function Events() {
                 <div className="spacing-tight">
                   <Label htmlFor="funeral-files">첨부파일 (선택사항)</Label>
                   <div className="spacing-tight">
-                    <Input 
-                      id="funeral-files"
-                      type="file"
-                      multiple
-                      accept="image/*,.pdf,.doc,.docx"
-                      onChange={(e) => {
-                        const files = Array.from(e.target.files || []);
-                        setFuneralForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
-                      }}
-                      className="min-h-[44px] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
-                    />
+                    <div className="w-full">
+                      <Input 
+                        id="funeral-files"
+                        type="file"
+                        multiple
+                        accept="image/*,.pdf,.doc,.docx"
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files || []);
+                          setFuneralForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
+                        }}
+                        className="w-full min-h-[48px] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                      />
+                    </div>
                     {funeralForm.attachments.length > 0 && (
                       <div className="spacing-tight">
                         {funeralForm.attachments.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-                            <div className="flex items-center spacing-items">
-                              <Paperclip className="h-4 w-4 text-muted-foreground" />
-                              <span className="text-sm">{file.name}</span>
+                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border">
+                            <div className="flex items-center spacing-items min-w-0 flex-1">
+                              <Paperclip className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                              <span className="text-sm truncate">{file.name}</span>
                             </div>
                             <Button
                               type="button"
@@ -374,7 +378,7 @@ export default function Events() {
                                 ...prev, 
                                 attachments: prev.attachments.filter((_, i) => i !== index) 
                               }))}
-                              className="min-h-[44px] min-w-[44px] p-0"
+                              className="min-h-[44px] min-w-[44px] p-0 flex-shrink-0 ml-2"
                             >
                               <X className="h-4 w-4" />
                             </Button>
