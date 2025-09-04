@@ -110,9 +110,10 @@ const EmotionalCare: React.FC = () => {
     setMessages(prev => [...prev, tempMessage]);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error('No valid session');
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session?.access_token) {
+        console.error('Session error:', sessionError);
+        throw new Error('인증이 필요합니다. 다시 로그인해주세요.');
       }
 
       const response = await supabase.functions.invoke('emotional-care-ai', {
@@ -127,7 +128,8 @@ const EmotionalCare: React.FC = () => {
       });
 
       if (response.error) {
-        throw new Error(response.error.message || 'API call failed');
+        console.error('Function invocation error:', response.error);
+        throw new Error(response.error.message || 'AI 응답을 받는데 실패했습니다.');
       }
 
       const { response: aiResponse, conversationId: newConversationId } = response.data;
@@ -169,7 +171,7 @@ const EmotionalCare: React.FC = () => {
       
       toast({
         title: '오류',
-        description: '메시지 전송에 실패했습니다. 다시 시도해주세요.',
+        description: error instanceof Error ? error.message : '메시지 전송에 실패했습니다.',
         variant: 'destructive',
       });
     } finally {
@@ -191,101 +193,152 @@ const EmotionalCare: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 p-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 p-4 animate-fade-in">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Heart className="w-8 h-8 text-pink-500" />
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+        <div className="text-center mb-8 animate-scale-in">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="relative">
+              <Heart className="w-10 h-10 text-pink-500 animate-pulse" />
+              <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full animate-pulse"></div>
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
               감정케어 AI
             </h1>
           </div>
-          <p className="text-gray-600">당신의 마음을 따뜻하게 돌봐드립니다</p>
+          <p className="text-gray-600 text-lg">당신의 마음을 따뜻하게 돌봐드립니다 ✨</p>
+          <div className="mt-4 flex justify-center">
+            <div className="px-4 py-2 bg-gradient-to-r from-pink-100 to-purple-100 rounded-full border border-pink-200">
+              <span className="text-sm text-gray-700">💝 언제든 편안하게 이야기해주세요</span>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Conversation History Sidebar */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
+          <div className="lg:col-span-1 animate-slide-in-right">
+            <Card className="backdrop-blur-sm bg-white/80 border-pink-200 shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-t-lg">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Heart className="w-5 h-5" />
+                  <Heart className="w-5 h-5 text-pink-500" />
                   이전 대화
                 </CardTitle>
-                <Button onClick={startNewConversation} className="w-full" variant="outline">
-                  새 대화 시작
+                <Button 
+                  onClick={startNewConversation} 
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-lg hover-scale" 
+                  variant="default"
+                >
+                  ✨ 새 대화 시작
                 </Button>
               </CardHeader>
-              <CardContent className="space-y-2">
-                {conversations.map((conv) => (
-                  <Button
-                    key={conv.id}
-                    variant={currentConversationId === conv.id ? "default" : "ghost"}
-                    className="w-full justify-start text-left h-auto p-3"
-                    onClick={() => loadMessages(conv.id)}
-                  >
-                    <div className="truncate">
-                      <div className="font-medium text-sm truncate">{conv.title}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {new Date(conv.created_at).toLocaleDateString()}
+              <CardContent className="space-y-3 p-4">
+                {conversations.length === 0 ? (
+                  <div className="text-center py-6 text-gray-500">
+                    <Heart className="w-8 h-8 mx-auto mb-2 text-pink-300" />
+                    <p className="text-sm">아직 대화가 없어요</p>
+                  </div>
+                ) : (
+                  conversations.map((conv) => (
+                    <Button
+                      key={conv.id}
+                      variant={currentConversationId === conv.id ? "default" : "ghost"}
+                      className={`w-full justify-start text-left h-auto p-4 transition-all duration-300 hover-scale ${
+                        currentConversationId === conv.id 
+                          ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg' 
+                          : 'hover:bg-pink-50 hover:border-pink-200'
+                      }`}
+                      onClick={() => loadMessages(conv.id)}
+                    >
+                      <div className="truncate">
+                        <div className="font-medium text-sm truncate">{conv.title}</div>
+                        <div className={`text-xs ${currentConversationId === conv.id ? 'text-pink-100' : 'text-muted-foreground'}`}>
+                          {new Date(conv.created_at).toLocaleDateString()}
+                        </div>
                       </div>
-                    </div>
-                  </Button>
-                ))}
+                    </Button>
+                  ))
+                )}
               </CardContent>
             </Card>
           </div>
 
           {/* Main Chat Area */}
-          <div className="lg:col-span-3">
-            <Card className="h-[600px] flex flex-col">
-              <CardHeader>
-                <CardTitle className="text-lg">감정 상담</CardTitle>
-                <div className="flex flex-wrap gap-2">
+          <div className="lg:col-span-3 animate-scale-in">
+            <Card className="h-[700px] flex flex-col backdrop-blur-sm bg-white/90 border-pink-200 shadow-2xl">
+              <CardHeader className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-t-lg border-b border-pink-100">
+                <CardTitle className="text-xl flex items-center gap-2">
+                  <div className="relative">
+                    <Heart className="w-6 h-6 text-pink-500" />
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                  </div>
+                  감정 상담
+                  <span className="text-sm font-normal text-gray-500 ml-2">• 온라인</span>
+                </CardTitle>
+                <div className="flex flex-wrap gap-3 mt-4">
                   {emotionOptions.map(({ emotion, icon: Icon, color, value }) => (
                     <Badge
                       key={value}
                       variant={selectedEmotion === value ? "default" : "outline"}
-                      className={`cursor-pointer transition-all ${
-                        selectedEmotion === value ? 'bg-primary text-primary-foreground' : color
+                      className={`cursor-pointer transition-all duration-300 hover-scale px-4 py-2 ${
+                        selectedEmotion === value 
+                          ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white shadow-lg transform scale-105' 
+                          : `${color} hover:shadow-md border-2`
                       }`}
                       onClick={() => setSelectedEmotion(selectedEmotion === value ? '' : value)}
                     >
-                      <Icon className="w-3 h-3 mr-1" />
+                      <Icon className="w-4 h-4 mr-2" />
                       {emotion}
                     </Badge>
                   ))}
                 </div>
               </CardHeader>
 
-              <CardContent className="flex-1 flex flex-col">
+              <CardContent className="flex-1 flex flex-col p-6">
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
+                <div className="flex-1 overflow-y-auto space-y-4 mb-6 pr-2">
                   {messages.length === 0 ? (
-                    <div className="text-center text-gray-500 mt-8">
-                      <Heart className="w-12 h-12 mx-auto mb-3 text-pink-300" />
-                      <p>안녕하세요! 오늘 기분은 어떠신가요?</p>
-                      <p className="text-sm mt-2">위에서 현재 감정을 선택하고 대화를 시작해보세요.</p>
+                    <div className="text-center text-gray-500 mt-16 animate-fade-in">
+                      <div className="relative mb-6">
+                        <Heart className="w-16 h-16 mx-auto text-pink-300 animate-pulse" />
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-pink-100 rounded-full opacity-30 animate-ping"></div>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-700 mb-2">안녕하세요! 🌸</h3>
+                      <p className="text-gray-600 mb-4">오늘 기분은 어떠신가요?</p>
+                      <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg p-4 max-w-md mx-auto border border-pink-100">
+                        <p className="text-sm text-gray-600">위에서 현재 감정을 선택하고 대화를 시작해보세요.</p>
+                        <p className="text-xs text-gray-500 mt-2">💝 편안한 마음으로 이야기해주세요</p>
+                      </div>
                     </div>
                   ) : (
-                    messages.map((message) => (
+                    messages.map((message, index) => (
                       <div
                         key={message.id}
-                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
+                        style={{ animationDelay: `${index * 100}ms` }}
                       >
                         <div
-                          className={`max-w-[80%] p-3 rounded-lg ${
+                          className={`max-w-[80%] p-4 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl ${
                             message.role === 'user'
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-gray-100 text-gray-900'
+                              ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white ml-4'
+                              : 'bg-white text-gray-800 border border-pink-100 mr-4'
                           }`}
                         >
-                          <p className="whitespace-pre-wrap">{message.content}</p>
+                          {message.role === 'assistant' && (
+                            <div className="flex items-center gap-2 mb-2">
+                              <div className="w-6 h-6 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
+                                <Heart className="w-3 h-3 text-white" />
+                              </div>
+                              <span className="text-xs text-gray-500 font-medium">감정케어 AI</span>
+                            </div>
+                          )}
+                          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
                           {message.emotion_detected && (
-                            <div className="mt-2">
-                              <Badge variant="secondary" className="text-xs">
-                                {emotionOptions.find(e => e.value === message.emotion_detected)?.emotion}
+                            <div className="mt-3 flex justify-end">
+                              <Badge variant="secondary" className="text-xs bg-white/20 text-white border-white/30">
+                                {emotionOptions.find(e => e.value === message.emotion_detected)?.emotion} 
+                                {emotionOptions.find(e => e.value === message.emotion_detected)?.icon && 
+                                  React.createElement(emotionOptions.find(e => e.value === message.emotion_detected)!.icon, { className: "w-3 h-3 ml-1" })
+                                }
                               </Badge>
                             </div>
                           )}
@@ -294,15 +347,20 @@ const EmotionalCare: React.FC = () => {
                     ))
                   )}
                   {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="bg-gray-100 p-3 rounded-lg">
-                        <div className="flex items-center space-x-2">
-                          <div className="animate-pulse flex space-x-1">
-                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    <div className="flex justify-start animate-fade-in">
+                      <div className="bg-white p-4 rounded-2xl shadow-lg border border-pink-100 mr-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-6 h-6 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full flex items-center justify-center">
+                            <Heart className="w-3 h-3 text-white animate-pulse" />
                           </div>
-                          <span className="text-sm text-gray-500">생각하고 있어요...</span>
+                          <div className="flex items-center space-x-2">
+                            <div className="animate-pulse flex space-x-1">
+                              <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce"></div>
+                              <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                            </div>
+                            <span className="text-sm text-gray-500 font-medium">마음을 읽고 있어요...</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -311,21 +369,25 @@ const EmotionalCare: React.FC = () => {
                 </div>
 
                 {/* Input Area */}
-                <div className="flex gap-2">
+                <div className="flex gap-3 p-4 bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl border border-pink-100">
                   <Input
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyDown={handleKeyPress}
-                    placeholder="마음속 이야기를 들려주세요..."
+                    placeholder="마음속 이야기를 들려주세요... 💭"
                     disabled={isLoading}
-                    className="flex-1"
+                    className="flex-1 border-pink-200 focus:border-pink-400 focus:ring-pink-400 bg-white/80 backdrop-blur-sm"
                   />
                   <Button 
                     onClick={sendMessage} 
                     disabled={isLoading || !inputValue.trim()}
-                    className="px-6"
+                    className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-lg hover-scale disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Send className="w-4 h-4" />
+                    {isLoading ? (
+                      <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
                   </Button>
                 </div>
               </CardContent>
