@@ -138,7 +138,7 @@ export default function BusinessCardSteps() {
                   </div>
                   <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-3">
-                      <Label htmlFor="englishName" className="text-sm font-semibold text-foreground">영어이름 *</Label>
+                      <Label htmlFor="englishName" className="text-sm font-semibold text-foreground">영어이름(확장자제외)</Label>
                       <Input 
                         id="englishName" 
                         value={formData.englishName}
