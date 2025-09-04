@@ -7,7 +7,8 @@ import { Modal } from '@/components/ui/Modal';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SuccessAnimation } from '@/components/ui/SuccessAnimation';
-import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X } from 'lucide-react';
+import { useScheduleStore } from '@/store/scheduleStore';
+import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X, CalendarPlus, Plane } from 'lucide-react';
 
 interface Person {
   id: string;
@@ -299,6 +300,8 @@ export const AIPeopleFinder: React.FC = () => {
     content: ''
   });
 
+  const { addScheduleItem } = useScheduleStore();
+
   // 실시간 검색 미리보기
   const handleSearchInput = (value: string) => {
     setSearchQuery(value);
@@ -400,13 +403,27 @@ export const AIPeopleFinder: React.FC = () => {
     // 실제로는 회의 예약 API 호출
     const selectedRoom = meetingRooms.find(room => room.id === meetingForm.meetingRoom);
     
+    // 오늘의 일정에 회의 추가
+    const [startTime] = meetingForm.timeSlot.split('-');
+    const newScheduleItem = {
+      id: `meeting_${Date.now()}`,
+      title: `${meetingForm.title} (with ${meetingForm.person.name})`,
+      time: startTime,
+      type: 'meeting' as const,
+      location: `${meetingForm.selectedLocation} ${selectedRoom?.name}`,
+      priority: 'high' as const,
+      completed: false
+    };
+    
+    addScheduleItem(newScheduleItem);
+    
     // 모달 닫기
     setIsModalOpen(false);
     
     // 성공 애니메이션 표시
     setSuccessMessage({
       title: "회의 예약 완료!",
-      message: `${meetingForm.person.name}님과 ${meetingForm.timeSlot}에 ${selectedRoom?.name}에서 회의가 예약되었습니다.`
+      message: `${meetingForm.person.name}님과 ${meetingForm.timeSlot}에 ${selectedRoom?.name}에서 회의가 예약되었습니다. 오늘의 일정에 추가되었습니다.`
     });
     setShowSuccessAnimation(true);
     
@@ -459,12 +476,20 @@ export const AIPeopleFinder: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-sm">{person.name}</div>
-                      <div className="text-xs text-muted-foreground">{person.englishName} • {person.dept}</div>
+                      <div className="font-medium text-sm flex items-center gap-1">
+                        <span>{person.name}</span>
+                        <span className="text-muted-foreground">/ {person.englishName}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground">{person.dept}</div>
                     </div>
-                    <Badge className={getStatusColor(person.status)}>
-                      {getStatusText(person.status)}
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      {person.status === 'vacation' && (
+                        <Plane className="h-3 w-3 text-blue-600" />
+                      )}
+                      <Badge className={getStatusColor(person.status)}>
+                        {getStatusText(person.status)}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -493,15 +518,28 @@ export const AIPeopleFinder: React.FC = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="space-y-3">
-                {/* 기본 정보 */}
+                 {/* 기본 정보 */}
                 <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold text-foreground">{person.name}</h3>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-foreground">{person.name}</h3>
+                      <span className="text-sm text-muted-foreground">/ {person.englishName}</span>
+                    </div>
                     <p className="text-sm text-muted-foreground">{person.dept}</p>
                   </div>
-                  <Badge className={getStatusColor(person.status)}>
-                    {getStatusText(person.status)}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    {person.status === 'vacation' && (
+                      <Badge className="bg-blue-50 text-blue-600 border-blue-200 flex items-center gap-1">
+                        <Plane className="h-3 w-3" />
+                        휴가중
+                      </Badge>
+                    )}
+                    {person.status !== 'vacation' && (
+                      <Badge className={getStatusColor(person.status)}>
+                        {getStatusText(person.status)}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
 
                 {/* 현재 위치 및 활동 */}
