@@ -303,35 +303,35 @@ export default function BusinessCardSteps() {
                        </div>
                      ) : (
                        // 캐릭터 명함 디자인 (업로드된 이미지 참고)
-                       <div className="h-full flex flex-col justify-between text-left p-4 bg-white">
+                       <div className="h-full flex flex-col justify-between text-left p-4 bg-white border-2 border-black">
                          {/* 상단 - 이름 */}
-                         <div className="space-y-3">
-                           <h3 className="text-xl font-bold text-black leading-tight">
-                             <span className="bg-yellow-300 px-1 py-0.5">{formData.koreanName || user.name}</span> <span className="text-lg font-normal">{formData.englishName}</span>
+                         <div className="space-y-2">
+                           <h3 className="text-lg font-bold text-black leading-tight">
+                             <span className="bg-yellow-300 px-1 py-0.5">{formData.koreanName || user.name}</span> <span className="text-sm font-bold">{formData.englishName}</span>
                            </h3>
-                           <div className="text-sm text-black">
+                           <div className="text-xs font-bold text-black">
                              {user.dept} {formData.position && `/ ${formData.position}`}
                            </div>
                          </div>
 
                          {/* 중앙 - 구분선 */}
-                         <div className="w-full h-1 bg-black my-4"></div>
+                         <div className="w-full h-1 bg-black my-3"></div>
 
-                         {/* 중앙 - 연락처 정보 */}
-                         <div className="space-y-3">
-                           <div className="text-2xl font-bold text-black">
+                         {/* 중앙 - 연락처 정보 (선에 가깝게) */}
+                         <div className="space-y-2 -mt-2">
+                           <div className="text-lg font-bold text-black">
                              <span className="bg-yellow-300 px-1 py-0.5">{user.phone}</span>
                            </div>
-                           <div className="text-xl text-black leading-relaxed">
+                           <div className="text-lg font-bold text-black leading-relaxed">
                              <span className="bg-yellow-300 px-1 py-0.5">{user.email.split('@')[0]}@</span><br/>
-                             <span className="text-lg">{user.email.split('@')[1]}</span>
+                             <span className="text-base font-bold">{user.email.split('@')[1]}</span>
                            </div>
                          </div>
 
                          {/* 하단 - 회사 정보 */}
-                         <div className="space-y-2 mt-6">
-                           <div className="text-sm font-bold text-black">카카오페이증권</div>
-                           <div className="text-xs text-black leading-tight">
+                         <div className="space-y-1 mt-4">
+                           <div className="text-xs font-bold text-black">카카오페이증권</div>
+                           <div className="text-[10px] font-bold text-black leading-tight">
                              {formData.building === '여의도오피스' 
                                ? '07325 서울시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5F'
                                : '13529 경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
