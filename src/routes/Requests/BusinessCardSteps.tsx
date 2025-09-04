@@ -44,6 +44,15 @@ export default function BusinessCardSteps() {
   };
 
   const handleSubmit = () => {
+    if (!user) {
+      toast({
+        title: "사용자 정보를 찾을 수 없습니다",
+        description: "다시 로그인해 주세요.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (!formData.englishName || !formData.koreanName) {
       toast({
         title: "필수 정보를 입력해주세요",
@@ -56,11 +65,11 @@ export default function BusinessCardSteps() {
     createBusinessCardRequest({
       englishName: formData.englishName,
       koreanName: formData.koreanName,
-      dept: user.dept,
+      dept: user.dept || '',
       position: formData.position,
       certification: formData.certification,
-      phone: user.phone,
-      email: user.email,
+      phone: user.phone || '',
+      email: user.email || '',
       building: formData.building as '판교오피스' | '여의도오피스',
       style: formData.design as 'character' | 'normal'
     });
@@ -216,7 +225,7 @@ export default function BusinessCardSteps() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="여의도오피스">🏢 여의도오피스</SelectItem>
-                        <SelectItem value="판교아지트">🏢 판교아지트</SelectItem>
+                        <SelectItem value="판교오피스">🏢 판교오피스</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -311,9 +320,9 @@ export default function BusinessCardSteps() {
                               {formData.koreanName || user.name}
                             </span> <span className="text-lg">{formData.englishName}</span>
                           </h3>
-                          <div className="text-sm text-black">
-                            {user.dept} {formData.position && `/ ${formData.position}`}
-                          </div>
+                           <div className="text-sm text-black">
+                             {user.dept || ''} {formData.position && `/ ${formData.position}`}
+                           </div>
                         </div>
 
                         {/* 중앙 - 구분선 */}
@@ -321,15 +330,15 @@ export default function BusinessCardSteps() {
 
                         {/* 중앙 - 연락처 정보 (선에 바로 붙여서) */}
                         <div className="space-y-1 -mt-4">
-                          <div className="text-lg font-bold text-black">
+                           <div className="text-lg font-bold text-black">
                             <span className="border-b-2 border-yellow-300">
-                              {user.phone}
+                              {user.phone || ''}
                             </span>
                           </div>
                           <div className="text-lg text-black leading-tight">
                             <span className="border-b-2 border-yellow-300">
-                              {user.email.split('@')[0]}@
-                            </span><br/>{user.email.split('@')[1]}
+                              {user.email?.split('@')?.[0] || ''}@
+                            </span><br/>{user.email?.split('@')?.[1] || ''}
                           </div>
                         </div>
 
