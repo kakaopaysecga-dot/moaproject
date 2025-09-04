@@ -7,6 +7,7 @@ import { ServiceCards } from '@/components/home/ServiceCards';
 import { QuickActions } from '@/components/home/QuickActions';
 import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
 import { TodaySchedule } from '@/components/home/TodaySchedule';
+import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 // Lazy load admin components for better performance
 const AdminPanel = React.lazy(() => import('@/components/home/AdminPanel').then(module => ({ default: module.AdminPanel })));
@@ -63,12 +64,16 @@ export default function Home() {
         <section className="spacing-group">
           <h2 className="text-lg font-semibold text-foreground">관리자 도구</h2>
           <div className="spacing-items">
-            <Suspense fallback={<LoadingCard />}>
-              <RecentActivity />
-            </Suspense>
-            <Suspense fallback={<LoadingCard />}>
-              <AdminPanel />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<LoadingCard />}>
+                <RecentActivity />
+              </Suspense>
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Suspense fallback={<LoadingCard />}>
+                <AdminPanel />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         </section>
       )}
