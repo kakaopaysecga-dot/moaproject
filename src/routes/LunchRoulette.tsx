@@ -141,26 +141,21 @@ export default function LunchRoulette() {
 
         {/* 결과 모달 */}
         <Dialog open={showResult} onOpenChange={setShowResult}>
-          <DialogContent className="max-w-md mx-auto">
-            <div className="text-center spacing-group py-6">
-              <div className="animate-bounce">
-                <Trophy className="w-16 h-16 text-primary mx-auto mb-4" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-primary flex items-center justify-center gap-2">
-                  <Sparkles className="w-6 h-6" />
+          <DialogContent className="max-w-sm mx-auto border-0 bg-card/95 backdrop-blur-sm">
+            <div className="text-center py-8 space-y-6">
+              <div className="space-y-3">
+                <div className="text-lg font-medium text-muted-foreground">
                   오늘의 점심 메뉴
-                  <Sparkles className="w-6 h-6" />
-                </h3>
-                <div className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent py-4">
+                </div>
+                <div className="text-4xl font-bold text-foreground animate-scale-in">
                   {selectedOption?.label}
                 </div>
-                <p className="text-muted-foreground">맛있게 드세요! 🍴</p>
               </div>
-              <div className="flex gap-1 justify-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-500 animate-pulse" style={{ animationDelay: `${i * 0.1}s` }} />
-                ))}
+              
+              <div className="w-16 h-0.5 bg-primary/30 mx-auto animate-fade-in"></div>
+              
+              <div className="text-sm text-muted-foreground">
+                맛있게 드세요!
               </div>
             </div>
           </DialogContent>
