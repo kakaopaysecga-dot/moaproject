@@ -317,18 +317,18 @@ export default function BusinessCardSteps() {
                         {/* 중앙 - 구분선 */}
                         <div className="w-full h-0.5 bg-black my-2"></div>
 
-                        {/* 중앙 - 연락처 정보 (선에 가깝게) */}
-                        <div className="space-y-1 -mt-1">
+                        {/* 중앙 - 연락처 정보 (선에 바로 붙여서) */}
+                        <div className="space-y-1 -mt-3">
                           <div className="text-lg font-bold text-black">{user.phone}</div>
                           <div className="text-lg text-black leading-tight">
-                            {user.email.split('@')[0]}<br />@{user.email.split('@')[1]}
+                            {user.email.split('@')[0]}<br/>@{user.email.split('@')[1]}
                           </div>
                         </div>
 
                         {/* 하단 - 회사 정보 */}
                         <div className="space-y-1 mt-4">
                           <div className="text-sm font-bold text-black">카카오페이증권</div>
-                          <div className="text-xs text-black leading-tight">
+                          <div className="text-[10px] text-black leading-tight">
                             {formData.building === '여의도오피스' 
                               ? '07325 서울시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5F'
                               : '13529 경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
