@@ -302,56 +302,35 @@ export default function BusinessCardSteps() {
                         </div>
                       </div>
                     ) : (
-                      <div className="h-full flex flex-col justify-between text-left p-2">
-                        <div className="space-y-3">
-                          <div className="space-y-1">
-                            <h3 className="text-lg font-bold text-black leading-tight">
-                              {formData.koreanName || user.name} {formData.englishName && `${formData.englishName}`}
-                            </h3>
-                          </div>
-                          
-                          <div className="text-sm text-black space-y-1">
-                            <div>
-                              {formData.position && `${formData.position} `}
-                              {user.dept}
-                            </div>
-                            {formData.certification && (
-                              <div>{formData.certification}</div>
-                            )}
+                      // 캐릭터 명함 디자인 (업로드된 이미지와 동일)
+                      <div className="h-full flex flex-col justify-between text-left p-4 bg-gray-100">
+                        {/* 상단 - 이름 */}
+                        <div className="space-y-2">
+                          <h3 className="text-xl font-bold text-black leading-tight">
+                            {formData.koreanName || user.name} {formData.englishName}
+                          </h3>
+                          <div className="text-sm text-black">
+                            {user.dept} {formData.position && `/ ${formData.position}`}
                           </div>
                         </div>
 
+                        {/* 중앙 - 구분선 */}
+                        <div className="w-full h-0.5 bg-black my-4"></div>
+
+                        {/* 중앙 - 연락처 정보 (큰 폰트) */}
                         <div className="space-y-2">
-                          <div className="space-y-1">
-                            <div className="text-sm text-black">{user.phone}</div>
-                            <div className="text-sm text-black">{user.email}</div>
-                          </div>
-                          
-                          <div className="w-full h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 my-2"></div>
-                          
-                          <div className="space-y-1">
-                            <div className="text-sm font-bold text-black">
-                              {formData.building === '여의도오피스' ? '07325' : '13529'}
-                            </div>
-                            
-                            <div className="text-xs text-black leading-relaxed">
-                              {formData.building === '여의도오피스' 
-                                ? '서울특별시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5층'
-                                : '경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
-                              }
-                            </div>
-                            
-                            <div className="text-xs text-black leading-relaxed">
-                              {formData.building === '여의도오피스' 
-                                ? '5F, 32, Gukjegeumyung-ro 2-gil,\nYeongdeungpo-gu, Seoul, Republic of Korea'
-                                : '8F B, 166, Pangyoyeok-ro, Bundang-gu,\nSeongnam-si, Gyeonggi-do, Korea'
-                              }
-                            </div>
-                            
-                            <div className="text-xs text-black font-bold leading-tight pt-2">
-                              www.kakaopaysec.com<br />
-                              (주) 카카오페이증권
-                            </div>
+                          <div className="text-xl font-bold text-black">{user.phone}</div>
+                          <div className="text-sm text-black break-all">{user.email}</div>
+                        </div>
+
+                        {/* 하단 - 회사 정보 */}
+                        <div className="space-y-2 mt-4">
+                          <div className="text-sm font-bold text-black">카카오페이증권</div>
+                          <div className="text-xs text-black leading-tight">
+                            {formData.building === '여의도오피스' 
+                              ? '07325 서울시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5F'
+                              : '13529 경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
+                            }
                           </div>
                         </div>
                       </div>
