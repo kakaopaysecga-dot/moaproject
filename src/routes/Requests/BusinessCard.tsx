@@ -333,8 +333,43 @@ export default function BusinessCard() {
           <CardContent className="px-8 pb-8">
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg border border-gray-300 aspect-[0.6/1] max-w-xs mx-auto shadow-md">
-                {formData.design === 'normal' ? (
-                  // 일반 명함 디자인 (참고 이미지 기반)
+                {formData.design === 'character' ? (
+                  // 캐릭터 명함 디자인 (업로드된 이미지 참고)
+                  <div className="h-full flex flex-col justify-between text-left p-4 bg-gray-100">
+                    {/* 상단 - 이름 */}
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <h3 className="text-xl font-bold text-black leading-tight">
+                          {formData.koreanName || user.name} {formData.englishName}
+                        </h3>
+                        <div className="text-sm text-black">
+                          {user.dept} {formData.position && `/ ${formData.position}`}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 중앙 - 구분선 */}
+                    <div className="w-full h-1 bg-black"></div>
+
+                    {/* 중앙 - 연락처 정보 */}
+                    <div className="space-y-2">
+                      <div className="text-base font-bold text-black">{user.phone}</div>
+                      <div className="text-sm text-black">{user.email}</div>
+                    </div>
+
+                    {/* 하단 - 회사 정보 */}
+                    <div className="space-y-2">
+                      <div className="text-sm font-bold text-black">카카오페이증권</div>
+                      <div className="text-xs text-black leading-tight">
+                        {formData.building === '여의도오피스' 
+                          ? '07325 서울시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5F'
+                          : '13529 경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
+                        }
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  // 일반 명함 디자인
                   <div className="h-full flex flex-col justify-between text-left p-2">
                     {/* 상단 - 이름과 부서 */}
                     <div className="space-y-3">
@@ -388,76 +423,10 @@ export default function BusinessCard() {
                           }
                         </div>
                         
-                        {/* 회사 정보 */}
+                     {/* 회사 정보 */}
                         <div className="text-xs text-black font-bold leading-tight pt-2">
                           www.kakaopaysec.com<br />
                           (주) 카카오페이증권
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  // 캐릭터 명함 디자인 (참고 이미지 기반)
-                  <div className="h-full flex flex-col justify-between text-left p-2">
-                    {/* 상단 - 이름과 부서 */}
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="text-lg font-bold text-black leading-tight">
-                          {formData.koreanName || user.name} {formData.englishName && `${formData.englishName}`}
-                        </h3>
-                      </div>
-                      
-                      <div className="text-sm text-black space-y-1">
-                        <div>
-                          {formData.position && `${formData.position} `}
-                          {user.dept}
-                        </div>
-                        {formData.certification && (
-                          <div>{formData.certification}</div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* 하단 - 연락처와 주소 */}
-                    <div className="space-y-2">
-                      {/* 연락처 */}
-                      <div className="space-y-1">
-                        <div className="text-sm text-black">{user.phone}</div>
-                        <div className="text-sm text-black">{user.email}</div>
-                      </div>
-                      
-                      {/* 캐릭터용 구분선 (그라데이션) */}
-                      <div className="w-full h-0.5 bg-gradient-to-r from-yellow-400 to-orange-400 my-2"></div>
-                      
-                      {/* 우편번호와 주소 - 정렬 개선 */}
-                      <div className="space-y-1">
-                        <div className="text-sm font-bold text-black">
-                          {formData.building === '여의도오피스' ? '07325' : '13529'}
-                        </div>
-                        
-                        {/* 한글 주소 */}
-                        <div className="text-xs text-black leading-relaxed">
-                          {formData.building === '여의도오피스' 
-                            ? '서울특별시 영등포구 국제금융로2길 32\n여의도파이낸스타워 5층'
-                            : '경기도 성남시 분당구 판교역로 166\n카카오판교아지트 B동 8F'
-                          }
-                        </div>
-                        
-                        {/* 영문 주소 */}
-                        <div className="text-xs text-black leading-relaxed">
-                          {formData.building === '여의도오피스' 
-                            ? '5F, 32, Gukjegeumyung-ro 2-gil,\nYeongdeungpo-gu, Seoul, Republic of Korea'
-                            : '8F B, 166, Pangyoyeok-ro, Bundang-gu,\nSeongnam-si, Gyeonggi-do, Korea'
-                          }
-                        </div>
-                        
-                        {/* 회사 정보 + 캐릭터 표시 */}
-                        <div className="flex justify-between items-end pt-2">
-                          <div className="text-xs text-black font-bold leading-tight">
-                            www.kakaopaysec.com<br />
-                            (주) 카카오페이증권
-                          </div>
-                          <span className="text-lg">🎨</span>
                         </div>
                       </div>
                     </div>
