@@ -284,6 +284,7 @@ interface MeetingFormData {
 }
 
 export const AIPeopleFinder: React.FC = () => {
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Person[]>([]);
   const [previewResults, setPreviewResults] = useState<Person[]>([]);
@@ -438,6 +439,25 @@ export const AIPeopleFinder: React.FC = () => {
     });
   };
 
+  // 외부에서 검색창에 포커스를 줄 수 있도록 전역 함수 등록
+  React.useEffect(() => {
+    const focusSearchInput = () => {
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 800); // 스크롤 완료 후 포커스
+    };
+
+    // 전역 이벤트 리스너 등록
+    (window as any).focusPeopleFinderSearch = focusSearchInput;
+
+    return () => {
+      // 정리
+      delete (window as any).focusPeopleFinderSearch;
+    };
+  }, []);
+
   return (
     <section id="ai-people-finder" className="space-y-4 animate-fade-in transition-all duration-300">
       <div className="flex items-center gap-2">
@@ -450,6 +470,7 @@ export const AIPeopleFinder: React.FC = () => {
         <div className="space-y-2">
           <div className="flex gap-2">
             <Input
+              ref={searchInputRef}
               placeholder="이름이나 부서를 입력하세요... (한글/영어 가능)"
               value={searchQuery}
               onChange={(e) => handleSearchInput(e.target.value)}

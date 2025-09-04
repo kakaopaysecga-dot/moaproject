@@ -54,24 +54,32 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           setTimeout(() => {
             const peopleFinderElement = document.getElementById('ai-people-finder');
             if (peopleFinderElement) {
-              peopleFinderElement.scrollIntoView({ behavior: 'smooth' });
-              // 애니메이션 효과 추가
-              peopleFinderElement.classList.add('animate-pulse');
-              setTimeout(() => {
-                peopleFinderElement.classList.remove('animate-pulse');
-                peopleFinderElement.classList.add('animate-scale-in');
-              }, 500);
+              peopleFinderElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+               // 애니메이션 효과 및 포커스
+               peopleFinderElement.classList.add('animate-pulse');
+               setTimeout(() => {
+                 peopleFinderElement.classList.remove('animate-pulse');
+                 peopleFinderElement.classList.add('animate-scale-in');
+                 // 검색창에 포커스
+                 if ((window as any).focusPeopleFinderSearch) {
+                   (window as any).focusPeopleFinderSearch();
+                 }
+               }, 500);
             }
           }, 100);
         } else {
           const peopleFinderElement = document.getElementById('ai-people-finder');
           if (peopleFinderElement) {
             peopleFinderElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            // 애니메이션 효과 추가
+            // 애니메이션 효과 및 포커스
             peopleFinderElement.classList.add('animate-pulse');
             setTimeout(() => {
               peopleFinderElement.classList.remove('animate-pulse');
               peopleFinderElement.classList.add('animate-scale-in');
+              // 검색창에 포커스
+              if ((window as any).focusPeopleFinderSearch) {
+                (window as any).focusPeopleFinderSearch();
+              }
             }, 500);
           }
         }
