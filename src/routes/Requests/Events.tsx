@@ -79,25 +79,25 @@ export default function Events() {
   };
 
   return (
-    <div className="py-6 space-y-8">
+    <div className="container-padding spacing-content pb-safe-bottom">
       {/* 헤더 */}
-      <div className="flex items-center gap-4 px-2">
+      <div className="flex items-center spacing-items">
         <Link to="/">
-          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted/50">
+          <Button variant="ghost" size="sm" className="min-h-[44px] min-w-[44px] p-0 hover:bg-muted/50">
             <ChevronLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">경조사 지원 신청</h1>
-          <p className="text-muted-foreground text-sm mt-1">
+        <div className="spacing-tight">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">경조사 지원 신청</h1>
+          <p className="text-base text-muted-foreground">
             결혼, 장례 등 경조사 지원을 신청하세요
           </p>
         </div>
       </div>
 
-      <Card className="shadow-md border-0 max-w-2xl mx-auto">
-        <CardHeader className="pb-6">
-          <CardTitle className="flex items-center gap-3 text-xl">
+      <Card className="shadow-md border-0">
+        <CardHeader className="spacing-items">
+          <CardTitle className="flex items-center spacing-items text-lg">
             <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
               <Heart className="h-5 w-5 text-primary" />
             </div>
@@ -106,15 +106,15 @@ export default function Events() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="marriage" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 h-12">
+            <TabsList className="grid w-full grid-cols-2 min-h-[44px]">
               <TabsTrigger value="marriage" className="text-base font-semibold">결혼식</TabsTrigger>
               <TabsTrigger value="funeral" className="text-base font-semibold">장례식</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="marriage" className="space-y-4">
-              <form onSubmit={handleMarriageSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+            <TabsContent value="marriage" className="spacing-group">
+              <form onSubmit={handleMarriageSubmit} className="spacing-group">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="spacing-tight">
                     <Label htmlFor="marriage-date">날짜</Label>
                     <Input 
                       id="marriage-date"
@@ -124,7 +124,7 @@ export default function Events() {
                       required
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="spacing-tight">
                     <Label htmlFor="marriage-time">시간</Label>
                     <Input 
                       id="marriage-time"
@@ -135,8 +135,7 @@ export default function Events() {
                     />
                   </div>
                 </div>
-
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="marriage-location">장소</Label>
                   <Input 
                     id="marriage-location"
@@ -146,8 +145,7 @@ export default function Events() {
                     required
                   />
                 </div>
-
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="marriage-address">주소</Label>
                   <div className="flex gap-2">
                     <Input 

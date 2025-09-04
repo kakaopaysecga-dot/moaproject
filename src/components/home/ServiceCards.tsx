@@ -65,6 +65,13 @@ const allServices: ServiceCard[] = [
     color: 'from-accent to-yellow-400'
   },
   {
+    title: '명함 신청',
+    description: '디지털 명함 포함',
+    icon: CreditCard,
+    path: '/requests/business-card',
+    color: 'from-success to-emerald-400'
+  },
+  {
     title: '사무환경 개선',
     description: '사진 첨부하여 개선 요청',
     icon: Settings,
