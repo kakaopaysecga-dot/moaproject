@@ -22,7 +22,11 @@ export const RouletteControls: React.FC<RouletteControlsProps> = ({
   return (
     <div className="flex flex-wrap gap-4 justify-center items-center">
       <Button 
-        onClick={onSpin} 
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          onSpin();
+        }} 
         disabled={isSpinning || disabled}
         size="lg"
         className="px-8 py-6 text-lg font-semibold relative overflow-hidden group"
@@ -44,7 +48,11 @@ export const RouletteControls: React.FC<RouletteControlsProps> = ({
       </Button>
       
       <Button 
-        onClick={onReset} 
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          onReset();
+        }} 
         variant="outline" 
         size="lg"
         className="px-6 py-6"
@@ -56,7 +64,11 @@ export const RouletteControls: React.FC<RouletteControlsProps> = ({
 
       {onOpenSettings && (
         <Button 
-          onClick={onOpenSettings} 
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            onOpenSettings?.();
+          }} 
           variant="secondary" 
           size="lg"
           className="px-6 py-6"

@@ -147,18 +147,23 @@ export const MenuCustomizer: React.FC<MenuCustomizerProps> = ({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* 새 메뉴 추가 */}
-        <div className="flex gap-2">
-          <Input
-            placeholder="새 메뉴 추가..."
-            value={newMenuText}
-            onChange={(e) => setNewMenuText(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && addMenu()}
-            className="flex-1"
-          />
-          <Button onClick={addMenu} disabled={!newMenuText.trim()}>
-            <Plus className="w-4 h-4" />
-          </Button>
-        </div>
+         <div className="flex gap-2">
+           <Input
+             placeholder="새 메뉴 추가..."
+             value={newMenuText}
+             onChange={(e) => setNewMenuText(e.target.value)}
+             onKeyPress={(e) => {
+               if (e.key === 'Enter') {
+                 e.preventDefault();
+                 addMenu();
+               }
+             }}
+             className="flex-1"
+           />
+           <Button type="button" onClick={(e) => { e.preventDefault(); addMenu(); }} disabled={!newMenuText.trim()}>
+             <Plus className="w-4 h-4" />
+           </Button>
+         </div>
 
         {/* 메뉴 목록 */}
         <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -193,14 +198,18 @@ export const MenuCustomizer: React.FC<MenuCustomizerProps> = ({
                   
                   {/* 색상 선택 */}
                   <div className="flex gap-1">
-                    {colorOptions.slice(0, 4).map((color) => (
-                      <button
-                        key={color}
-                        className="w-6 h-6 rounded-full border-2 border-background shadow-sm hover:scale-110 transition-transform"
-                        style={{ backgroundColor: color }}
-                        onClick={() => changeColor(option.id, color)}
-                      />
-                    ))}
+                     {colorOptions.slice(0, 4).map((color) => (
+                       <button
+                         key={color}
+                         type="button"
+                         className="w-6 h-6 rounded-full border-2 border-background shadow-sm hover:scale-110 transition-transform"
+                         style={{ backgroundColor: color }}
+                         onClick={(e) => {
+                           e.preventDefault();
+                           changeColor(option.id, color);
+                         }}
+                       />
+                     ))}
                   </div>
                   
                   <Button
@@ -223,22 +232,24 @@ export const MenuCustomizer: React.FC<MenuCustomizerProps> = ({
             <Palette className="w-4 h-4" />
             전체 색상 팔레트
           </label>
-          <div className="grid grid-cols-6 gap-2">
-            {colorOptions.map((color, index) => (
-              <button
-                key={index}
-                className="w-8 h-8 rounded-full border-2 border-background shadow-sm hover:scale-110 transition-transform"
-                style={{ backgroundColor: color }}
-                onClick={() => {
-                  // 마지막으로 추가된 메뉴의 색상 변경
-                  if (options.length > 0) {
-                    const lastOption = options[options.length - 1];
-                    changeColor(lastOption.id, color);
-                  }
-                }}
-              />
-            ))}
-          </div>
+           <div className="grid grid-cols-6 gap-2">
+             {colorOptions.map((color, index) => (
+               <button
+                 key={index}
+                 type="button"
+                 className="w-8 h-8 rounded-full border-2 border-background shadow-sm hover:scale-110 transition-transform"
+                 style={{ backgroundColor: color }}
+                 onClick={(e) => {
+                   e.preventDefault();
+                   // 마지막으로 추가된 메뉴의 색상 변경
+                   if (options.length > 0) {
+                     const lastOption = options[options.length - 1];
+                     changeColor(lastOption.id, color);
+                   }
+                 }}
+               />
+             ))}
+           </div>
         </div>
 
         {/* 액션 버튼들 */}

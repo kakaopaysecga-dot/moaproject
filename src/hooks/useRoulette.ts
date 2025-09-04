@@ -21,6 +21,9 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
   const spin = useCallback(() => {
     if (isSpinning || options.length === 0) return;
 
+    // 스크롤 위치 고정하여 스핀 중 페이지 이동 방지
+    const currentScrollY = window.scrollY;
+    
     setIsSpinning(true);
     setSelectedOption(null);
 
@@ -50,6 +53,10 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
       const selectedOpt = options[selectedIndex];
       setSelectedOption(selectedOpt);
       setIsSpinning(false);
+      
+      // 스크롤 위치 복원
+      window.scrollTo(0, currentScrollY);
+      
       onSpinComplete?.(selectedOpt);
     }, duration);
   }, [isSpinning, options, onSpinComplete, rotation]);
