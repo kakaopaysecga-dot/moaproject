@@ -1,183 +1,181 @@
-import React, { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { RotateCcw, Trophy, Clock } from 'lucide-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Trophy, Star, Sparkles } from 'lucide-react';
+import { useRoulette, RouletteOption } from '@/hooks/useRoulette';
+import { RouletteWheel } from '@/components/roulette/RouletteWheel';
+import { RouletteControls } from '@/components/roulette/RouletteControls';
+import { MenuCustomizer } from '@/components/roulette/MenuCustomizer';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
-const menuOptions = [
-  '삼겹살', '갈비', '불고기', '비빔밥', '냉면', '김치찌개',
-  '된장찌개', '순두부찌개', '부대찌개', '닭갈비', '치킨',
-  '피자', '햄버거', '파스타', '돈까스', '회', '초밥',
-  '짜장면', '짬뽕', '탕수육', '마라탕', '쌀국수', '팟타이',
-  '카레', '라멘', '우동', '소바', '덮밥', '김밥',
-  '떡볶이', '순대', '어묵', '호떡', '붕어빵', '타코야키'
-];
-
-const colors = [
-  'hsl(var(--primary))',
-  'hsl(var(--accent))',
-  'hsl(var(--success))',
-  'hsl(var(--warning))',
-  'hsl(var(--destructive))',
-  'hsl(220, 70%, 50%)',
-  'hsl(280, 70%, 50%)',
-  'hsl(160, 70%, 50%)',
-  'hsl(40, 70%, 50%)',
-  'hsl(320, 70%, 50%)',
-  'hsl(200, 70%, 50%)',
-  'hsl(120, 70%, 50%)'
+const defaultMenuOptions: RouletteOption[] = [
+  { id: '1', label: '삼겹살', color: 'hsl(var(--primary))' },
+  { id: '2', label: '갈비', color: 'hsl(var(--accent))' },
+  { id: '3', label: '불고기', color: 'hsl(var(--success))' },
+  { id: '4', label: '비빔밥', color: 'hsl(var(--warning))' },
+  { id: '5', label: '냉면', color: 'hsl(var(--destructive))' },
+  { id: '6', label: '김치찌개', color: 'hsl(220, 70%, 50%)' },
+  { id: '7', label: '된장찌개', color: 'hsl(280, 70%, 50%)' },
+  { id: '8', label: '순두부찌개', color: 'hsl(160, 70%, 50%)' },
+  { id: '9', label: '부대찌개', color: 'hsl(40, 70%, 50%)' },
+  { id: '10', label: '닭갈비', color: 'hsl(320, 70%, 50%)' },
+  { id: '11', label: '치킨', color: 'hsl(200, 70%, 50%)' },
+  { id: '12', label: '피자', color: 'hsl(120, 70%, 50%)' },
+  { id: '13', label: '햄버거', color: 'hsl(60, 70%, 50%)' },
+  { id: '14', label: '파스타', color: 'hsl(300, 70%, 50%)' },
+  { id: '15', label: '돈까스', color: 'hsl(180, 70%, 50%)' },
+  { id: '16', label: '회', color: 'hsl(240, 70%, 50%)' },
+  { id: '17', label: '초밥', color: 'hsl(20, 70%, 50%)' },
+  { id: '18', label: '짜장면', color: 'hsl(340, 70%, 50%)' },
+  { id: '19', label: '짬뽕', color: 'hsl(100, 70%, 50%)' },
+  { id: '20', label: '탕수육', color: 'hsl(260, 70%, 50%)' },
+  { id: '21', label: '마라탕', color: 'hsl(80, 70%, 50%)' },
+  { id: '22', label: '쌀국수', color: 'hsl(140, 70%, 50%)' },
+  { id: '23', label: '팟타이', color: 'hsl(190, 70%, 50%)' },
+  { id: '24', label: '카레', color: 'hsl(350, 70%, 50%)' }
 ];
 
 export default function LunchRoulette() {
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
-  const [rotation, setRotation] = useState(0);
-  const wheelRef = useRef<HTMLDivElement>(null);
+  const [menuOptions, setMenuOptions] = useLocalStorage<RouletteOption[]>('lunch-roulette-menus', defaultMenuOptions);
+  const [showCustomizer, setShowCustomizer] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [wheelSize, setWheelSize] = useState<'small' | 'medium' | 'large'>('medium');
 
-  const spinWheel = () => {
-    if (isSpinning) return;
+  const {
+    isSpinning,
+    selectedOption,
+    rotation,
+    spinCount,
+    wheelRef,
+    spin,
+    reset
+  } = useRoulette({
+    options: menuOptions,
+    onSpinComplete: () => {
+      setShowResult(true);
+      // 결과 표시 후 5초 뒤에 자동으로 닫기
+      setTimeout(() => setShowResult(false), 5000);
+    }
+  });
 
-    setIsSpinning(true);
-    setSelectedMenu(null);
+  // 화면 크기에 따른 휠 사이즈 자동 조정
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setWheelSize('small');
+      } else if (window.innerWidth < 1024) {
+        setWheelSize('medium');
+      } else {
+        setWheelSize('large');
+      }
+    };
 
-    // 랜덤 회전 각도 (최소 5바퀴 + 랜덤)
-    const randomIndex = Math.floor(Math.random() * menuOptions.length);
-    const baseRotation = 360 * 5; // 5바퀴
-    const targetRotation = baseRotation + (360 - (360 / menuOptions.length) * randomIndex);
-    
-    setRotation(prev => prev + targetRotation);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-    // 애니메이션 완료 후 결과 표시
-    setTimeout(() => {
-      setSelectedMenu(menuOptions[randomIndex]);
-      setIsSpinning(false);
-    }, 3000);
+  const handleMenuOptionsChange = (newOptions: RouletteOption[]) => {
+    setMenuOptions(newOptions);
   };
-
-  const reset = () => {
-    setRotation(0);
-    setSelectedMenu(null);
-    setIsSpinning(false);
-  };
-
-  const segmentAngle = 360 / menuOptions.length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 container-padding spacing-content">
       <div className="text-center spacing-group">
+        {/* 헤더 */}
         <div className="spacing-tight">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
             🍽️ 점심 메뉴 룰렛
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-muted-foreground animate-fade-in" style={{ animationDelay: '0.2s' }}>
             오늘 점심 뭘 먹을지 고민이세요? 룰렛을 돌려보세요!
           </p>
-        </div>
-
-        {/* 룰렛 휠 */}
-        <div className="relative flex justify-center items-center spacing-group">
-          {/* 포인터 */}
-          <div className="absolute top-0 z-20 w-0 h-0 border-l-[20px] border-r-[20px] border-b-[40px] border-l-transparent border-r-transparent border-b-destructive drop-shadow-lg"></div>
-          
-          {/* 룰렛 휠 */}
-          <div className="relative">
-            <div 
-              ref={wheelRef}
-              className="w-80 h-80 md:w-96 md:h-96 rounded-full border-8 border-border shadow-2xl transition-transform duration-3000 ease-out"
-              style={{ 
-                transform: `rotate(${rotation}deg)`,
-                background: `conic-gradient(${menuOptions.map((_, index) => 
-                  `${colors[index % colors.length]} ${index * segmentAngle}deg ${(index + 1) * segmentAngle}deg`
-                ).join(', ')})`
-              }}
-            >
-              {/* 메뉴 텍스트 */}
-              {menuOptions.map((menu, index) => {
-                const angle = (index * segmentAngle) + (segmentAngle / 2);
-                const radian = (angle * Math.PI) / 180;
-                const radius = 120;
-                const x = Math.cos(radian) * radius;
-                const y = Math.sin(radian) * radius;
-                
-                return (
-                  <div
-                    key={menu}
-                    className="absolute text-white font-bold text-sm md:text-base drop-shadow-lg"
-                    style={{
-                      left: `calc(50% + ${x}px)`,
-                      top: `calc(50% + ${y}px)`,
-                      transform: `translate(-50%, -50%) rotate(${angle}deg)`,
-                      textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
-                    }}
-                  >
-                    {menu}
-                  </div>
-                );
-              })}
-              
-              {/* 중앙 원 */}
-              <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-background border-4 border-border rounded-full transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-lg">
-                <div className="text-2xl">🎯</div>
-              </div>
-            </div>
+          <div className="flex justify-center gap-2 mt-4">
+            <Star className="w-4 h-4 text-yellow-500 animate-pulse" />
+            <Star className="w-4 h-4 text-yellow-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
+            <Star className="w-4 h-4 text-yellow-500 animate-pulse" style={{ animationDelay: '1s' }} />
           </div>
         </div>
 
-        {/* 결과 표시 */}
-        {selectedMenu && (
-          <Card className="animate-scale-in border-primary/50 bg-gradient-to-r from-primary/10 to-accent/10">
-            <CardContent className="p-6 text-center spacing-tight">
-              <Trophy className="w-8 h-8 text-primary mx-auto" />
-              <h3 className="text-2xl font-bold text-primary">오늘의 점심 메뉴</h3>
-              <div className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                {selectedMenu}
-              </div>
-              <p className="text-muted-foreground">맛있게 드세요! 🍴</p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* 컨트롤 버튼 */}
-        <div className="flex gap-4 justify-center">
-          <Button 
-            onClick={spinWheel} 
-            disabled={isSpinning}
-            size="lg"
-            className="px-8 py-6 text-lg font-semibold animate-pulse hover:animate-none"
-          >
-            {isSpinning ? (
-              <>
-                <Clock className="w-5 h-5 mr-2 animate-spin" />
-                돌리는 중...
-              </>
-            ) : (
-              <>
-                🎰 룰렛 돌리기
-              </>
-            )}
-          </Button>
-          
-          <Button 
-            onClick={reset} 
-            variant="outline" 
-            size="lg"
-            className="px-8 py-6"
-            disabled={isSpinning}
-          >
-            <RotateCcw className="w-5 h-5 mr-2" />
-            초기화
-          </Button>
+        {/* 룰렛 휠 */}
+        <div className="spacing-group animate-scale-in" style={{ animationDelay: '0.4s' }}>
+          <RouletteWheel
+            options={menuOptions}
+            rotation={rotation}
+            isSpinning={isSpinning}
+            wheelRef={wheelRef}
+            size={wheelSize}
+          />
         </div>
 
-        {/* 추가 정보 */}
-        <Card className="max-w-md mx-auto">
+        {/* 컨트롤 버튼들 */}
+        <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <RouletteControls
+            onSpin={spin}
+            onReset={reset}
+            onOpenSettings={() => setShowCustomizer(true)}
+            isSpinning={isSpinning}
+            spinCount={spinCount}
+            disabled={menuOptions.length === 0}
+          />
+        </div>
+
+        {/* 통계 정보 */}
+        <Card className="max-w-md mx-auto animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <CardContent className="p-4 text-center">
             <div className="text-sm text-muted-foreground space-y-2">
-              <p>💡 <strong>총 {menuOptions.length}개</strong>의 메뉴 중에서 랜덤 선택</p>
-              <p>🎲 공정한 확률로 메뉴를 추천해드려요</p>
-              <p>🍽️ 선택 장애 해결사</p>
+              <div className="flex justify-between items-center">
+                <span>💡 등록된 메뉴</span>
+                <span className="font-semibold">{menuOptions.length}개</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>🎲 도전 횟수</span>
+                <span className="font-semibold">{spinCount}번</span>
+              </div>
+              <div className="text-xs text-muted-foreground/70 mt-3">
+                🍽️ 공정한 확률로 메뉴를 추천해드려요
+              </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* 결과 모달 */}
+        <Dialog open={showResult} onOpenChange={setShowResult}>
+          <DialogContent className="max-w-md mx-auto">
+            <div className="text-center spacing-group py-6">
+              <div className="animate-bounce">
+                <Trophy className="w-16 h-16 text-primary mx-auto mb-4" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-primary flex items-center justify-center gap-2">
+                  <Sparkles className="w-6 h-6" />
+                  오늘의 점심 메뉴
+                  <Sparkles className="w-6 h-6" />
+                </h3>
+                <div className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent py-4">
+                  {selectedOption?.label}
+                </div>
+                <p className="text-muted-foreground">맛있게 드세요! 🍴</p>
+              </div>
+              <div className="flex gap-1 justify-center">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-yellow-500 animate-pulse" style={{ animationDelay: `${i * 0.1}s` }} />
+                ))}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* 메뉴 커스터마이저 모달 */}
+        <Dialog open={showCustomizer} onOpenChange={setShowCustomizer}>
+          <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <MenuCustomizer
+              options={menuOptions}
+              onOptionsChange={handleMenuOptionsChange}
+              onClose={() => setShowCustomizer(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
