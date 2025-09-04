@@ -27,14 +27,5 @@ export const LiveStatus: React.FC<LiveStatusProps> = ({
       clearInterval(interval);
     };
   }, []);
-  return <div className={cn("flex items-center gap-2", className)}>
-      
-      
-      <span className="text-xs text-muted-foreground">
-        {lastUpdated.toLocaleTimeString('ko-KR', {
-        hour: '2-digit',
-        minute: '2-digit'
-      })}
-      </span>
-    </div>;
+  return;
 };
