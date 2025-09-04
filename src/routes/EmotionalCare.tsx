@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, Send, Smile, Frown, Meh, Angry, Zap, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,7 +41,21 @@ const EmotionalCare: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { user } = useAuthStore();
+  const { user, session } = useAuthStore();
+  const navigate = useNavigate();
+
+  // Check authentication and redirect if not logged in
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: '로그인 필요',
+        description: '감정케어 AI를 사용하려면 로그인이 필요합니다.',
+        variant: 'destructive',
+      });
+      navigate('/login');
+      return;
+    }
+  }, [user, navigate, toast]);
 
   useEffect(() => {
     if (user) {
@@ -94,6 +109,17 @@ const EmotionalCare: React.FC = () => {
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
+    
+    // Check if user is still authenticated
+    if (!user) {
+      toast({
+        title: '인증 오류',
+        description: '로그인이 필요합니다. 로그인 페이지로 이동합니다.',
+        variant: 'destructive',
+      });
+      navigate('/login');
+      return;
+    }
 
     const userMessage = inputValue.trim();
     setInputValue('');
@@ -110,11 +136,13 @@ const EmotionalCare: React.FC = () => {
     setMessages(prev => [...prev, tempMessage]);
 
     try {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !session?.access_token) {
-        console.error('Session error:', sessionError);
-        throw new Error('인증이 필요합니다. 다시 로그인해주세요.');
+      // Use session from auth store
+      if (!session?.access_token) {
+        console.error('No session or access token found');
+        throw new Error('로그인이 만료되었습니다. 다시 로그인해주세요.');
       }
+
+      console.log('Sending message to AI with session:', !!session);
 
       const response = await supabase.functions.invoke('emotional-care-ai', {
         headers: {
@@ -130,6 +158,10 @@ const EmotionalCare: React.FC = () => {
       if (response.error) {
         console.error('Function invocation error:', response.error);
         throw new Error(response.error.message || 'AI 응답을 받는데 실패했습니다.');
+      }
+
+      if (!response.data) {
+        throw new Error('AI 응답 데이터가 없습니다.');
       }
 
       const { response: aiResponse, conversationId: newConversationId } = response.data;
@@ -169,11 +201,23 @@ const EmotionalCare: React.FC = () => {
       // Remove temporary message on error
       setMessages(prev => prev.filter(msg => msg.id !== tempMessage.id));
       
-      toast({
-        title: '오류',
-        description: error instanceof Error ? error.message : '메시지 전송에 실패했습니다.',
-        variant: 'destructive',
-      });
+      const errorMessage = error instanceof Error ? error.message : '메시지 전송에 실패했습니다.';
+      
+      // If it's an authentication error, redirect to login
+      if (errorMessage.includes('로그인') || errorMessage.includes('인증')) {
+        toast({
+          title: '인증 오류',
+          description: errorMessage + ' 로그인 페이지로 이동합니다.',
+          variant: 'destructive',
+        });
+        setTimeout(() => navigate('/login'), 2000);
+      } else {
+        toast({
+          title: '오류',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -191,6 +235,11 @@ const EmotionalCare: React.FC = () => {
       sendMessage();
     }
   };
+
+  // Don't render anything if user is not authenticated
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 p-4 animate-fade-in">
