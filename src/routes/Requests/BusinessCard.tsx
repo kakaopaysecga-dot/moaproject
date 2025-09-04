@@ -334,31 +334,29 @@ export default function BusinessCard() {
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg border border-gray-300 aspect-[0.6/1] max-w-xs mx-auto shadow-md">
                 {formData.design === 'character' ? (
-                  // 캐릭터 명함 디자인 (업로드된 이미지 참고)
+                  // 캐릭터 명함 디자인 (업로드된 이미지와 동일)
                   <div className="h-full flex flex-col justify-between text-left p-4 bg-gray-100">
                     {/* 상단 - 이름 */}
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-bold text-black leading-tight">
-                          {formData.koreanName || user.name} {formData.englishName}
-                        </h3>
-                        <div className="text-sm text-black">
-                          {user.dept} {formData.position && `/ ${formData.position}`}
-                        </div>
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-bold text-black leading-tight">
+                        {formData.koreanName || user.name} {formData.englishName}
+                      </h3>
+                      <div className="text-sm text-black">
+                        {user.dept} {formData.position && `/ ${formData.position}`}
                       </div>
                     </div>
 
                     {/* 중앙 - 구분선 */}
-                    <div className="w-full h-1 bg-black"></div>
+                    <div className="w-full h-0.5 bg-black my-4"></div>
 
-                    {/* 중앙 - 연락처 정보 */}
+                    {/* 중앙 - 연락처 정보 (큰 폰트) */}
                     <div className="space-y-2">
-                      <div className="text-base font-bold text-black">{user.phone}</div>
-                      <div className="text-sm text-black">{user.email}</div>
+                      <div className="text-xl font-bold text-black">{user.phone}</div>
+                      <div className="text-sm text-black break-all">{user.email}</div>
                     </div>
 
                     {/* 하단 - 회사 정보 */}
-                    <div className="space-y-2">
+                    <div className="space-y-2 mt-4">
                       <div className="text-sm font-bold text-black">카카오페이증권</div>
                       <div className="text-xs text-black leading-tight">
                         {formData.building === '여의도오피스' 
