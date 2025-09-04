@@ -121,6 +121,7 @@ export default function Events() {
                       type="date"
                       value={marriageForm.date}
                       onChange={(e) => setMarriageForm(prev => ({ ...prev, date: e.target.value }))}
+                      className="min-h-[44px]"
                       required
                     />
                   </div>
@@ -131,6 +132,7 @@ export default function Events() {
                       type="time"
                       value={marriageForm.time}
                       onChange={(e) => setMarriageForm(prev => ({ ...prev, time: e.target.value }))}
+                      className="min-h-[44px]"
                       required
                     />
                   </div>
@@ -142,6 +144,7 @@ export default function Events() {
                     value={marriageForm.location}
                     onChange={(e) => setMarriageForm(prev => ({ ...prev, location: e.target.value }))}
                     placeholder="예: 롯데호텔 크리스탈 볼룸"
+                    className="min-h-[44px]"
                     required
                   />
                 </div>
@@ -153,15 +156,16 @@ export default function Events() {
                       value={marriageForm.address}
                       onChange={(e) => setMarriageForm(prev => ({ ...prev, address: e.target.value }))}
                       placeholder="주소를 입력하세요"
+                      className="min-h-[44px] flex-1"
                       required
                     />
-                    <Button type="button" variant="outline" size="sm">
+                    <Button type="button" variant="outline" size="sm" className="min-h-[44px] px-4">
                       주소찾기
                     </Button>
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="marriage-link">청첩장 링크 (선택사항)</Label>
                   <div className="relative">
                     <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -170,14 +174,14 @@ export default function Events() {
                       value={marriageForm.invitationLink}
                       onChange={(e) => setMarriageForm(prev => ({ ...prev, invitationLink: e.target.value }))}
                       placeholder="온라인 청첩장 URL을 입력하세요"
-                      className="pl-10"
+                      className="pl-10 min-h-[44px]"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="marriage-files">첨부파일 (선택사항)</Label>
-                  <div className="space-y-3">
+                  <div className="spacing-tight">
                     <Input 
                       id="marriage-files"
                       type="file"
@@ -187,13 +191,13 @@ export default function Events() {
                         const files = Array.from(e.target.files || []);
                         setMarriageForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
                       }}
-                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                      className="min-h-[44px] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
                     />
                     {marriageForm.attachments.length > 0 && (
-                      <div className="space-y-2">
+                      <div className="spacing-tight">
                         {marriageForm.attachments.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded-lg">
-                            <div className="flex items-center gap-2">
+                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                            <div className="flex items-center spacing-items">
                               <Paperclip className="h-4 w-4 text-muted-foreground" />
                               <span className="text-sm">{file.name}</span>
                             </div>
@@ -205,6 +209,7 @@ export default function Events() {
                                 ...prev, 
                                 attachments: prev.attachments.filter((_, i) => i !== index) 
                               }))}
+                              className="min-h-[44px] min-w-[44px] p-0"
                             >
                               <X className="h-4 w-4" />
                             </Button>
@@ -215,81 +220,87 @@ export default function Events() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="marriage-memo">메모 (선택사항)</Label>
                   <Textarea 
                     id="marriage-memo"
                     value={marriageForm.memo}
                     onChange={(e) => setMarriageForm(prev => ({ ...prev, memo: e.target.value }))}
                     placeholder="추가 정보가 있으시면 입력해주세요"
+                    className="min-h-[100px]"
                   />
                 </div>
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full min-h-[48px] text-base font-semibold">
                   결혼 경조사 신청
                 </Button>
               </form>
             </TabsContent>
 
-            <TabsContent value="funeral" className="space-y-4">
-              <form onSubmit={handleFuneralSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+            <TabsContent value="funeral" className="spacing-group">
+              <form onSubmit={handleFuneralSubmit} className="spacing-group">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="spacing-tight">
                     <Label htmlFor="relationship">관계</Label>
                     <Input 
                       id="relationship"
                       value={funeralForm.relationship}
                       onChange={(e) => setFuneralForm(prev => ({ ...prev, relationship: e.target.value }))}
                       placeholder="예: 부친, 모친"
+                      className="min-h-[44px]"
                       required
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="spacing-tight">
                     <Label htmlFor="deceased">고인명</Label>
                     <Input 
                       id="deceased"
                       value={funeralForm.deceased}
                       onChange={(e) => setFuneralForm(prev => ({ ...prev, deceased: e.target.value }))}
+                      className="min-h-[44px]"
                       required
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="spacing-tight">
                     <Label htmlFor="death-date">망일</Label>
                     <Input 
                       id="death-date"
                       type="date"
                       value={funeralForm.deathDate}
                       onChange={(e) => setFuneralForm(prev => ({ ...prev, deathDate: e.target.value }))}
+                      className="min-h-[44px]"
                       required
                     />
                   </div>
-                  <div className="space-y-2">
+                  <div className="spacing-tight">
                     <Label htmlFor="funeral-date">발인일</Label>
                     <Input 
                       id="funeral-date"
                       type="date"
                       value={funeralForm.funeralDate}
                       onChange={(e) => setFuneralForm(prev => ({ ...prev, funeralDate: e.target.value }))}
+                      className="min-h-[44px]"
                       required
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="funeral-location">장례식장</Label>
                   <Input 
                     id="funeral-location"
                     value={funeralForm.location}
                     onChange={(e) => setFuneralForm(prev => ({ ...prev, location: e.target.value }))}
                     placeholder="예: 서울아산병원 장례식장"
+                    className="min-h-[44px]"
                     required
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="funeral-address">주소</Label>
                   <div className="flex gap-2">
                     <Input 
@@ -297,15 +308,16 @@ export default function Events() {
                       value={funeralForm.address}
                       onChange={(e) => setFuneralForm(prev => ({ ...prev, address: e.target.value }))}
                       placeholder="주소를 입력하세요"
+                      className="min-h-[44px] flex-1"
                       required
                     />
-                    <Button type="button" variant="outline" size="sm">
+                    <Button type="button" variant="outline" size="sm" className="min-h-[44px] px-4">
                       주소찾기
                     </Button>
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="contact">연락처</Label>
                   <Input 
                     id="contact"
@@ -313,11 +325,12 @@ export default function Events() {
                     value={funeralForm.contact}
                     onChange={(e) => setFuneralForm(prev => ({ ...prev, contact: e.target.value }))}
                     placeholder="010-1234-5678"
+                    className="min-h-[44px]"
                     required
                   />
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="funeral-link">부고장 링크 (선택사항)</Label>
                   <div className="relative">
                     <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -326,14 +339,14 @@ export default function Events() {
                       value={funeralForm.noticeLink}
                       onChange={(e) => setFuneralForm(prev => ({ ...prev, noticeLink: e.target.value }))}
                       placeholder="온라인 부고장 URL을 입력하세요"
-                      className="pl-10"
+                      className="pl-10 min-h-[44px]"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="spacing-tight">
                   <Label htmlFor="funeral-files">첨부파일 (선택사항)</Label>
-                  <div className="space-y-3">
+                  <div className="spacing-tight">
                     <Input 
                       id="funeral-files"
                       type="file"
@@ -343,13 +356,13 @@ export default function Events() {
                         const files = Array.from(e.target.files || []);
                         setFuneralForm(prev => ({ ...prev, attachments: [...prev.attachments, ...files] }));
                       }}
-                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
+                      className="min-h-[44px] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
                     />
                     {funeralForm.attachments.length > 0 && (
-                      <div className="space-y-2">
+                      <div className="spacing-tight">
                         {funeralForm.attachments.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded-lg">
-                            <div className="flex items-center gap-2">
+                          <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                            <div className="flex items-center spacing-items">
                               <Paperclip className="h-4 w-4 text-muted-foreground" />
                               <span className="text-sm">{file.name}</span>
                             </div>
@@ -361,6 +374,7 @@ export default function Events() {
                                 ...prev, 
                                 attachments: prev.attachments.filter((_, i) => i !== index) 
                               }))}
+                              className="min-h-[44px] min-w-[44px] p-0"
                             >
                               <X className="h-4 w-4" />
                             </Button>
@@ -371,7 +385,7 @@ export default function Events() {
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full min-h-[48px] text-base font-semibold">
                   장례 경조사 신청
                 </Button>
               </form>
