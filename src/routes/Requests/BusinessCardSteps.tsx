@@ -318,7 +318,7 @@ export default function BusinessCardSteps() {
                         <div className="w-full h-0.5 bg-black my-2"></div>
 
                         {/* 중앙 - 연락처 정보 (선에 바로 붙여서) */}
-                        <div className="space-y-1 -mt-3">
+                        <div className="space-y-1 -mt-4">
                           <div className="text-lg font-bold text-black">{user.phone}</div>
                           <div className="text-lg text-black leading-tight">
                             {user.email.split('@')[0]}@<br/>{user.email.split('@')[1]}
