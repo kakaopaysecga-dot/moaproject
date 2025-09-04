@@ -204,128 +204,7 @@ export default function MeetingRoomDashboard() {
       </div>
 
       <div className="p-4 space-y-6">
-        {/* 빠른 액세스 메뉴 */}
-        <div className="grid grid-cols-2 gap-3">
-          <Card className="border-0 bg-gradient-to-r from-primary/10 to-primary/5">
-            <CardContent className="p-4 text-center">
-              <Zap className="h-6 w-6 text-primary mx-auto mb-2" />
-              <p className="text-sm font-semibold mb-1">퀵 미팅</p>
-              <p className="text-xs text-muted-foreground">즉시 30분 예약</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-0 bg-gradient-to-r from-accent/10 to-accent/5">
-            <CardContent className="p-4 text-center">
-              <CalendarIcon className="h-6 w-6 text-accent mx-auto mb-2" />
-              <p className="text-sm font-semibold mb-1">타임테이블</p>
-              <p className="text-xs text-muted-foreground">실시간 현황 보기</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 퀵 미팅 섹션 */}
-        <Card className="border-0 bg-gradient-to-r from-primary/5 to-primary/10">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Zap className="h-5 w-5 text-primary" />
-              ⚡ 퀵 미팅 (30분)
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">지금 즉시 사용 가능한 회의실</p>
-          </CardHeader>
-          <CardContent>
-            {getCurrentlyAvailableRooms().length > 0 ? (
-              <div className="space-y-3">
-                {getCurrentlyAvailableRooms().slice(0, 3).map((room) => (
-                  <Card key={room.id} className="border border-primary/20 bg-background/80">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <h4 className="font-semibold">{room.name}</h4>
-                          <p className="text-sm text-muted-foreground">{room.location}</p>
-                        </div>
-                        <Badge variant="secondary" className="text-sm">
-                          {room.capacity}인
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">
-                          {getNextAvailableSlot()}-{timeSlots[timeSlots.indexOf(getNextAvailableSlot() || '') + 1]}
-                        </span>
-                      </div>
-                      <Button 
-                        size="sm" 
-                        className="w-full"
-                        onClick={() => handleQuickMeeting(room)}
-                      >
-                        <Zap className="h-4 w-4 mr-2" />
-                        즉시 예약
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-                {getCurrentlyAvailableRooms().length > 3 && (
-                  <div className="text-center pt-2">
-                    <Link to="/booking/meeting-room">
-                      <Button variant="outline" size="sm">
-                        더 많은 회의실 보기
-                      </Button>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">현재 즉시 사용 가능한 회의실이 없습니다</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* 필터 섹션 */}
-        <Card className="border-0">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Filter className="h-5 w-5 text-accent" />
-              필터 및 검색
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="회의실 이름 또는 위치 검색..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Select value={selectedLocation} onValueChange={(value: string) => setSelectedLocation(value as '판교아지트' | '여의도오피스' | 'all')}>
-                <SelectTrigger>
-                  <SelectValue placeholder="위치" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">전체 위치</SelectItem>
-                  <SelectItem value="판교아지트">판교아지트</SelectItem>
-                  <SelectItem value="여의도오피스">여의도오피스</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={capacityFilter} onValueChange={setCapacityFilter}>
-                <SelectTrigger>
-                  <SelectValue placeholder="인원" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">전체</SelectItem>
-                  <SelectItem value="small">1-4인</SelectItem>
-                  <SelectItem value="medium">5-10인</SelectItem>
-                  <SelectItem value="large">11인+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
+        {/* 실시간 현황만 표시 */}
 
         {/* 모바일 친화적 타임테이블 카드 */}
         <Card className="border-0">
@@ -338,7 +217,7 @@ export default function MeetingRoomDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {filteredRooms.slice(0, 5).map((room) => (
+              {filteredRooms.map((room) => (
                 <Card key={room.id} className="border border-border/50">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-3">
@@ -416,16 +295,6 @@ export default function MeetingRoomDashboard() {
                   </CardContent>
                 </Card>
               ))}
-              
-              {filteredRooms.length > 5 && (
-                <div className="text-center pt-2">
-                  <Link to="/booking/meeting-room">
-                    <Button variant="outline">
-                      모든 회의실 보기 ({filteredRooms.length}개)
-                    </Button>
-                  </Link>
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>
