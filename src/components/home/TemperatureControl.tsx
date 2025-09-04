@@ -4,5 +4,5 @@ import { Thermometer } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 export const TemperatureControl: React.FC = () => {
-  return;
+  return null;
 };
