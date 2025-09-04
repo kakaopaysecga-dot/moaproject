@@ -69,11 +69,23 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
     try {
       const request = await RequestService.createTempRequest(type);
       const currentRequests = get().requests;
+      
+      // 즉시 쿨다운 설정 (60분 = 3600초)
+      if (type === 'cold') {
+        set({ coldCooldown: 60 });
+      } else {
+        set({ hotCooldown: 60 });
+      }
+      
       set({ 
         requests: [request, ...currentRequests],
         isLoading: false 
       });
-      get().updateCooldowns();
+      
+      // 실제 쿨다운 데이터 업데이트
+      setTimeout(() => {
+        get().updateCooldowns();
+      }, 100);
     } catch (error) {
       set({ 
         error: error instanceof Error ? error.message : '온도 조절 요청에 실패했습니다.',
