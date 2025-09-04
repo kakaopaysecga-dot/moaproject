@@ -307,8 +307,7 @@ export default function BusinessCardSteps() {
                         {/* 상단 - 이름 */}
                         <div className="space-y-2">
                           <h3 className="text-xl font-bold text-black leading-tight">
-                            <span className="relative inline-block">
-                              <span className="absolute bottom-0 left-0 w-full h-1/3 bg-yellow-200 -z-10"></span>
+                            <span className="bg-gradient-to-t from-yellow-200 from-0% via-yellow-200 via-33% to-transparent to-33%">
                               {formData.koreanName || user.name}
                             </span> <span className="text-lg">{formData.englishName}</span>
                           </h3>
@@ -323,14 +322,12 @@ export default function BusinessCardSteps() {
                         {/* 중앙 - 연락처 정보 (선에 바로 붙여서) */}
                         <div className="space-y-1 -mt-4">
                           <div className="text-lg font-bold text-black">
-                            <span className="relative inline-block">
-                              <span className="absolute bottom-0 left-0 w-full h-1/3 bg-yellow-200 -z-10"></span>
+                            <span className="bg-gradient-to-t from-yellow-200 from-0% via-yellow-200 via-33% to-transparent to-33%">
                               {user.phone}
                             </span>
                           </div>
                           <div className="text-lg text-black leading-tight">
-                            <span className="relative inline-block">
-                              <span className="absolute bottom-0 left-0 w-full h-1/3 bg-yellow-200 -z-10"></span>
+                            <span className="bg-gradient-to-t from-yellow-200 from-0% via-yellow-200 via-33% to-transparent to-33%">
                               {user.email.split('@')[0]}@
                             </span><br/>{user.email.split('@')[1]}
                           </div>
