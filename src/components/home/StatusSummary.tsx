@@ -33,10 +33,10 @@ export const StatusSummary: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-success" />
+          <MapPin className="w-4 h-4 text-warning" />
           <div>
-            <div className="text-xs text-muted-foreground">사용 가능</div>
-            <div className="font-medium">{statusData.availableRooms}개실</div>
+            <div className="text-xs text-muted-foreground">요청대기중</div>
+            <div className="font-medium">2건</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
