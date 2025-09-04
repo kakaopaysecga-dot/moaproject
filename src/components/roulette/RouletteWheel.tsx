@@ -62,8 +62,8 @@ export const RouletteWheel: React.FC<RouletteWheelProps> = ({
 
   return (
     <div className="relative flex justify-center items-center">
-      {/* 포인터 */}
-      <div className="absolute top-0 z-20 w-0 h-0 border-l-[20px] border-r-[20px] border-b-[40px] border-l-transparent border-r-transparent border-b-destructive drop-shadow-lg animate-pulse"></div>
+      {/* 포인터 - 위에서 아래로 향하는 화살표 */}
+      <div className="absolute top-0 z-20 w-0 h-0 border-l-[15px] border-r-[15px] border-t-[30px] border-l-transparent border-r-transparent border-t-destructive drop-shadow-lg animate-pulse transform translate-y-2"></div>
       
       {/* 룰렛 휠 */}
       <div className="relative">
