@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { Suspense, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
 import { WelcomeSection } from '@/components/home/WelcomeSection';
 import { ServiceCards } from '@/components/home/ServiceCards';
-
-import { AdminPanel } from '@/components/home/AdminPanel';
 import { QuickActions } from '@/components/home/QuickActions';
-import { RecentActivity } from '@/components/home/RecentActivity';
 import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
 import { TodaySchedule } from '@/components/home/TodaySchedule';
-import { GoogleIntegration } from '@/components/home/GoogleIntegration';
-import { GoogleCalendarSync } from '@/components/home/GoogleCalendarSync';
-import { TemperatureControl } from '@/components/home/TemperatureControl';
+
+// Lazy load admin components for better performance
+const AdminPanel = React.lazy(() => import('@/components/home/AdminPanel').then(module => ({ default: module.AdminPanel })));
+const RecentActivity = React.lazy(() => import('@/components/home/RecentActivity').then(module => ({ default: module.RecentActivity })));
+
+// Loading component for better UX
+const LoadingCard = memo(() => (
+  <div className="animate-pulse bg-card rounded-lg p-4 h-32">
+    <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+    <div className="h-3 bg-muted rounded w-1/2"></div>
+  </div>
+));
 
 export default function Home() {
   const { user } = useAuthStore();
@@ -57,8 +63,12 @@ export default function Home() {
         <section className="spacing-group">
           <h2 className="text-lg font-semibold text-foreground">관리자 도구</h2>
           <div className="spacing-items">
-            <RecentActivity />
-            <AdminPanel />
+            <Suspense fallback={<LoadingCard />}>
+              <RecentActivity />
+            </Suspense>
+            <Suspense fallback={<LoadingCard />}>
+              <AdminPanel />
+            </Suspense>
           </div>
         </section>
       )}
