@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ProgressSteps } from '@/components/ui/ProgressSteps';
 import { useAuthStore } from '@/store/authStore';
 import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +16,7 @@ export default function BusinessCard() {
   const { user } = useAuthStore();
   const { createBusinessCardRequest } = useRequestsStore();
   const { toast } = useToast();
+  const [currentStep, setCurrentStep] = useState(0);
   
   const [formData, setFormData] = useState<{
     englishName: string;
@@ -35,6 +37,8 @@ export default function BusinessCard() {
     quantity: '100',
     memo: ''
   });
+
+  const steps = ['개인정보', '명함옵션', '미리보기', '완료'];
 
   const capitalizeEnglishName = (name: string) => {
     return name.split(' ').map(word => 
@@ -71,26 +75,31 @@ export default function BusinessCard() {
       description: "명함 제작 신청이 성공적으로 접수되었습니다."
     });
 
-    setFormData({ 
-      englishName: '',
-      koreanName: user?.name || '',
-      position: '',
-      certification: '',
-      building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
-      design: 'character', 
-      quantity: '100', 
-      memo: '' 
-    });
+    setCurrentStep(3); // 완료 단계로 이동
+    
+    setTimeout(() => {
+      setFormData({ 
+        englishName: '',
+        koreanName: user?.name || '',
+        position: '',
+        certification: '',
+        building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
+        design: 'character', 
+        quantity: '100', 
+        memo: '' 
+      });
+      setCurrentStep(0);
+    }, 3000);
   };
 
   if (!user) return null;
 
   return (
-    <div className="py-6 space-y-8">
+    <div className="container-padding spacing-content">
       {/* 헤더 */}
-      <div className="flex items-center gap-4 px-2">
+      <div className="flex items-center gap-4">
         <Link to="/">
-          <Button variant="ghost" size="sm" className="p-2 hover:bg-muted/50">
+          <Button variant="ghost" size="sm" className="min-h-[44px] min-w-[44px] p-2 hover:bg-muted/50 touch-manipulation">
             <ChevronLeft className="h-5 w-5" />
           </Button>
         </Link>
@@ -101,6 +110,13 @@ export default function BusinessCard() {
           </p>
         </div>
       </div>
+
+      {/* 진행 단계 */}
+      <ProgressSteps 
+        steps={steps} 
+        currentStep={currentStep} 
+        className="mb-6"
+      />
 
       <div className="grid gap-10 xl:grid-cols-2 max-w-7xl mx-auto">
         {/* 신청 폼 */}
@@ -132,7 +148,7 @@ export default function BusinessCard() {
                         englishName: capitalizeEnglishName(e.target.value)
                       }))}
                       placeholder="John Smith"
-                      className="h-12 text-base font-medium"
+                      className="min-h-[44px] text-base font-medium touch-manipulation"
                       required
                     />
                   </div>
@@ -271,10 +287,36 @@ export default function BusinessCard() {
                 </div>
               </div>
 
-              <div className="pt-4">
-                <Button type="submit" className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg">
+              <div className="pt-4 space-y-4">
+                <Button 
+                  type="submit" 
+                  className="w-full min-h-[48px] text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg touch-manipulation"
+                >
                   명함 신청하기
                 </Button>
+                
+                {/* 모바일 네비게이션 */}
+                <div className="flex gap-3 md:hidden">
+                  {currentStep > 0 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setCurrentStep(currentStep - 1)}
+                      className="flex-1 min-h-[44px] touch-manipulation"
+                    >
+                      이전
+                    </Button>
+                  )}
+                  {currentStep < 2 && (
+                    <Button
+                      type="button"
+                      onClick={() => setCurrentStep(currentStep + 1)}
+                      className="flex-1 min-h-[44px] touch-manipulation"
+                    >
+                      다음
+                    </Button>
+                  )}
+                </div>
               </div>
             </form>
           </CardContent>
