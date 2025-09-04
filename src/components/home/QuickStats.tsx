@@ -28,21 +28,5 @@ export const QuickStats: React.FC = () => {
     color: "text-accent",
     bgColor: "bg-accent/10"
   }];
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((stat, index) => (
-        <Card key={index} className="p-4">
-          <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-              <stat.icon className={`w-4 h-4 ${stat.color}`} />
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground">{stat.label}</div>
-              <div className="font-semibold">{stat.value}</div>
-            </div>
-          </div>
-        </Card>
-      ))}
-    </div>
-  );
+  return;
 };
