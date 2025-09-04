@@ -307,7 +307,7 @@ export default function BusinessCardSteps() {
                         {/* 상단 - 이름 */}
                         <div className="space-y-2">
                           <h3 className="text-xl font-bold text-black leading-tight">
-                            <span className="bg-yellow-300 px-1">{formData.koreanName || user.name}</span> {formData.englishName}
+                            <span className="border-b-2 border-yellow-200">{formData.koreanName || user.name}</span> <span className="text-lg">{formData.englishName}</span>
                           </h3>
                           <div className="text-sm text-black">
                             {user.dept} {formData.position && `/ ${formData.position}`}
@@ -320,10 +320,10 @@ export default function BusinessCardSteps() {
                         {/* 중앙 - 연락처 정보 (선에 바로 붙여서) */}
                         <div className="space-y-1 -mt-4">
                           <div className="text-lg font-bold text-black">
-                            <span className="bg-yellow-300 px-1">{user.phone}</span>
+                            <span className="border-b-2 border-yellow-200">{user.phone}</span>
                           </div>
                           <div className="text-lg text-black leading-tight">
-                            <span className="bg-yellow-300 px-1">{user.email.split('@')[0]}@</span><br/>{user.email.split('@')[1]}
+                            <span className="border-b-2 border-yellow-200">{user.email.split('@')[0]}@</span><br/>{user.email.split('@')[1]}
                           </div>
                         </div>
 
