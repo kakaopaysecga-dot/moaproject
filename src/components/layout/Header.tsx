@@ -4,6 +4,7 @@ import { LogOut, Settings, User, Circle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { LiveStatus } from '@/components/ui/LiveStatus';
 
 export const Header: React.FC = () => {
   const { user, logout } = useAuthStore();
@@ -20,6 +21,7 @@ export const Header: React.FC = () => {
             <Link to="/" className="flex items-center">
               <span className="font-bold text-2xl text-primary tracking-tight">MOA</span>
             </Link>
+            <LiveStatus className="ml-3" />
           </div>
 
           {/* User Section */}

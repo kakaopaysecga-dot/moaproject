@@ -294,10 +294,20 @@ All colors MUST be HSL.
     
     /* Touch-friendly tap highlights */
     * {
-      -webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: rgba(45, 90, 58, 0.1);
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
+    }
+    
+    /* Enhanced touch feedback for interactive elements */
+    button, a, [role="button"] {
+      -webkit-tap-highlight-color: rgba(45, 90, 58, 0.2);
+      transition: transform 0.1s ease;
+    }
+    
+    button:active, a:active, [role="button"]:active {
+      transform: scale(0.98);
     }
     
     /* Allow text selection for input fields */
@@ -365,4 +375,51 @@ All colors MUST be HSL.
 
 .animate-float {
   animation: float-elements 6s ease-in-out infinite;
+}
+
+/* Haptic feedback visual effects */
+@keyframes shake-light {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+}
+
+@keyframes shake-medium {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes shake-heavy {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-4px); }
+  20% { transform: translateX(4px); }
+  30% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  50% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  70% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  90% { transform: translateX(-4px); }
+}
+
+@keyframes shake-success {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes shake-warning {
+  0%, 100% { transform: translateX(0) scale(1); }
+  25% { transform: translateX(-1px) scale(1.01); }
+  75% { transform: translateX(1px) scale(1.01); }
+}
+
+@keyframes shake-error {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
 }

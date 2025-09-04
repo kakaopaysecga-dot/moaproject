@@ -7,6 +7,9 @@ import { ServiceCards } from '@/components/home/ServiceCards';
 import { QuickActions } from '@/components/home/QuickActions';
 import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
 import { TodaySchedule } from '@/components/home/TodaySchedule';
+import { StatusSummary } from '@/components/home/StatusSummary';
+import { QuickStats } from '@/components/home/QuickStats';
+import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 // Lazy load admin components for better performance
@@ -24,6 +27,12 @@ const LoadingCard = memo(() => (
 export default function Home() {
   const { user } = useAuthStore();
 
+  const handleRefresh = async () => {
+    // 실제 데이터 새로고침 로직
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    window.location.reload();
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center container-padding">
@@ -39,13 +48,20 @@ export default function Home() {
   }
 
   return (
-    <div className="container-padding spacing-content pb-safe-bottom">
-      <WelcomeSection 
-        userEnglishName={user.englishName}
-        userDept={user.dept}
-        userBuilding={user.building}
-        userWorkArea={user.workArea}
-      />
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="container-padding spacing-content pb-safe-bottom">
+        <WelcomeSection 
+          userEnglishName={user.englishName}
+          userDept={user.dept}
+          userBuilding={user.building}
+          userWorkArea={user.workArea}
+        />
+      
+      {/* 실시간 상태 요약 */}
+      <StatusSummary />
+      
+      {/* 빠른 통계 */}
+      <QuickStats />
       
       {/* 빠른 예약 */}
       <QuickActions />
@@ -81,5 +97,6 @@ export default function Home() {
       {/* Footer Space for Mobile Navigation */}
       <div className="h-safe-bottom" />
     </div>
+    </PullToRefresh>
   );
 }
