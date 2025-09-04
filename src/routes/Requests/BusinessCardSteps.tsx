@@ -321,7 +321,7 @@ export default function BusinessCardSteps() {
                         <div className="space-y-1 -mt-3">
                           <div className="text-lg font-bold text-black">{user.phone}</div>
                           <div className="text-lg text-black leading-tight">
-                            {user.email.split('@')[0]}<br/>@{user.email.split('@')[1]}
+                            {user.email.split('@')[0]}@<br/>{user.email.split('@')[1]}
                           </div>
                         </div>
 
