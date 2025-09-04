@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Calendar, Users, MessageSquare } from 'lucide-react';
+import { Plus, Calendar, Users, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,8 +28,23 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           peopleFinderElement.scrollIntoView({ behavior: 'smooth' });
         }
         break;
-      case 'request':
-        navigate('/requests/events');
+      case 'service':
+        // 서비스찾기 기능 - ServiceCards 섹션으로 이동
+        if (window.location.pathname !== '/') {
+          navigate('/');
+          // 페이지 로드 후 스크롤
+          setTimeout(() => {
+            const serviceCardsElement = document.getElementById('service-cards');
+            if (serviceCardsElement) {
+              serviceCardsElement.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+        } else {
+          const serviceCardsElement = document.getElementById('service-cards');
+          if (serviceCardsElement) {
+            serviceCardsElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
         break;
       default:
         console.log('Unknown action:', actionType);
@@ -50,10 +65,10 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       action: () => handleActionClick('colleagues')
     },
     {
-      icon: MessageSquare,
-      label: '요청하기',
+      icon: Search,
+      label: '서비스찾기',
       color: 'bg-success text-success-foreground hover:bg-success/90',
-      action: () => handleActionClick('request')
+      action: () => handleActionClick('service')
     }
   ];
 

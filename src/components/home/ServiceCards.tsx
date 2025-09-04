@@ -68,7 +68,7 @@ export const ServiceCards: React.FC = () => {
   const filteredFrequentServices = frequentServices.filter(service => service.title.toLowerCase().includes(searchTerm.toLowerCase()) || service.description.toLowerCase().includes(searchTerm.toLowerCase()));
   const filteredAllServices = allServices.filter(service => service.title.toLowerCase().includes(searchTerm.toLowerCase()) || service.description.toLowerCase().includes(searchTerm.toLowerCase()));
   const hasSearchResults = filteredFrequentServices.length > 0 || filteredAllServices.length > 0;
-  return <div className="spacing-content">
+  return <div id="service-cards" className="spacing-content">
       {/* 검색 기능 */}
       
 
