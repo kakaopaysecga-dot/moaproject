@@ -424,7 +424,7 @@ export const AIPeopleFinder: React.FC = () => {
   return (
     <section className="space-y-4 animate-fade-in">
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-foreground">AI 사람찾기</h2>
+        <h2 className="text-lg font-semibold text-foreground">동료 찾기</h2>
         <Users className="h-4 w-4 text-primary" />
       </div>
 
@@ -478,7 +478,7 @@ export const AIPeopleFinder: React.FC = () => {
         <Card className="p-6">
           <div className="flex items-center justify-center gap-2">
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
-            <span className="text-muted-foreground">AI가 사람을 찾고 있습니다...</span>
+            <span className="text-muted-foreground">동료를 찾고 있습니다...</span>
           </div>
         </Card>
       )}

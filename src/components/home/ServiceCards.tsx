@@ -34,18 +34,18 @@ interface ServiceCard {
 
 const frequentServices: ServiceCard[] = [
   {
+    title: '회의실 예약',
+    description: '즉시 예약 가능',
+    icon: Calendar,
+    path: '/booking',
+    color: 'from-corporate-blue to-blue-400'
+  },
+  {
     title: '온도 조절 요청',
     description: '실시간 환경 개선',
     icon: Thermometer,
     path: '/requests/environment',
     color: 'from-warning to-orange-400'
-  },
-  {
-    title: '명함 신청',
-    description: '디지털 명함 포함',
-    icon: CreditCard,
-    path: '/requests/business-card',
-    color: 'from-success to-emerald-400'
   }
 ];
 
@@ -66,7 +66,7 @@ const allServices: ServiceCard[] = [
   },
   {
     title: '명함 신청',
-    description: '디지털 명함 포함',
+    description: '개인 명함 제작',
     icon: CreditCard,
     path: '/requests/business-card',
     color: 'from-success to-emerald-400'
