@@ -19,7 +19,33 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     
     switch (actionType) {
       case 'booking':
-        navigate('/booking/select');
+        // 빠른예약 기능 - QuickActions 섹션으로 스크롤
+        if (window.location.pathname !== '/') {
+          navigate('/');
+          setTimeout(() => {
+            const quickActionsElement = document.getElementById('quick-actions');
+            if (quickActionsElement) {
+              quickActionsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              // 애니메이션 효과 추가
+              quickActionsElement.classList.add('animate-pulse');
+              setTimeout(() => {
+                quickActionsElement.classList.remove('animate-pulse');
+                quickActionsElement.classList.add('animate-scale-in');
+              }, 500);
+            }
+          }, 100);
+        } else {
+          const quickActionsElement = document.getElementById('quick-actions');
+          if (quickActionsElement) {
+            quickActionsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // 애니메이션 효과 추가
+            quickActionsElement.classList.add('animate-pulse');
+            setTimeout(() => {
+              quickActionsElement.classList.remove('animate-pulse');
+              quickActionsElement.classList.add('animate-scale-in');
+            }, 500);
+          }
+        }
         break;
       case 'colleagues':
         // AIPeopleFinder 기능 (홈페이지의 해당 섹션으로 스크롤)
@@ -40,7 +66,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         } else {
           const peopleFinderElement = document.getElementById('ai-people-finder');
           if (peopleFinderElement) {
-            peopleFinderElement.scrollIntoView({ behavior: 'smooth' });
+            peopleFinderElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             // 애니메이션 효과 추가
             peopleFinderElement.classList.add('animate-pulse');
             setTimeout(() => {
@@ -58,13 +84,25 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           setTimeout(() => {
             const serviceCardsElement = document.getElementById('service-cards');
             if (serviceCardsElement) {
-              serviceCardsElement.scrollIntoView({ behavior: 'smooth' });
+              serviceCardsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              // 애니메이션 효과 추가
+              serviceCardsElement.classList.add('animate-pulse');
+              setTimeout(() => {
+                serviceCardsElement.classList.remove('animate-pulse');
+                serviceCardsElement.classList.add('animate-scale-in');
+              }, 500);
             }
           }, 100);
         } else {
           const serviceCardsElement = document.getElementById('service-cards');
           if (serviceCardsElement) {
-            serviceCardsElement.scrollIntoView({ behavior: 'smooth' });
+            serviceCardsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // 애니메이션 효과 추가
+            serviceCardsElement.classList.add('animate-pulse');
+            setTimeout(() => {
+              serviceCardsElement.classList.remove('animate-pulse');
+              serviceCardsElement.classList.add('animate-scale-in');
+            }, 500);
           }
         }
         break;

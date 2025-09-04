@@ -26,7 +26,7 @@ const quickActions = [
 
 export const QuickActions: React.FC = () => {
   return (
-    <section className="spacing-items animate-fade-in">
+    <section id="quick-actions" className="spacing-items animate-fade-in transition-all duration-300">
       <div className="flex items-center gap-2">
         <h2 className="text-lg font-semibold text-foreground">빠른 예약</h2>
         <Zap className="h-5 w-5 text-primary animate-bounce-subtle" />
