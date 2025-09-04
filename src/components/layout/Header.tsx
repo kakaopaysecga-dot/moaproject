@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
             {/* User Info - Mobile/Tablet */}
             <div className="lg:hidden flex items-center gap-2">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">{user.name}</span>
+                <span className="text-sm font-medium text-foreground">{user.englishName ? `${user.englishName}(${user.name})` : user.name}</span>
                 
               </div>
             </div>
