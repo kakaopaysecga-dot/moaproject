@@ -204,6 +204,50 @@ export default function MeetingRoomDashboard() {
       </div>
 
       <div className="p-4 space-y-6">
+        {/* 필터 섹션 */}
+        <Card className="border-0">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Filter className="h-5 w-5 text-accent" />
+              필터 및 검색
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="회의실 이름 또는 위치 검색..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Select value={selectedLocation} onValueChange={(value: string) => setSelectedLocation(value as '판교아지트' | '여의도오피스' | 'all')}>
+                <SelectTrigger>
+                  <SelectValue placeholder="위치" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체 위치</SelectItem>
+                  <SelectItem value="판교아지트">판교아지트</SelectItem>
+                  <SelectItem value="여의도오피스">여의도오피스</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={capacityFilter} onValueChange={setCapacityFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="인원" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">전체</SelectItem>
+                  <SelectItem value="small">1-4인</SelectItem>
+                  <SelectItem value="medium">5-10인</SelectItem>
+                  <SelectItem value="large">11인+</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* 실시간 현황만 표시 */}
 
         {/* 모바일 친화적 타임테이블 카드 */}
