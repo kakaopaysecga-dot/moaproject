@@ -15,8 +15,7 @@ export const StatusSummary: React.FC = () => {
     temperature: "22°C",
     peopleOnline: 28
   };
-  return (
-    <Card className="p-4">
+  return <Card className="p-4">
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-primary" />
@@ -46,14 +45,7 @@ export const StatusSummary: React.FC = () => {
             <div className="font-medium">{statusData.temperature}</div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Users className="w-4 h-4 text-accent" />
-          <div>
-            <div className="text-xs text-muted-foreground">접속중</div>
-            <div className="font-medium">{statusData.peopleOnline}명</div>
-          </div>
-        </div>
+        
       </div>
-    </Card>
-  );
+    </Card>;
 };
