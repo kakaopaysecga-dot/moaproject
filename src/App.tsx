@@ -36,6 +36,9 @@ import AdminPage from "./routes/Admin/AdminPage";
 // Settings route
 import Settings from "./routes/Settings";
 
+// Emotional Care route
+import EmotionalCare from "./routes/EmotionalCare";
+
 const queryClient = new QueryClient();
 
 // Protected Route Component
@@ -108,6 +111,13 @@ const AppRoutes = () => {
         <Route path="/booking/quick-office" element={
           <ProtectedRoute>
             <QuickSmartOffice />
+          </ProtectedRoute>
+        } />
+
+        {/* Emotional Care Route */}
+        <Route path="/emotional-care" element={
+          <ProtectedRoute>
+            <EmotionalCare />
           </ProtectedRoute>
         } />
 

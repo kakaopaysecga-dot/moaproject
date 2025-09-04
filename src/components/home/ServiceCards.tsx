@@ -26,6 +26,12 @@ const frequentServices: ServiceCard[] = [{
   color: 'from-warning to-orange-400'
 }];
 const allServices: ServiceCard[] = [{
+  title: '감정케어 AI',
+  description: 'AI와 함께하는 마음 돌봄',
+  icon: Heart,
+  path: '/emotional-care',
+  color: 'from-pink-500 to-purple-600'
+}, {
   title: '예약 현황',
   description: '좌석 및 회의실 현황',
   icon: Calendar,
