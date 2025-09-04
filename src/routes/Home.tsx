@@ -21,7 +21,7 @@ export default function Home() {
     return (
       <div className="min-h-screen flex items-center justify-center container-padding">
         <div className="text-center spacing-group">
-          <h1 className="text-3xl md:text-4xl font-bold">MOA에 오신 것을 환영합니다</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">MOA에 오신 것을 환영합니다</h1>
           <p className="text-lg text-muted-foreground">로그인이 필요합니다.</p>
           <Button asChild size="lg">
             <Link to="/login">로그인</Link>
@@ -55,7 +55,7 @@ export default function Home() {
       {/* 관리자 전용 */}
       {user.isAdmin && (
         <section className="spacing-group">
-          <h2 className="text-xl font-semibold text-foreground">관리자 도구</h2>
+          <h2 className="text-lg font-semibold text-foreground">관리자 도구</h2>
           <div className="spacing-items">
             <RecentActivity />
             <AdminPanel />

@@ -32,7 +32,7 @@ export const WelcomeSection: React.FC<WelcomeSectionProps> = ({
         </div>
         
         <div className="spacing-tight">
-          <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+          <h1 className="text-xl md:text-2xl font-bold text-white drop-shadow-lg">
             {greeting}, {userEnglishName}님
           </h1>
           <div className="flex items-center justify-center gap-2 text-white/90 text-sm md:text-base font-medium">

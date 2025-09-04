@@ -46,7 +46,7 @@ export const TodaySchedule: React.FC = () => {
     return (
       <section className="spacing-items animate-fade-in">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-foreground">오늘의 일정</h2>
+          <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
           <AddScheduleModal />
         </div>
         <div className="relative p-8 rounded-xl bg-muted/30 border-2 border-dashed border-muted-foreground/20">
@@ -66,7 +66,7 @@ export const TodaySchedule: React.FC = () => {
     <section className="spacing-items animate-fade-in">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h2 className="text-xl font-semibold text-foreground">오늘의 일정</h2>
+            <h2 className="text-lg font-semibold text-foreground">오늘의 일정</h2>
             <div className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
               {sortedSchedule.length}
             </div>
@@ -123,7 +123,7 @@ export const TodaySchedule: React.FC = () => {
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-sm">{getTypeIcon(item.type)}</span>
                       <h3 className={cn(
-                        "font-medium text-base md:text-lg",
+                        "font-medium text-sm md:text-base",
                         item.completed 
                           ? "line-through text-muted-foreground" 
                           : "text-foreground"

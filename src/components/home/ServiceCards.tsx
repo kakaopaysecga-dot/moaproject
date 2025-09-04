@@ -133,7 +133,7 @@ export const ServiceCards: React.FC = () => {
           </div>
         ) : (
           <div className="flex items-center justify-between w-full">
-            <h3 className="text-xl font-semibold text-foreground">서비스</h3>
+            <h3 className="text-lg font-semibold text-foreground">서비스</h3>
             <Button
               variant="ghost"
               size="sm"
@@ -157,9 +157,9 @@ export const ServiceCards: React.FC = () => {
       {(!searchTerm || filteredFrequentServices.length > 0) && (
         <section className="spacing-items">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-semibold text-foreground">
-              {searchTerm ? '자주 사용하는 서비스 검색 결과' : '자주 사용하는 서비스'}
-            </h3>
+          <h3 className="text-lg font-semibold text-foreground">
+            {searchTerm ? '자주 사용하는 서비스 검색 결과' : '자주 사용하는 서비스'}
+          </h3>
             {!searchTerm && filteredFrequentServices.length > 1 && (
               <div className="text-sm text-muted-foreground hidden sm:block">
                 스와이프하여 더 보기
@@ -200,7 +200,7 @@ export const ServiceCards: React.FC = () => {
       {/* 전체 서비스 - 모바일 최적화 그리드 */}
       {(!searchTerm || filteredAllServices.length > 0) && (
         <section className="spacing-items">
-          <h3 className="text-xl font-semibold text-foreground">
+          <h3 className="text-lg font-semibold text-foreground">
             {searchTerm ? '전체 서비스 검색 결과' : '전체 서비스'}
           </h3>
           <div className="grid grid-cols-2 gap-3 md:gap-4">
@@ -246,7 +246,7 @@ const ServiceCard: React.FC<{
           <service.icon className="h-5 w-5 text-white" />
         </div>
         <div className="spacing-tight flex-1">
-          <h4 className="font-semibold text-base md:text-lg text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
+          <h4 className="font-semibold text-sm md:text-base text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
           <p className="text-sm md:text-base text-muted-foreground">{service.description}</p>
         </div>
         {isMobile && (
