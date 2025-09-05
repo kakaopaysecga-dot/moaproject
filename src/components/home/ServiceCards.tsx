@@ -32,18 +32,6 @@ const allServices: ServiceCard[] = [{
   path: '/booking',
   color: 'from-corporate-blue to-blue-400'
 }, {
-  title: '요청 관리',
-  description: '요청 상태 확인',
-  icon: FileText,
-  path: '/requests',
-  color: 'from-accent to-yellow-400'
-}, {
-  title: '커뮤니티',
-  description: '익명으로 소통하기',
-  icon: MessageCircle,
-  path: '/community',
-  color: 'from-teal-500 to-cyan-400'
-}, {
   title: '명함 신청',
   description: '개인 명함 제작',
   icon: CreditCard,
