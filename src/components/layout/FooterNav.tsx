@@ -13,7 +13,7 @@ export const FooterNav: React.FC = () => {
 
   if (!user) return null;
 
-  // 모든 사용자에게 5개 탭 제공 (커뮤니티 추가)
+  // 모든 사용자에게 4개 탭 제공
   const navItems = [
     { 
       icon: Home, 
@@ -29,11 +29,6 @@ export const FooterNav: React.FC = () => {
       icon: Calendar, 
       label: '예약', 
       path: '/booking'
-    },
-    { 
-      icon: MessageCircle, 
-      label: '커뮤니티', 
-      path: '/community'
     },
     user?.isAdmin 
       ? { 
@@ -51,7 +46,7 @@ export const FooterNav: React.FC = () => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white/98 backdrop-blur-xl border-t border-border/30 z-50 md:hidden">
       <div className="safe-bottom">
-        <div className="grid grid-cols-5 h-20 px-2 py-2">
+        <div className="grid grid-cols-4 h-20 px-2 py-2">
           {navItems.map(({ icon: Icon, label, path }) => {
             const isActive = location.pathname === path || 
               (path !== '/' && location.pathname.startsWith(path));
