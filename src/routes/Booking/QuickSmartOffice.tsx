@@ -126,21 +126,64 @@ export default function QuickSmartOffice() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">판교오피스</h2>
-          <Badge variant="outline">
+          <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
             {getAvailableCount('판교오피스')}/10 사용가능
           </Badge>
         </div>
         
-        <div className="grid grid-cols-5 gap-3 mb-4">
+        {/* 홀수 자리 (1, 3, 5, 7, 9) */}
+        <div className="grid grid-cols-5 gap-3 mb-3">
           {offices
-            .filter(office => office.building === '판교오피스')
+            .filter(office => office.building === '판교오피스' && office.seatNumber % 2 === 1)
             .sort((a, b) => a.seatNumber - b.seatNumber)
             .map((office) => (
               <Button
                 key={office.id}
-                variant={office.status === 'my-booking' ? 'default' : office.status === 'available' ? 'outline' : 'secondary'}
-                className={`h-16 flex flex-col gap-1 ${
-                  office.status === 'occupied' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                variant="outline"
+                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                  office.status === 'available' 
+                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    : office.status === 'my-booking'
+                    ? 'border-blue-500 bg-blue-500 text-white hover:bg-blue-600'
+                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
+                }`}
+                disabled={office.status === 'occupied'}
+                onClick={() => {
+                  if (office.status === 'available') {
+                    useOffice(office);
+                  } else if (office.status === 'my-booking') {
+                    cancelBooking(office);
+                  }
+                }}
+              >
+                <span className="font-medium">{office.seatNumber}번</span>
+                <span className="text-xs">
+                  {office.status === 'available' 
+                    ? '예약하기' 
+                    : office.status === 'my-booking'
+                    ? '예약중'
+                    : '사용중'}
+                </span>
+              </Button>
+            ))
+          }
+        </div>
+        
+        {/* 짝수 자리 (2, 4, 6, 8, 10) */}
+        <div className="grid grid-cols-5 gap-3 mb-4">
+          {offices
+            .filter(office => office.building === '판교오피스' && office.seatNumber % 2 === 0)
+            .sort((a, b) => a.seatNumber - b.seatNumber)
+            .map((office) => (
+              <Button
+                key={office.id}
+                variant="outline"
+                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                  office.status === 'available' 
+                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    : office.status === 'my-booking'
+                    ? 'border-blue-500 bg-blue-500 text-white hover:bg-blue-600'
+                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -169,21 +212,64 @@ export default function QuickSmartOffice() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">여의도오피스</h2>
-          <Badge variant="outline">
+          <Badge variant="outline" className="border-purple-200 text-purple-700 bg-purple-50">
             {getAvailableCount('여의도오피스')}/10 사용가능
           </Badge>
         </div>
         
-        <div className="grid grid-cols-5 gap-3 mb-4">
+        {/* 홀수 자리 (1, 3, 5, 7, 9) */}
+        <div className="grid grid-cols-5 gap-3 mb-3">
           {offices
-            .filter(office => office.building === '여의도오피스')
+            .filter(office => office.building === '여의도오피스' && office.seatNumber % 2 === 1)
             .sort((a, b) => a.seatNumber - b.seatNumber)
             .map((office) => (
               <Button
                 key={office.id}
-                variant={office.status === 'my-booking' ? 'default' : office.status === 'available' ? 'outline' : 'secondary'}
-                className={`h-16 flex flex-col gap-1 ${
-                  office.status === 'occupied' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                variant="outline"
+                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                  office.status === 'available' 
+                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    : office.status === 'my-booking'
+                    ? 'border-purple-500 bg-purple-500 text-white hover:bg-purple-600'
+                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
+                }`}
+                disabled={office.status === 'occupied'}
+                onClick={() => {
+                  if (office.status === 'available') {
+                    useOffice(office);
+                  } else if (office.status === 'my-booking') {
+                    cancelBooking(office);
+                  }
+                }}
+              >
+                <span className="font-medium">{office.seatNumber}번</span>
+                <span className="text-xs">
+                  {office.status === 'available' 
+                    ? '예약하기' 
+                    : office.status === 'my-booking'
+                    ? '예약중'
+                    : '사용중'}
+                </span>
+              </Button>
+            ))
+          }
+        </div>
+        
+        {/* 짝수 자리 (2, 4, 6, 8, 10) */}
+        <div className="grid grid-cols-5 gap-3 mb-4">
+          {offices
+            .filter(office => office.building === '여의도오피스' && office.seatNumber % 2 === 0)
+            .sort((a, b) => a.seatNumber - b.seatNumber)
+            .map((office) => (
+              <Button
+                key={office.id}
+                variant="outline"
+                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                  office.status === 'available' 
+                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    : office.status === 'my-booking'
+                    ? 'border-purple-500 bg-purple-500 text-white hover:bg-purple-600'
+                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -209,12 +295,12 @@ export default function QuickSmartOffice() {
       </div>
 
       {/* 안내 */}
-      <Card className="p-4 mb-6 bg-muted/50">
+      <Card className="p-4 mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border-0">
         <div className="text-sm space-y-2">
-          <p className="font-medium">💡 사용 방법</p>
-          <ul className="text-muted-foreground space-y-1">
-            <li>• 사용가능한 자리를 클릭하면 즉시 예약됩니다</li>
-            <li>• 예약한 자리를 다시 클릭하면 취소됩니다</li>
+          <p className="font-medium text-gray-800">💡 사용 방법</p>
+          <ul className="text-gray-600 space-y-1">
+            <li>• <span className="text-green-600 font-medium">초록색 버튼</span>을 클릭하면 즉시 예약됩니다</li>
+            <li>• <span className="text-blue-600 font-medium">파란색/보라색 버튼</span>을 다시 클릭하면 취소됩니다</li>
             <li>• 예약 시간: 지금 ~ 오후 6시까지</li>
           </ul>
         </div>
@@ -222,7 +308,7 @@ export default function QuickSmartOffice() {
 
       {/* 전체 예약 버튼 */}
       <Link to="/booking/smart-office">
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-50">
           전체 스마트 오피스 예약
         </Button>
       </Link>
