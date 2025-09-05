@@ -6,8 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { SuccessAnimation } from '@/components/ui/SuccessAnimation';
 import { useScheduleStore } from '@/store/scheduleStore';
+import { useToast } from '@/hooks/use-toast';
 import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X, CalendarPlus, Plane } from 'lucide-react';
 
 interface Person {
@@ -290,8 +290,6 @@ export const AIPeopleFinder: React.FC = () => {
   const [previewResults, setPreviewResults] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
-  const [successMessage, setSuccessMessage] = useState({ title: '', message: '' });
   const [meetingForm, setMeetingForm] = useState<MeetingFormData>({
     person: {} as Person,
     timeSlot: '',
@@ -302,6 +300,7 @@ export const AIPeopleFinder: React.FC = () => {
   });
 
   const { addScheduleItem } = useScheduleStore();
+  const { toast } = useToast();
 
   // 실시간 검색 미리보기
   const handleSearchInput = (value: string) => {
@@ -423,12 +422,12 @@ export const AIPeopleFinder: React.FC = () => {
     // 모달 닫기
     setIsModalOpen(false);
     
-    // 성공 애니메이션 표시
-    setSuccessMessage({
+    // Toast로 성공 메시지 표시
+    toast({
       title: "회의 예약 완료!",
-      message: `${meetingForm.person.name}님과 ${meetingForm.timeSlot}에 ${selectedRoom?.name}에서 회의가 예약되었습니다. 오늘의 일정에 추가되었습니다.`
+      description: `${meetingForm.person.name}님과 ${meetingForm.timeSlot}에 ${selectedRoom?.name}에서 회의가 예약되었습니다.`,
+      duration: 3000,
     });
-    setShowSuccessAnimation(true);
     
     // 폼 초기화
     setMeetingForm({
@@ -760,14 +759,6 @@ export const AIPeopleFinder: React.FC = () => {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* 성공 애니메이션 */}
-      <SuccessAnimation
-        title={successMessage.title}
-        message={successMessage.message}
-        isVisible={showSuccessAnimation}
-        onComplete={() => setShowSuccessAnimation(false)}
-      />
     </section>
   );
 };
