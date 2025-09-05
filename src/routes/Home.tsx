@@ -136,7 +136,7 @@ export default function Home() {
             items={visibleWidgets.map(w => w.id)} 
             strategy={verticalListSortingStrategy}
           >
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 spacing-content">
+            <div className="space-y-6">
               {visibleWidgets.map((widget) => (
                 <DraggableWidget key={widget.id} widget={widget}>
                   {renderWidget(widget)}

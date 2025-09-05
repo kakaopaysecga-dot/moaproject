@@ -38,11 +38,11 @@ export const DraggableWidget: React.FC<DraggableWidgetProps> = ({
 
   const getGridClasses = (size: string) => {
     switch (size) {
-      case 'small': return 'col-span-1';
-      case 'medium': return 'col-span-1 md:col-span-2';
-      case 'large': return 'col-span-full md:col-span-2';
-      case 'full': return 'col-span-full';
-      default: return 'col-span-full';
+      case 'small': return '';
+      case 'medium': return '';
+      case 'large': return '';
+      case 'full': return '';
+      default: return '';
     }
   };
 
@@ -51,8 +51,7 @@ export const DraggableWidget: React.FC<DraggableWidgetProps> = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'relative',
-        getGridClasses(widget.size),
+        'relative w-full',
         isDragging && 'z-50 opacity-50',
         !widget.isVisible && isEditMode && 'opacity-60'
       )}

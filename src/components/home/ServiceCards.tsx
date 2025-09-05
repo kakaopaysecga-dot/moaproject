@@ -144,9 +144,9 @@ export const ServiceCards: React.FC = () => {
           <h3 className="text-lg font-semibold text-foreground">
             {searchTerm ? '전체 서비스 검색 결과' : '전체 서비스'}
           </h3>
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 md:gap-4">
             {filteredAllServices.map((service, index) => <Link key={service.path} to={service.path} className="group">
-                <Card className="relative overflow-hidden border border-border/50 bg-card hover:shadow-xl transition-all duration-300 min-h-[120px] md:min-h-[140px] group-hover:scale-[1.02] animate-scale-in touch-manipulation" style={{
+                <Card className="relative overflow-hidden border border-border/50 bg-card hover:shadow-xl transition-all duration-300 h-[120px] md:h-[140px] group-hover:scale-[1.02] animate-scale-in touch-manipulation" style={{
             animationDelay: `${(index + 2) * 100}ms`
           }}>
                   <CardContent className="relative p-3 md:p-4 text-center space-y-2 md:space-y-3 h-full flex flex-col justify-center">
@@ -155,7 +155,7 @@ export const ServiceCards: React.FC = () => {
                     </div>
                     <div className="space-y-1">
                       <h4 className="font-semibold text-sm md:text-base leading-tight text-foreground group-hover:text-primary transition-colors">{service.title}</h4>
-                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{service.description}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2">{service.description}</p>
                     </div>
                     <ChevronRight className="absolute top-2 right-2 h-3 w-3 md:h-4 md:w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   </CardContent>
