@@ -108,8 +108,8 @@ export default function RequestStatus() {
         </div>
       </div>
 
-      {/* 에러 메시지 */}
-      {error && (
+      {/* 에러 메시지 - 실제 에러가 있고 로딩중이 아닐 때만 표시 */}
+      {error && !isLoading && (
         <Card className="shadow-md border-0 bg-red-50 border-red-200">
           <CardContent className="py-4">
             <div className="flex items-center justify-between">

@@ -49,18 +49,26 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
       // 사용자 인증 확인
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        throw new Error('로그인이 필요합니다.');
+        // 인증되지 않은 경우 조용히 빈 배열 반환 (에러 메시지 표시하지 않음)
+        set({ requests: [], isLoading: false });
+        return;
       }
 
       const requests = await RequestService.listRequests(filter);
-      console.log('Loaded requests:', requests.length); // 디버깅용
       set({ requests, isLoading: false });
     } catch (error) {
-      console.error('Load requests error:', error); // 디버깅용
-      set({ 
-        error: error instanceof Error ? error.message : '요청 목록을 불러올 수 없습니다.',
-        isLoading: false 
-      });
+      // 실제 요청 실패 시에만 에러 메시지 표시
+      const errorMessage = error instanceof Error ? error.message : '요청 목록을 불러올 수 없습니다.';
+      
+      // 특정 오류는 무시 (예: 인증 관련)
+      if (errorMessage.includes('로그인이 필요합니다') || errorMessage.includes('JWT')) {
+        set({ requests: [], isLoading: false });
+      } else {
+        set({ 
+          error: errorMessage,
+          isLoading: false 
+        });
+      }
     }
   },
 
