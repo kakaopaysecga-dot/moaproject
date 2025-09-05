@@ -326,6 +326,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_like_count: {
+        Args: { post_id: string }
+        Returns: undefined
+      }
+      increment_view_count: {
+        Args: { post_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

@@ -10,7 +10,7 @@ export const FooterNav: React.FC = () => {
 
   if (!user) return null;
 
-  // 모든 사용자에게 5개 탭 제공
+  // 모든 사용자에게 5개 탭 제공 (커뮤니티 추가)
   const navItems = [
     { 
       icon: Home, 
@@ -29,8 +29,8 @@ export const FooterNav: React.FC = () => {
     },
     { 
       icon: MessageCircle, 
-      label: '게시판', 
-      path: '/board'
+      label: '커뮤니티', 
+      path: '/community'
     },
     user?.isAdmin 
       ? { 
@@ -67,7 +67,7 @@ export const FooterNav: React.FC = () => {
                 <div className="flex flex-col items-center space-y-1 py-2">
                   <Icon 
                     className={cn(
-                      'h-6 w-6 transition-all duration-200',
+                      'h-5 w-5 transition-all duration-200',
                       isActive 
                         ? 'text-white' 
                         : 'text-muted-foreground group-hover:text-foreground'

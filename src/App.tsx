@@ -38,9 +38,10 @@ import Settings from "./routes/Settings";
 
 // Lunch Roulette route
 import LunchRoulette from "./routes/LunchRoulette";
+import Community from "./routes/Community";
+import CommunityWrite from "./routes/CommunityWrite";
+import CommunityPost from "./routes/CommunityPost";
 
-// Anonymous Board route
-import AnonymousBoard from "./routes/AnonymousBoard";
 
 const queryClient = new QueryClient();
 
@@ -158,10 +159,20 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
 
-        {/* Anonymous Board Route */}
-        <Route path="/board" element={
+        {/* Admin Routes */}
+        <Route path="/community" element={
           <ProtectedRoute>
-            <AnonymousBoard />
+            <Community />
+          </ProtectedRoute>
+        } />
+        <Route path="/community/write" element={
+          <ProtectedRoute>
+            <CommunityWrite />
+          </ProtectedRoute>
+        } />
+        <Route path="/community/post/:id" element={
+          <ProtectedRoute>
+            <CommunityPost />
           </ProtectedRoute>
         } />
 
