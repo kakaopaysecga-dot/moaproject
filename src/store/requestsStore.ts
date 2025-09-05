@@ -46,9 +46,17 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
   loadRequests: async (filter = 'all') => {
     set({ isLoading: true, error: null });
     try {
+      // 사용자 인증 확인
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('로그인이 필요합니다.');
+      }
+
       const requests = await RequestService.listRequests(filter);
+      console.log('Loaded requests:', requests.length); // 디버깅용
       set({ requests, isLoading: false });
     } catch (error) {
+      console.error('Load requests error:', error); // 디버깅용
       set({ 
         error: error instanceof Error ? error.message : '요청 목록을 불러올 수 없습니다.',
         isLoading: false 

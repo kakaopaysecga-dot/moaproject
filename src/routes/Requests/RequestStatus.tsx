@@ -7,19 +7,42 @@ import { ChevronLeft, CreditCard, Car, Thermometer, Heart, Settings, FileImage }
 import { useRequestsStore } from '@/store/requestsStore';
 
 export default function RequestStatus() {
-  const { requests, loadRequests, initRealtime, cleanup } = useRequestsStore();
+  const { 
+    requests, 
+    isLoading, 
+    error, 
+    loadRequests, 
+    initRealtime, 
+    cleanup, 
+    clearError 
+  } = useRequestsStore();
   
   useEffect(() => {
     // 초기 데이터 로드
-    loadRequests();
-    // 실시간 업데이트 초기화
-    initRealtime();
+    const loadData = async () => {
+      try {
+        await loadRequests();
+        // 데이터 로드 후 실시간 업데이트 초기화
+        initRealtime();
+      } catch (err) {
+        console.error('Failed to load requests:', err);
+      }
+    };
+    
+    loadData();
     
     // 클린업
     return () => {
       cleanup();
     };
   }, []);
+
+  // 에러가 있으면 에러 처리
+  useEffect(() => {
+    if (error) {
+      console.error('Request error:', error);
+    }
+  }, [error]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -85,9 +108,43 @@ export default function RequestStatus() {
         </div>
       </div>
 
+      {/* 에러 메시지 */}
+      {error && (
+        <Card className="shadow-md border-0 bg-red-50 border-red-200">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-red-700">
+                <span>⚠️</span>
+                <span>{error}</span>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={clearError}
+                className="text-red-700 hover:bg-red-100"
+              >
+                닫기
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* 로딩 상태 */}
+      {isLoading && requests.length === 0 && (
+        <Card className="shadow-md border-0">
+          <CardContent className="py-16 text-center">
+            <div className="space-y-4">
+              <div className="mx-auto w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-muted-foreground">요청 목록을 불러오는 중...</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* 요청 목록 */}
       <div className="space-y-6">
-        {requests.length === 0 ? (
+        {!isLoading && requests.length === 0 ? (
           <Card className="shadow-md border-0">
             <CardContent className="py-16 text-center space-y-6">
               <div className="mx-auto w-20 h-20 bg-muted/20 rounded-full flex items-center justify-center">
