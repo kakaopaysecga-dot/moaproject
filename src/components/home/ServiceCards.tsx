@@ -39,7 +39,7 @@ const allServices: ServiceCard[] = [{
   color: 'from-accent to-yellow-400'
 }, {
   title: '커뮤니티',
-  description: '익명 게시판에서 소통하기',
+  description: '익명으로 소통하기',
   icon: MessageCircle,
   path: '/community',
   color: 'from-teal-500 to-cyan-400'
