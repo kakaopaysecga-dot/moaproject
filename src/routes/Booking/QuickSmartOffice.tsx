@@ -126,7 +126,7 @@ export default function QuickSmartOffice() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">판교오피스</h2>
-          <Badge variant="outline" className="border-primary/20 text-primary bg-primary/5">
+          <Badge variant="outline" className="font-medium">
             {getAvailableCount('판교오피스')}/10 사용가능
           </Badge>
         </div>
@@ -140,12 +140,12 @@ export default function QuickSmartOffice() {
               <Button
                 key={office.id}
                 variant="outline"
-                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                className={`h-16 flex flex-col gap-1 transition-colors ${
                   office.status === 'available' 
-                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
+                    ? 'bg-green-500 text-white hover:bg-green-600' 
                     : office.status === 'my-booking'
-                    ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90'
-                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
+                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -178,12 +178,12 @@ export default function QuickSmartOffice() {
               <Button
                 key={office.id}
                 variant="outline"
-                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                className={`h-16 flex flex-col gap-1 transition-colors ${
                   office.status === 'available' 
-                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
+                    ? 'bg-green-500 text-white hover:bg-green-600' 
                     : office.status === 'my-booking'
-                    ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90'
-                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
+                    ? 'bg-blue-500 text-white hover:bg-blue-600'
+                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -212,7 +212,7 @@ export default function QuickSmartOffice() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">여의도오피스</h2>
-          <Badge variant="outline" className="border-accent/20 text-accent-foreground bg-accent/5">
+          <Badge variant="outline" className="font-medium">
             {getAvailableCount('여의도오피스')}/10 사용가능
           </Badge>
         </div>
@@ -226,12 +226,12 @@ export default function QuickSmartOffice() {
               <Button
                 key={office.id}
                 variant="outline"
-                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                className={`h-16 flex flex-col gap-1 transition-colors ${
                   office.status === 'available' 
-                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
+                    ? 'bg-green-500 text-white hover:bg-green-600' 
                     : office.status === 'my-booking'
-                    ? 'border-accent bg-accent text-accent-foreground hover:bg-accent/90'
-                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
+                    ? 'bg-purple-500 text-white hover:bg-purple-600'
+                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -264,12 +264,12 @@ export default function QuickSmartOffice() {
               <Button
                 key={office.id}
                 variant="outline"
-                className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
+                className={`h-16 flex flex-col gap-1 transition-colors ${
                   office.status === 'available' 
-                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
+                    ? 'bg-green-500 text-white hover:bg-green-600' 
                     : office.status === 'my-booking'
-                    ? 'border-accent bg-accent text-accent-foreground hover:bg-accent/90'
-                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
+                    ? 'bg-purple-500 text-white hover:bg-purple-600'
+                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -295,13 +295,13 @@ export default function QuickSmartOffice() {
       </div>
 
       {/* 안내 */}
-      <Card className="p-4 mb-6 bg-muted/50">
+      <Card className="p-4 mb-6">
         <div className="text-sm space-y-2">
-          <p className="font-medium text-foreground">💡 사용 방법</p>
+          <p className="font-medium">💡 사용 방법</p>
           <ul className="text-muted-foreground space-y-1">
-            <li>• <span className="text-success font-medium">초록색 버튼</span>을 클릭하면 즉시 예약됩니다</li>
-            <li>• <span className="text-primary font-medium">파란색</span>/<span className="text-accent font-medium">보라색 버튼</span>을 다시 클릭하면 취소됩니다</li>
-            <li>• 예약 시간: 지금 ~ 오후 6시까지</li>
+            <li>• 초록색: 클릭하여 예약</li>
+            <li>• 파란색/보라색: 클릭하여 취소</li>
+            <li>• 회색: 사용중 (예약불가)</li>
           </ul>
         </div>
       </Card>
