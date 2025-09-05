@@ -45,13 +45,8 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
     setRotation(finalRotation);
     setSpinCount(prev => prev + 1);
 
-    // 애니메이션 완료 후 결과 계산 - 더 긴 지속시간
-    const duration = 4000 + Math.random() * 1000; // 4-5초 지속시간
-    
-    // 진동 효과 (지원되는 디바이스에서)
-    if ('vibrate' in navigator) {
-      navigator.vibrate([100, 50, 100]);
-    }
+    // 애니메이션 완료 후 결과 계산
+    const duration = 3000 + Math.random() * 1000; // 3-4초 지속시간
     
     setTimeout(() => {
       // 최종 회전 각도에서 포인터(12시 방향)가 가리키는 세그먼트 계산
@@ -70,11 +65,6 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
       const selectedOpt = options[selectedIndex];
       setSelectedOption(selectedOpt);
       setIsSpinning(false);
-      
-      // 승리 진동 효과
-      if ('vibrate' in navigator) {
-        navigator.vibrate([200, 100, 200, 100, 400]);
-      }
       
       // 스크롤 위치 복원
       window.scrollTo(0, currentScrollY);
