@@ -81,6 +81,11 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
         requests: [request, ...currentRequests],
         isLoading: false 
       });
+      
+      // 생성 후 최신 데이터 다시 로드
+      setTimeout(() => {
+        get().loadRequests();
+      }, 100);
     } catch (error) {
       set({ 
         error: error instanceof Error ? error.message : '요청 생성에 실패했습니다.',
@@ -107,8 +112,9 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
         isLoading: false 
       });
       
-      // 실제 쿨다운 데이터 업데이트
+      // 생성 후 최신 데이터 다시 로드
       setTimeout(() => {
+        get().loadRequests();
         get().updateCooldowns();
       }, 100);
     } catch (error) {
@@ -128,6 +134,11 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
         requests: [request, ...currentRequests],
         isLoading: false 
       });
+      
+      // 생성 후 최신 데이터 다시 로드
+      setTimeout(() => {
+        get().loadRequests();
+      }, 100);
     } catch (error) {
       set({ 
         error: error instanceof Error ? error.message : '명함 신청에 실패했습니다.',
@@ -145,6 +156,11 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
         requests: [request, ...currentRequests],
         isLoading: false 
       });
+      
+      // 생성 후 최신 데이터 다시 로드
+      setTimeout(() => {
+        get().loadRequests();
+      }, 100);
     } catch (error) {
       set({ 
         error: error instanceof Error ? error.message : '주차 등록 신청에 실패했습니다.',
@@ -162,6 +178,11 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
         requests: [request, ...currentRequests],
         isLoading: false 
       });
+      
+      // 생성 후 최신 데이터 다시 로드
+      setTimeout(() => {
+        get().loadRequests();
+      }, 100);
     } catch (error) {
       set({ 
         error: error instanceof Error ? error.message : '경조사 지원 신청에 실패했습니다.',

@@ -37,6 +37,16 @@ export default function RequestStatus() {
     };
   }, []);
 
+  // 페이지 포커스 시 데이터 새로고침
+  useEffect(() => {
+    const handleFocus = () => {
+      loadRequests();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
+
   // 에러가 있으면 에러 처리
   useEffect(() => {
     if (error) {
