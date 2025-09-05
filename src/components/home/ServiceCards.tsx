@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, FileText, CreditCard, Car, Heart, Thermometer, Settings, Search, X, ChevronRight, LucideIcon, Utensils } from 'lucide-react';
+import { Calendar, FileText, CreditCard, Car, Heart, Thermometer, Settings, Search, X, ChevronRight, LucideIcon, Utensils, MessageCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,12 @@ const allServices: ServiceCard[] = [{
   icon: FileText,
   path: '/requests',
   color: 'from-accent to-yellow-400'
+}, {
+  title: '커뮤니티',
+  description: '익명 게시판에서 소통하기',
+  icon: MessageCircle,
+  path: '/community',
+  color: 'from-teal-500 to-cyan-400'
 }, {
   title: '명함 신청',
   description: '개인 명함 제작',
