@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
-import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/store/authStore";
 
 // Route imports
 import Login from "./routes/auth/Login";
+import Signup from "./routes/auth/Signup";
 import GoogleCallback from "./routes/auth/GoogleCallback";
 import Home from "./routes/Home";
 import NotFound from "./pages/NotFound";
@@ -42,167 +43,132 @@ const queryClient = new QueryClient();
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full"></div>
-      </div>
-    );
-  }
-  
-  return user ? <>{children}</> : <Navigate to="/auth" replace />;
+  const { user } = useAuthStore();
+  return user ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 // Auth Route Component (redirect if already logged in)
 const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading } = useAuth();
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full"></div>
-      </div>
-    );
-  }
-  
+  const { user } = useAuthStore();
   return !user ? <>{children}</> : <Navigate to="/" replace />;
 };
 
 const AppRoutes = () => {
+  const { initializeAuth } = useAuthStore();
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
   return (
-    <Routes>
-      {/* Auth Routes */}
-      <Route path="/auth" element={
-        <AuthRoute>
-          <Login />
-        </AuthRoute>
-      } />
+    <Layout>
+      <Routes>
+        {/* Auth Routes */}
+        <Route path="/login" element={
+          <AuthRoute>
+            <Login />
+          </AuthRoute>
+        } />
+        <Route path="/signup" element={
+          <AuthRoute>
+            <Signup />
+          </AuthRoute>
+        } />
 
-      {/* Protected Routes with Layout */}
-      <Route path="/" element={
-        <ProtectedRoute>
-          <Layout>
+        {/* Protected Routes */}
+        <Route path="/" element={
+          <ProtectedRoute>
             <Home />
-          </Layout>
-        </ProtectedRoute>
-      } />
+          </ProtectedRoute>
+        } />
 
-      {/* Booking Routes */}
-      <Route path="/booking" element={
-        <ProtectedRoute>
-          <Layout>
+        {/* Booking Routes */}
+        <Route path="/booking" element={
+          <ProtectedRoute>
             <BookingSelect />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/booking/dashboard" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/dashboard" element={
+          <ProtectedRoute>
             <MeetingRoomDashboard />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/booking/smart-office" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/smart-office" element={
+          <ProtectedRoute>
             <SmartOfficeBooking />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/booking/meeting-room" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/meeting-room" element={
+          <ProtectedRoute>
             <MeetingRoomBooking />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/booking/quick-meeting" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/quick-meeting" element={
+          <ProtectedRoute>
             <QuickMeetingRoom />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/booking/quick-office" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/booking/quick-office" element={
+          <ProtectedRoute>
             <QuickSmartOffice />
-          </Layout>
-        </ProtectedRoute>
-      } />
+          </ProtectedRoute>
+        } />
 
-      {/* Request Routes */}
-      <Route path="/requests" element={
-        <ProtectedRoute>
-          <Layout>
+        {/* Request Routes */}
+        <Route path="/requests" element={
+          <ProtectedRoute>
             <RequestStatus />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/requests/business-card" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/business-card" element={
+          <ProtectedRoute>
             <BusinessCardSteps />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/requests/parking" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/parking" element={
+          <ProtectedRoute>
             <Parking />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/requests/events" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/events" element={
+          <ProtectedRoute>
             <Events />
-          </Layout>
-        </ProtectedRoute>
-      } />
-      <Route path="/requests/environment" element={
-        <ProtectedRoute>
-          <Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/environment" element={
+          <ProtectedRoute>
             <Environment />
-          </Layout>
-        </ProtectedRoute>
-      } />
+          </ProtectedRoute>
+        } />
 
-      {/* Settings Route */}
-      <Route path="/settings" element={
-        <ProtectedRoute>
-          <Layout>
+        {/* Settings Route */}
+        <Route path="/settings" element={
+          <ProtectedRoute>
             <Settings />
-          </Layout>
-        </ProtectedRoute>
-      } />
+          </ProtectedRoute>
+        } />
 
-      {/* Lunch Roulette Route */}
-      <Route path="/roulette" element={
-        <ProtectedRoute>
-          <Layout>
+        {/* Lunch Roulette Route */}
+        <Route path="/lunch-roulette" element={
+          <ProtectedRoute>
             <LunchRoulette />
-          </Layout>
-        </ProtectedRoute>
-      } />
+          </ProtectedRoute>
+        } />
 
-      {/* Admin Routes */}
-      <Route path="/admin" element={
-        <ProtectedRoute>
-          <Layout>
+        {/* Admin Routes */}
+        <Route path="/admin" element={
+          <ProtectedRoute>
             <AdminPage />
-          </Layout>
-        </ProtectedRoute>
-      } />
+          </ProtectedRoute>
+        } />
 
-      {/* Google Auth Callback */}
-      <Route path="/auth/google/callback" element={<GoogleCallback />} />
+        {/* Google Auth Callback */}
+        <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
-      {/* Catch-all route */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* Catch-all route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Layout>
   );
 };
 
@@ -217,9 +183,7 @@ const App = () => (
           v7_relativeSplatPath: true
         }}
       >
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
+        <AppRoutes />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
