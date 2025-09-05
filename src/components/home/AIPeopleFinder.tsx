@@ -461,7 +461,7 @@ export const AIPeopleFinder: React.FC = () => {
   return (
     <section id="ai-people-finder" className="space-y-4 animate-fade-in transition-all duration-300">
       <div className="flex items-center gap-2">
-        <h2 className="text-lg font-semibold text-foreground">동료 찾기</h2>
+        <h2 className="text-lg font-semibold text-foreground">AI 검색</h2>
         <Users className="h-4 w-4 text-primary" />
       </div>
 
