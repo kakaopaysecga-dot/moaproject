@@ -22,7 +22,13 @@ import MeetingRoomDashboard from "./routes/Booking/MeetingRoomDashboard";
 import QuickMeetingRoom from "./routes/Booking/QuickMeetingRoom";
 import QuickSmartOffice from "./routes/Booking/QuickSmartOffice";
 
-// Request routes (removed)
+// Request routes
+import RequestStatus from "./routes/Requests/RequestStatus";
+import BusinessCard from "./routes/Requests/BusinessCard";
+import BusinessCardSteps from "./routes/Requests/BusinessCardSteps";
+import Parking from "./routes/Requests/Parking";
+import Events from "./routes/Requests/Events";
+import Environment from "./routes/Requests/Environment";
 
 // Admin routes
 import AdminPage from "./routes/Admin/AdminPage";
@@ -32,6 +38,9 @@ import Settings from "./routes/Settings";
 
 // Lunch Roulette route
 import LunchRoulette from "./routes/LunchRoulette";
+import Community from "./routes/Community";
+import CommunityWrite from "./routes/CommunityWrite";
+import CommunityPost from "./routes/CommunityPost";
 
 
 const queryClient = new QueryClient();
@@ -109,7 +118,32 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
 
-        {/* Request Routes (removed) */}
+        {/* Request Routes */}
+        <Route path="/requests" element={
+          <ProtectedRoute>
+            <RequestStatus />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/business-card" element={
+          <ProtectedRoute>
+            <BusinessCardSteps />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/parking" element={
+          <ProtectedRoute>
+            <Parking />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/events" element={
+          <ProtectedRoute>
+            <Events />
+          </ProtectedRoute>
+        } />
+        <Route path="/requests/environment" element={
+          <ProtectedRoute>
+            <Environment />
+          </ProtectedRoute>
+        } />
 
         {/* Settings Route */}
         <Route path="/settings" element={
@@ -125,7 +159,22 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } />
 
-        {/* Community Routes (removed) */}
+        {/* Admin Routes */}
+        <Route path="/community" element={
+          <ProtectedRoute>
+            <Community />
+          </ProtectedRoute>
+        } />
+        <Route path="/community/write" element={
+          <ProtectedRoute>
+            <CommunityWrite />
+          </ProtectedRoute>
+        } />
+        <Route path="/community/post/:id" element={
+          <ProtectedRoute>
+            <CommunityPost />
+          </ProtectedRoute>
+        } />
 
         {/* Admin Routes */}
         <Route path="/admin" element={
