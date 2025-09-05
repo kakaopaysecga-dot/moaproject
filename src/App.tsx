@@ -39,6 +39,9 @@ import Settings from "./routes/Settings";
 // Lunch Roulette route
 import LunchRoulette from "./routes/LunchRoulette";
 
+// Anonymous Board route
+import AnonymousBoard from "./routes/AnonymousBoard";
+
 const queryClient = new QueryClient();
 
 // Protected Route Component
@@ -152,6 +155,13 @@ const AppRoutes = () => {
         <Route path="/lunch-roulette" element={
           <ProtectedRoute>
             <LunchRoulette />
+          </ProtectedRoute>
+        } />
+
+        {/* Anonymous Board Route */}
+        <Route path="/board" element={
+          <ProtectedRoute>
+            <AnonymousBoard />
           </ProtectedRoute>
         } />
 
