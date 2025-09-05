@@ -16,7 +16,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <MobileKeyboardHandler>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary font-sans md:max-w-md md:mx-auto md:border-x md:border-border md:shadow-2xl">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary font-sans max-w-md mx-auto border-x border-border shadow-2xl">
         {user && <Header />}
         <OfflineIndicator />
         
