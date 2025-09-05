@@ -7,11 +7,19 @@ import { ChevronLeft } from 'lucide-react';
 import { useRequestsStore } from '@/store/requestsStore';
 
 export default function RequestStatus() {
-  const { requests, isLoading, loadRequests } = useRequestsStore();
+  const { requests, isLoading, error, loadRequests } = useRequestsStore();
 
   useEffect(() => {
+    console.log('RequestStatus: Loading requests...');
     loadRequests();
   }, [loadRequests]);
+
+  console.log('RequestStatus render:', { 
+    requestsCount: requests.length, 
+    isLoading, 
+    error,
+    requests: requests.slice(0, 2) // 처음 2개만 로그
+  });
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -45,7 +53,22 @@ export default function RequestStatus() {
 
       {/* 요청 목록 */}
       <div className="space-y-6">
-        {requests.length === 0 ? (
+        {error && (
+          <Card className="shadow-md border-0 border-l-4 border-l-red-500">
+            <CardContent className="py-4">
+              <p className="text-red-600">{error}</p>
+            </CardContent>
+          </Card>
+        )}
+        
+        {isLoading ? (
+          <Card className="shadow-md border-0">
+            <CardContent className="py-16 text-center">
+              <div className="animate-spin mx-auto w-8 h-8 border-2 border-primary border-t-transparent rounded-full mb-4"></div>
+              <p className="text-muted-foreground">요청을 불러오는 중...</p>
+            </CardContent>
+          </Card>
+        ) : requests.length === 0 ? (
           <Card className="shadow-md border-0">
             <CardContent className="py-16 text-center space-y-6">
               <div className="mx-auto w-20 h-20 bg-muted/20 rounded-full flex items-center justify-center">
