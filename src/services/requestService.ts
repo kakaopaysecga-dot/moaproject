@@ -140,7 +140,7 @@ export class RequestService {
     return mappedRequest;
   }
 
-  static async createParkingRequest(carNumber: string): Promise<RequestItem> {
+  static async createParkingRequest(carNumber: string, location?: string): Promise<RequestItem> {
     console.log('Creating parking request:', carNumber);
     const { data: { user } } = await supabase.auth.getUser();
     console.log('Current user:', user);
@@ -150,9 +150,13 @@ export class RequestService {
       user_id: user.id,
       type: 'parking',
       title: '주차 등록 신청',
-      description: `차량번호: ${carNumber}`,
+      description: `차량번호: ${carNumber}${location ? `, 희망위치: ${location}` : ''}`,
       status: 'pending',
-      metadata: { carNumber }
+      metadata: { 
+        carNumber,
+        location: location || '',
+        requestType: 'daily'
+      }
     };
     
     console.log('Parking request data to insert:', requestData);

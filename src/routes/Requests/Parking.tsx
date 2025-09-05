@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useRequestsStore } from '@/store/requestsStore';
 import { useToast } from '@/hooks/use-toast';
 import { Car, ChevronLeft } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function Parking() {
   const { user } = useAuthStore();
@@ -16,9 +17,29 @@ export default function Parking() {
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
-    carNumber: user?.car || '',
+    carNumber: '',
     location: ''
   });
+
+  // 프로필에서 차량 번호 가져오기
+  useEffect(() => {
+    const fetchCarNumber = async () => {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
+      
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('car_number')
+        .eq('user_id', authUser.id)
+        .single();
+      
+      if (profile?.car_number) {
+        setFormData(prev => ({ ...prev, carNumber: profile.car_number }));
+      }
+    };
+
+    fetchCarNumber();
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,14 +54,15 @@ export default function Parking() {
     }
 
     try {
-      await createParkingRequest(formData.carNumber);
+      await createParkingRequest(formData.carNumber, formData.location);
 
       toast({
         title: "신청이 완료되었습니다",
         description: "주차 등록 신청이 성공적으로 접수되었습니다."
       });
 
-      setFormData({ carNumber: '', location: '' });
+      // 차량번호는 유지하고 위치만 초기화
+      setFormData(prev => ({ ...prev, location: '' }));
     } catch (error) {
       console.error('Parking request failed:', error);
       toast({
@@ -100,9 +122,8 @@ export default function Parking() {
                   <SelectValue placeholder="주차 위치를 선택하세요" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ground">지상 주차장</SelectItem>
-                  <SelectItem value="underground">지하 주차장</SelectItem>
-                  <SelectItem value="any">어디든 상관없음</SelectItem>
+                  <SelectItem value="판교아지트">판교아지트</SelectItem>
+                  <SelectItem value="여의도오피스">여의도오피스</SelectItem>
                 </SelectContent>
               </Select>
             </div>

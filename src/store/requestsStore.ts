@@ -19,7 +19,7 @@ interface RequestsState {
   createEnvironmentRequest: (data: { image: File | null; note: string }) => Promise<void>;
   createTempRequest: (type: 'cold' | 'hot') => Promise<void>;
   createBusinessCardRequest: (data: BusinessCardRequest) => Promise<void>;
-  createParkingRequest: (carNumber: string) => Promise<void>;
+  createParkingRequest: (carNumber: string, location?: string) => Promise<void>;
   createEventsRequest: (data: EventsRequest) => Promise<void>;
   updateRequestStatus: (id: string, status: RequestItem['status']) => Promise<void>;
   
@@ -147,10 +147,10 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
     }
   },
 
-  createParkingRequest: async (carNumber: string) => {
+  createParkingRequest: async (carNumber: string, location?: string) => {
     set({ isLoading: true, error: null });
     try {
-      const request = await RequestService.createParkingRequest(carNumber);
+      const request = await RequestService.createParkingRequest(carNumber, location);
       const currentRequests = get().requests;
       set({ 
         requests: [request, ...currentRequests],
