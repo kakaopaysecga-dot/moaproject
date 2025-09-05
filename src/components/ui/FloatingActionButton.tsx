@@ -84,36 +84,6 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           }
         }
         break;
-      case 'service':
-        // 서비스찾기 기능 - ServiceCards 섹션으로 이동
-        if (window.location.pathname !== '/') {
-          navigate('/');
-          // 페이지 로드 후 스크롤
-          setTimeout(() => {
-            const serviceCardsElement = document.getElementById('service-cards');
-            if (serviceCardsElement) {
-              serviceCardsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              // 애니메이션 효과 추가
-              serviceCardsElement.classList.add('animate-pulse');
-              setTimeout(() => {
-                serviceCardsElement.classList.remove('animate-pulse');
-                serviceCardsElement.classList.add('animate-scale-in');
-              }, 500);
-            }
-          }, 100);
-        } else {
-          const serviceCardsElement = document.getElementById('service-cards');
-          if (serviceCardsElement) {
-            serviceCardsElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            // 애니메이션 효과 추가
-            serviceCardsElement.classList.add('animate-pulse');
-            setTimeout(() => {
-              serviceCardsElement.classList.remove('animate-pulse');
-              serviceCardsElement.classList.add('animate-scale-in');
-            }, 500);
-          }
-        }
-        break;
       default:
         console.log('Unknown action:', actionType);
     }
@@ -131,12 +101,6 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       label: '동료 찾기',
       color: 'bg-accent text-accent-foreground hover:bg-accent/90',
       action: () => handleActionClick('colleagues')
-    },
-    {
-      icon: Search,
-      label: '서비스찾기',
-      color: 'bg-success text-success-foreground hover:bg-success/90',
-      action: () => handleActionClick('service')
     }
   ];
 
