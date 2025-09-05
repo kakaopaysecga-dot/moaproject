@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Modal } from '@/components/ui/Modal';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { SuccessAnimation } from '@/components/ui/SuccessAnimation';
@@ -640,137 +640,126 @@ export const AIPeopleFinder: React.FC = () => {
       )}
 
       {/* 회의 예약 모달 */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-foreground">회의 예약</h3>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* 회의 정보 요약 */}
-          <Card className="p-3 bg-muted/50">
-            <div className="space-y-1">
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>회의 예약</DialogTitle>
+            <DialogDescription>
+              {meetingForm.person?.name}님과의 회의를 예약해보세요.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* 선택된 시간 */}
+            <div className="bg-muted/50 p-3 rounded-lg">
               <div className="flex items-center gap-2 text-sm">
-                <Users className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">{meetingForm.person.name}</span>
-                <span className="text-muted-foreground">({meetingForm.person.dept})</span>
+                <Calendar className="h-4 w-4 text-primary" />
+                <span className="font-medium">선택된 시간</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="font-medium">{meetingForm.timeSlot}</span>
-              </div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                오늘 {meetingForm.timeSlot}
+              </p>
             </div>
-          </Card>
 
-          {/* 오피스 위치 선택 */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">오피스 위치 선택 *</label>
-            <Select
-              value={meetingForm.selectedLocation}
-              onValueChange={(value) => setMeetingForm(prev => ({ ...prev, selectedLocation: value, meetingRoom: '' }))}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="오피스 위치를 선택하세요" />
-              </SelectTrigger>
-              <SelectContent className="bg-background border border-border z-50">
-                {locations.map((location) => (
-                  <SelectItem key={location} value={location}>
-                    {location}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* 회의실 선택 */}
-          {meetingForm.selectedLocation && (
+            {/* 장소 선택 */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-foreground">회의실 선택 *</label>
-                <span className="text-xs text-muted-foreground">
-                  {meetingForm.timeSlot} 시간 기준 사용 가능한 회의실
-                </span>
-              </div>
+              <label className="text-sm font-medium text-foreground">회의 장소 선택 *</label>
               <Select
-                value={meetingForm.meetingRoom}
-                onValueChange={(value) => setMeetingForm(prev => ({ ...prev, meetingRoom: value }))}
+                value={meetingForm.selectedLocation}
+                onValueChange={(value) => setMeetingForm(prev => ({ ...prev, selectedLocation: value, meetingRoom: '' }))}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="사용 가능한 회의실을 선택하세요" />
+                  <SelectValue placeholder="장소를 선택하세요" />
                 </SelectTrigger>
                 <SelectContent className="bg-background border border-border z-50">
-                  {getAvailableRooms(meetingForm.timeSlot)
-                    .filter(room => room.location === meetingForm.selectedLocation)
-                    .map((room) => (
-                    <SelectItem key={room.id} value={room.id}>
-                      <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium">{room.name}</span>
-                          <Badge variant="outline" className="text-xs px-1 py-0 bg-success/10 text-success border-success/20">
-                            사용가능
-                          </Badge>
-                        </div>
-                        <span className="text-xs text-muted-foreground">
-                          최대 {room.capacity}명
-                        </span>
-                      </div>
+                  {locations.map((location) => (
+                    <SelectItem key={location} value={location}>
+                      {location}
                     </SelectItem>
                   ))}
-                  {getAvailableRooms(meetingForm.timeSlot).filter(room => room.location === meetingForm.selectedLocation).length === 0 && (
-                    <div className="p-2 text-center text-muted-foreground text-sm">
-                      해당 시간에 사용 가능한 회의실이 없습니다
-                    </div>
-                  )}
                 </SelectContent>
               </Select>
             </div>
-          )}
 
-          {/* 회의 제목 */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">회의 제목 *</label>
-            <Input
-              placeholder="회의 제목을 입력하세요"
-              value={meetingForm.title}
-              onChange={(e) => setMeetingForm(prev => ({ ...prev, title: e.target.value }))}
-            />
-          </div>
+            {/* 회의실 선택 */}
+            {meetingForm.selectedLocation && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-foreground">회의실 선택 *</label>
+                <Select
+                  value={meetingForm.meetingRoom}
+                  onValueChange={(value) => setMeetingForm(prev => ({ ...prev, meetingRoom: value }))}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="사용 가능한 회의실을 선택하세요" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background border border-border z-50">
+                    {getAvailableRooms(meetingForm.timeSlot)
+                      .filter(room => room.location === meetingForm.selectedLocation)
+                      .map((room) => (
+                      <SelectItem key={room.id} value={room.id}>
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium">{room.name}</span>
+                            <Badge variant="outline" className="text-xs px-1 py-0 bg-success/10 text-success border-success/20">
+                              사용가능
+                            </Badge>
+                          </div>
+                          <span className="text-xs text-muted-foreground">
+                            최대 {room.capacity}명
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                    {getAvailableRooms(meetingForm.timeSlot).filter(room => room.location === meetingForm.selectedLocation).length === 0 && (
+                      <div className="p-2 text-center text-muted-foreground text-sm">
+                        해당 시간에 사용 가능한 회의실이 없습니다
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
-          {/* 회의 내용 */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">회의 내용</label>
-            <Textarea
-              placeholder="회의 내용을 입력하세요 (선택사항)"
-              value={meetingForm.content}
-              onChange={(e) => setMeetingForm(prev => ({ ...prev, content: e.target.value }))}
-              rows={3}
-            />
-          </div>
+            {/* 회의 제목 */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">회의 제목 *</label>
+              <Input
+                placeholder="회의 제목을 입력하세요"
+                value={meetingForm.title}
+                onChange={(e) => setMeetingForm(prev => ({ ...prev, title: e.target.value }))}
+              />
+            </div>
 
-          {/* 버튼 */}
-          <div className="flex gap-2 pt-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsModalOpen(false)}
-              className="flex-1"
-            >
-              취소
-            </Button>
-            <Button
-              onClick={handleMeetingSubmit}
-              className="flex-1"
-            >
-              회의 예약
-            </Button>
+            {/* 회의 내용 */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">회의 내용</label>
+              <Textarea
+                placeholder="회의 내용을 입력하세요 (선택사항)"
+                value={meetingForm.content}
+                onChange={(e) => setMeetingForm(prev => ({ ...prev, content: e.target.value }))}
+                rows={3}
+              />
+            </div>
+
+            {/* 버튼 */}
+            <div className="flex gap-2 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsModalOpen(false)}
+                className="flex-1"
+              >
+                취소
+              </Button>
+              <Button
+                onClick={handleMeetingSubmit}
+                className="flex-1"
+              >
+                회의 예약
+              </Button>
+            </div>
           </div>
-        </div>
-      </Modal>
+        </DialogContent>
+      </Dialog>
 
       {/* 성공 애니메이션 */}
       <SuccessAnimation
