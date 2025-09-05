@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, CreditCard, Car, Thermometer, Heart, Settings, FileImage } from 'lucide-react';
 import { useRequestsStore } from '@/store/requestsStore';
 
 export default function RequestStatus() {
@@ -24,13 +24,47 @@ export default function RequestStatus() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="secondary">처리 대기중</Badge>;
+        return <Badge variant="secondary" className="bg-yellow-50 text-yellow-700 border-yellow-200">처리 대기중</Badge>;
       case 'processing':
-        return <Badge variant="default">처리 진행중</Badge>;
+        return <Badge variant="default" className="bg-blue-50 text-blue-700 border-blue-200">처리 진행중</Badge>;
       case 'completed':
-        return <Badge variant="outline">처리 완료</Badge>;
+        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">처리 완료</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  const getRequestIcon = (type: string) => {
+    switch (type) {
+      case 'business-card':
+        return <CreditCard className="h-5 w-5 text-primary" />;
+      case 'parking':
+        return <Car className="h-5 w-5 text-purple-500" />;
+      case 'temperature':
+        return <Thermometer className="h-5 w-5 text-orange-500" />;
+      case 'events':
+        return <Heart className="h-5 w-5 text-pink-500" />;
+      case 'environment':
+        return <Settings className="h-5 w-5 text-green-500" />;
+      default:
+        return <FileImage className="h-5 w-5 text-muted-foreground" />;
+    }
+  };
+
+  const getRequestTypeLabel = (type: string) => {
+    switch (type) {
+      case 'business-card':
+        return '명함 신청';
+      case 'parking':
+        return '주차 등록';
+      case 'temperature':
+        return '온도 조절';
+      case 'events':
+        return '경조사 지원';
+      case 'environment':
+        return '사무환경 개선';
+      default:
+        return '기타 요청';
     }
   };
 
@@ -108,16 +142,26 @@ export default function RequestStatus() {
             <Card key={request.id} className="shadow-md border-0 hover:shadow-lg transition-all duration-200">
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1">
-                    <CardTitle className="text-lg font-semibold leading-tight">{request.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      신청일: {new Date(request.createdAt).toLocaleDateString('ko-KR', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        weekday: 'short'
-                      })}
-                    </p>
+                  <div className="flex items-start gap-3 min-w-0 flex-1">
+                    <div className="flex-shrink-0 mt-1">
+                      {getRequestIcon(request.type)}
+                    </div>
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <CardTitle className="text-lg font-semibold leading-tight">{request.title}</CardTitle>
+                        <Badge variant="outline" className="text-xs">
+                          {getRequestTypeLabel(request.type)}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        신청일: {new Date(request.createdAt).toLocaleDateString('ko-KR', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          weekday: 'short'
+                        })}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex-shrink-0">
                     {getStatusBadge(request.status)}
