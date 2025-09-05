@@ -50,13 +50,6 @@ export type Database = {
             referencedRelation: "anonymous_posts"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "anonymous_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "anonymous_posts_public"
-            referencedColumns: ["id"]
-          },
         ]
       }
       anonymous_posts: {
@@ -315,87 +308,7 @@ export type Database = {
       }
     }
     Views: {
-      anonymous_comments_public: {
-        Row: {
-          author_nickname: string | null
-          content: string | null
-          created_at: string | null
-          id: string | null
-          is_deleted: boolean | null
-          post_id: string | null
-        }
-        Insert: {
-          author_nickname?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_deleted?: boolean | null
-          post_id?: string | null
-        }
-        Update: {
-          author_nickname?: string | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_deleted?: boolean | null
-          post_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "anonymous_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "anonymous_posts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "anonymous_comments_post_id_fkey"
-            columns: ["post_id"]
-            isOneToOne: false
-            referencedRelation: "anonymous_posts_public"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      anonymous_posts_public: {
-        Row: {
-          author_nickname: string | null
-          comment_count: number | null
-          content: string | null
-          created_at: string | null
-          id: string | null
-          is_deleted: boolean | null
-          like_count: number | null
-          title: string | null
-          updated_at: string | null
-          view_count: number | null
-        }
-        Insert: {
-          author_nickname?: string | null
-          comment_count?: number | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_deleted?: boolean | null
-          like_count?: number | null
-          title?: string | null
-          updated_at?: string | null
-          view_count?: number | null
-        }
-        Update: {
-          author_nickname?: string | null
-          comment_count?: number | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_deleted?: boolean | null
-          like_count?: number | null
-          title?: string | null
-          updated_at?: string | null
-          view_count?: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       get_current_user_role: {
