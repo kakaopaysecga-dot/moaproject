@@ -102,6 +102,7 @@ export default function LunchRoulette() {
             isSpinning={isSpinning}
             wheelRef={wheelRef}
             size={wheelSize}
+            selectedOption={selectedOption}
           />
         </div>
 

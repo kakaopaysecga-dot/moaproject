@@ -68,6 +68,10 @@ All colors MUST be HSL.
     --corporate-gray: 217 12% 45%;
     --corporate-gray-light: 217 8% 85%;
 
+    /* RGB versions for dynamic opacity effects */
+    --primary-rgb: 248 207 87;
+    --accent-rgb: 199 123 67;
+
     /* Kakao Pay Premium gradients */
     --gradient-primary: linear-gradient(135deg, hsl(45 90% 58%), hsl(35 75% 52%));
     --gradient-accent: linear-gradient(135deg, hsl(35 75% 52%), hsl(45 90% 58%));

@@ -27,20 +27,32 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
     setIsSpinning(true);
     setSelectedOption(null);
 
-    // 완전히 랜덤한 회전 설정
-    const minSpins = 3; // 최소 회전 수
-    const maxSpins = 6; // 최대 회전 수
+    // 극적인 회전 설정
+    const minSpins = 5; // 최소 회전 수 증가
+    const maxSpins = 8; // 최대 회전 수 증가
     const randomSpins = minSpins + Math.random() * (maxSpins - minSpins);
-    const randomAngle = Math.random() * 360; // 0-360도 사이의 랜덤 각도
     
-    const totalRotation = randomSpins * 360 + randomAngle;
+    // 더 정교한 랜덤 각도 계산
+    const segmentAngle = 360 / options.length;
+    const targetSegment = Math.floor(Math.random() * options.length);
+    const segmentCenter = (targetSegment * segmentAngle) + (segmentAngle / 2);
+    const randomOffset = (Math.random() - 0.5) * segmentAngle * 0.8; // 세그먼트 내에서 랜덤 위치
+    const finalAngle = segmentCenter + randomOffset;
+    
+    const totalRotation = randomSpins * 360 + finalAngle;
     const finalRotation = rotation + totalRotation;
 
     setRotation(finalRotation);
     setSpinCount(prev => prev + 1);
 
-    // 애니메이션 완료 후 결과 계산
-    const duration = 3000 + Math.random() * 1000; // 3-4초 지속시간
+    // 애니메이션 완료 후 결과 계산 - 더 긴 지속시간
+    const duration = 4000 + Math.random() * 1000; // 4-5초 지속시간
+    
+    // 진동 효과 (지원되는 디바이스에서)
+    if ('vibrate' in navigator) {
+      navigator.vibrate([100, 50, 100]);
+    }
+    
     setTimeout(() => {
       // 최종 회전 각도에서 포인터(12시 방향)가 가리키는 세그먼트 계산
       const normalizedAngle = (360 - (finalRotation % 360) + 360) % 360; // 시계 반대방향으로 회전하므로 반전
@@ -58,6 +70,11 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
       const selectedOpt = options[selectedIndex];
       setSelectedOption(selectedOpt);
       setIsSpinning(false);
+      
+      // 승리 진동 효과
+      if ('vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200, 100, 400]);
+      }
       
       // 스크롤 위치 복원
       window.scrollTo(0, currentScrollY);
