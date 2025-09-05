@@ -78,15 +78,15 @@ export const RecentActivity: React.FC = () => {
 
   if (isLoading) {
     return (
-      <section className="spacing-group">
+      <section className="space-y-4">
         <h2 className="text-lg font-semibold text-foreground">최근 활동</h2>
         <Card className="p-4">
-          <div className="spacing-items">
+          <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 animate-pulse">
-                <div className="w-10 h-10 bg-muted rounded-lg"></div>
+              <div key={i} className="flex items-center gap-3 animate-pulse">
+                <div className="w-8 h-8 bg-muted rounded-full"></div>
                 <div className="flex-1">
-                  <div className="h-4 bg-muted rounded mb-2"></div>
+                  <div className="h-4 bg-muted rounded mb-1"></div>
                   <div className="h-3 bg-muted rounded w-20"></div>
                 </div>
               </div>
@@ -98,26 +98,26 @@ export const RecentActivity: React.FC = () => {
   }
 
   return (
-    <section className="spacing-group animate-fade-in">
+    <section className="space-y-4 animate-fade-in">
       <div className="flex items-center gap-2">
         <h2 className="text-lg font-semibold text-foreground">최근 활동</h2>
         <Clock className="h-4 w-4 text-muted-foreground" />
       </div>
       
       <Card className="p-4 hover:shadow-lg transition-shadow duration-300">
-        <div className="spacing-items">
+        <div className="space-y-4">
           {activities.map((activity, index) => (
             <div 
               key={activity.id} 
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-slide-up"
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-slide-up"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="flex-shrink-0 p-2 rounded-lg bg-muted/50">
+              <div className="flex-shrink-0">
                 {getStatusIcon(activity.status)}
               </div>
               
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">
+                <p className="text-sm font-medium text-foreground truncate">
                   {activity.title}
                 </p>
                 <div className="flex items-center gap-2 mt-1">

@@ -56,9 +56,9 @@ export const AIInsights: React.FC = () => {
 
   if (isLoading) {
     return (
-      <section className="spacing-group">
+      <section className="space-y-4">
         <h2 className="text-lg font-semibold text-foreground">AI 인사이트</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {[...Array(4)].map((_, i) => (
             <Card key={i} className="p-4 animate-pulse">
               <div className="h-4 bg-muted rounded mb-2"></div>
@@ -72,41 +72,39 @@ export const AIInsights: React.FC = () => {
   }
 
   return (
-    <section className="spacing-group animate-fade-in">
+    <section className="space-y-4 animate-fade-in">
       <div className="flex items-center gap-2">
         <h2 className="text-lg font-semibold text-foreground">AI 인사이트</h2>
-        <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
+        <Badge variant="secondary" className="bg-kakao-light text-kakao-dark text-xs">
           실시간
         </Badge>
       </div>
       
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         {insights.map((insight, index) => {
           const Icon = insight.icon;
           return (
             <Card 
               key={insight.title} 
-              className="p-4 hover:shadow-lg transition-all duration-300 animate-slide-up"
+              className="p-4 hover:shadow-lg transition-all duration-300 animate-slide-up border-l-4 border-l-primary"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="text-center space-y-3">
-                <div className="inline-flex p-3 rounded-full bg-primary/10">
-                  <Icon className="h-5 w-5 text-primary" />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-2xl font-bold text-foreground">
-                    {insight.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {insight.title}
-                  </div>
-                  <Badge 
-                    variant="outline"
-                    className="text-xs bg-success/10 text-success border-success/20"
-                  >
-                    {insight.change}
-                  </Badge>
-                </div>
+              <div className="flex items-start justify-between mb-2">
+                <Icon className="h-5 w-5 text-primary" />
+                <Badge 
+                  variant={insight.trend === 'up' ? 'default' : 'secondary'}
+                  className="text-xs bg-success/10 text-success border-success/20"
+                >
+                  {insight.change}
+                </Badge>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground font-medium">
+                  {insight.title}
+                </p>
+                <p className="text-xl font-bold text-foreground">
+                  {insight.value}
+                </p>
               </div>
             </Card>
           );

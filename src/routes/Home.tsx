@@ -9,7 +9,6 @@ import { AIPeopleFinder } from '@/components/home/AIPeopleFinder';
 import { TodaySchedule } from '@/components/home/TodaySchedule';
 import { StatusSummary } from '@/components/home/StatusSummary';
 import { QuickStats } from '@/components/home/QuickStats';
-import { AIInsights } from '@/components/home/AIInsights';
 import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import { SkeletonCard } from '@/components/ui/SkeletonCard';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
@@ -61,9 +60,6 @@ export default function Home() {
       
       {/* 빠른 통계 */}
       <QuickStats />
-      
-      {/* AI 인사이트 */}
-      <AIInsights />
       
       {/* 빠른 예약 */}
       <QuickActions />

@@ -29,25 +29,5 @@ export const QuickStats: React.FC = () => {
     bgColor: "bg-accent/10"
   }];
 
-  return (
-    <section className="spacing-group">
-      <h2 className="text-lg font-semibold text-foreground">빠른 통계</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="p-4 text-center">
-              <div className={`inline-flex p-3 rounded-full ${stat.bgColor} mb-3`}>
-                <Icon className={`w-5 h-5 ${stat.color}`} />
-              </div>
-              <div className="space-y-1">
-                <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            </Card>
-          );
-        })}
-      </div>
-    </section>
-  );
+  return null;
 };
