@@ -138,31 +138,30 @@ export default function QuickSmartOffice() {
 
         {/* 빌딩별 현황 */}
         {!isLoading && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {['판교오피스', '여의도오피스'].map(building => (
-              <div key={building} className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">{building}</h3>
-                  <Badge variant="outline">
+              <div key={building} className="space-y-4">
+                <div className="flex items-center justify-between px-2">
+                  <h3 className="text-lg font-semibold text-foreground">{building}</h3>
+                  <Badge variant="outline" className="text-sm">
                     {getAvailableCount(building)}/{getTotalCount(building)} 사용 가능
                   </Badge>
                 </div>
                 
-                
-                {/* 홀수 자리 (1, 3, 5, 7, 9) */}
-                <div className="grid grid-cols-5 gap-2 mb-2">
+                {/* 모든 자리를 한 번에 표시 (1-10번) */}
+                <div className="grid grid-cols-5 gap-3">
                   {offices
-                    .filter(office => office.building === building && office.seatNumber % 2 === 1)
+                    .filter(office => office.building === building)
                     .sort((a, b) => a.seatNumber - b.seatNumber)
                     .map((office, index) => (
                       <Card 
                         key={office.id}
-                        className={`relative p-3 text-center hover:shadow-lg transition-all duration-300 animate-scale-in ${
+                        className={`relative overflow-hidden transition-all duration-300 hover:shadow-lg animate-scale-in ${
                           office.status === 'available' 
-                            ? 'hover:border-primary cursor-pointer' 
+                            ? 'hover:border-primary cursor-pointer border-border' 
                             : office.status === 'my-booking'
-                            ? 'border-2 border-primary bg-primary/10 cursor-pointer'
-                            : 'opacity-60'
+                            ? 'border-2 border-primary bg-primary/5 cursor-pointer shadow-md'
+                            : 'opacity-60 border-destructive/20'
                         }`}
                         style={{ animationDelay: `${index * 50}ms` }}
                         onClick={() => {
@@ -173,96 +172,76 @@ export default function QuickSmartOffice() {
                           }
                         }}
                       >
-                        <div className="space-y-2">
-                          <div className="text-sm font-medium">
+                        <div className="p-4 text-center space-y-3">
+                          {/* 자리 번호 */}
+                          <div className="text-base font-semibold text-foreground">
                             {office.seatNumber}번
                           </div>
-                          <div className={`w-3 h-3 rounded-full mx-auto ${
-                            office.status === 'available' 
-                              ? 'bg-success animate-pulse' 
-                              : office.status === 'my-booking'
-                              ? 'bg-primary animate-pulse'
-                              : 'bg-destructive'
-                          }`} />
-                          <div className="text-xs text-muted-foreground">
-                            {office.status === 'available' 
-                              ? '사용가능' 
-                              : office.status === 'my-booking'
-                              ? '내 예약'
-                              : '사용중'}
+                          
+                          {/* 상태 표시 원 */}
+                          <div className="flex justify-center">
+                            <div className={`w-4 h-4 rounded-full ${
+                              office.status === 'available' 
+                                ? 'bg-success animate-pulse' 
+                                : office.status === 'my-booking'
+                                ? 'bg-primary animate-pulse'
+                                : 'bg-destructive'
+                            }`} />
+                          </div>
+                          
+                          {/* 상태 텍스트 */}
+                          <div className="space-y-1">
+                            <div className={`text-sm font-medium ${
+                              office.status === 'available' 
+                                ? 'text-success' 
+                                : office.status === 'my-booking'
+                                ? 'text-primary'
+                                : 'text-destructive'
+                            }`}>
+                              {office.status === 'available' 
+                                ? '사용가능' 
+                                : office.status === 'my-booking'
+                                ? '내 예약'
+                                : '사용중'}
+                            </div>
+                            
+                            {/* 내 예약일 때 취소 안내 */}
+                            {office.status === 'my-booking' && (
+                              <div className="text-xs text-muted-foreground">
+                                클릭하여 취소
+                              </div>
+                            )}
                           </div>
                         </div>
                         
+                        {/* 호버 효과 */}
                         {office.status === 'available' && (
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 hover:opacity-100 transition-opacity duration-300" />
                         )}
                         
+                        {/* 내 예약 표시 */}
                         {office.status === 'my-booking' && (
-                          <div className="absolute top-1 right-1">
-                            <Badge variant="secondary" className="text-xs px-1 py-0.5">취소</Badge>
-                          </div>
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10 opacity-50" />
                         )}
                       </Card>
                     ))
                   }
                 </div>
                 
-                {/* 짝수 자리 (2, 4, 6, 8, 10) */}
-                <div className="grid grid-cols-5 gap-2">
-                  {offices
-                    .filter(office => office.building === building && office.seatNumber % 2 === 0)
-                    .sort((a, b) => a.seatNumber - b.seatNumber)
-                    .map((office, index) => (
-                      <Card 
-                        key={office.id}
-                        className={`relative p-3 text-center hover:shadow-lg transition-all duration-300 animate-scale-in ${
-                          office.status === 'available' 
-                            ? 'hover:border-primary cursor-pointer' 
-                            : office.status === 'my-booking'
-                            ? 'border-2 border-primary bg-primary/10 cursor-pointer'
-                            : 'opacity-60'
-                        }`}
-                        style={{ animationDelay: `${(index + 5) * 50}ms` }}
-                        onClick={() => {
-                          if (office.status === 'available') {
-                            useOffice(office);
-                          } else if (office.status === 'my-booking') {
-                            cancelBooking(office);
-                          }
-                        }}
-                      >
-                        <div className="space-y-2">
-                          <div className="text-sm font-medium">
-                            {office.seatNumber}번
-                          </div>
-                          <div className={`w-3 h-3 rounded-full mx-auto ${
-                            office.status === 'available' 
-                              ? 'bg-success animate-pulse' 
-                              : office.status === 'my-booking'
-                              ? 'bg-primary animate-pulse'
-                              : 'bg-destructive'
-                          }`} />
-                          <div className="text-xs text-muted-foreground">
-                            {office.status === 'available' 
-                              ? '사용가능' 
-                              : office.status === 'my-booking'
-                              ? '내 예약'
-                              : '사용중'}
-                          </div>
-                        </div>
-                        
-                        {office.status === 'available' && (
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg opacity-0 hover:opacity-100 transition-opacity duration-300" />
-                        )}
-                        
-                        {office.status === 'my-booking' && (
-                          <div className="absolute top-1 right-1">
-                            <Badge variant="secondary" className="text-xs px-1 py-0.5">취소</Badge>
-                          </div>
-                        )}
-                      </Card>
-                    ))
-                  }
+                {/* 범례 */}
+                <div className="flex justify-center gap-6 mt-4 p-3 bg-muted/30 rounded-lg">
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="w-3 h-3 rounded-full bg-success animate-pulse"></div>
+                    <span className="text-muted-foreground">사용가능</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="w-3 h-3 rounded-full bg-primary animate-pulse"></div>
+                    <span className="text-muted-foreground">내 예약</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    <div className="w-3 h-3 rounded-full bg-destructive"></div>
+                    <span className="text-muted-foreground">사용중</span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -270,27 +249,29 @@ export default function QuickSmartOffice() {
         )}
 
         {/* 전체 스마트 오피스 보기 */}
-        <div className="mt-6">
+        <div className="mt-8 px-2">
           <Link to="/booking/smart-office">
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full h-12 text-base font-medium">
               전체 스마트 오피스 보기
             </Button>
           </Link>
         </div>
 
         {/* 이용 안내 */}
-        <Card className="mt-6 bg-muted/30">
-          <div className="p-4 text-center space-y-2">
-            <div className="text-sm font-medium">💡 즉시예약 안내</div>
-            <div className="text-xs text-muted-foreground space-y-1">
+        <Card className="mt-6 bg-muted/30 border-0">
+          <div className="p-6 text-center space-y-3">
+            <div className="text-base font-semibold text-foreground">💡 즉시예약 안내</div>
+            <div className="text-sm text-muted-foreground space-y-2 leading-relaxed">
               <div>• 클릭 한 번으로 지금부터 퇴근시간(18:00)까지 이용</div>
               <div>• 내 예약한 자리는 파란색으로 표시되며 클릭하면 취소</div>
               <div>• 실시간 이용현황 확인 가능</div>
-              <div>• 다양한 편의시설 제공</div>
-              <div>• 홀수석(1,3,5,7,9) / 짝수석(2,4,6,8,10) 배치</div>
+              <div>• 다양한 편의시설 제공 (모니터, WiFi, 커피 등)</div>
             </div>
           </div>
         </Card>
+
+        {/* 하단 여백 */}
+        <div className="h-8" />
       </div>
     </div>
   );
