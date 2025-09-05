@@ -1,10 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, FileText, CreditCard, Car, Heart, Thermometer, Settings, Search, X, ChevronRight, LucideIcon, Utensils, MessageCircle } from 'lucide-react';
+import { Calendar, CreditCard, Car, Heart, Thermometer, Settings, ChevronRight, LucideIcon, Utensils } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 interface ServiceCard {
   title: string;
   description: string;
@@ -64,7 +62,6 @@ const allServices: ServiceCard[] = [{
 }];
 export const ServiceCards: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [showSearch, setShowSearch] = useState(false);
 
   // 메모이제이션으로 불필요한 재계산 방지
   const filteredFrequentServices = useMemo(() => 
@@ -154,20 +151,21 @@ export const ServiceCards: React.FC = () => {
     </div>;
 };
 
-// 개별 서비스 카드 컴포넌트
+// 개별 서비스 카드 컴포넌트 - 메모이제이션으로 불필요한 리렌더 방지
 const ServiceCard: React.FC<{
   service: ServiceCard;
   index: number;
   isMobile?: boolean;
-}> = ({
+}> = React.memo(({
   service,
   index,
   isMobile = false
-}) => <Link to={service.path} className="group">
+}) => (
+  <Link to={service.path} className="group">
     <Card className={`relative overflow-hidden border border-border/50 bg-card hover:shadow-xl transition-all duration-300 group-hover:scale-[1.02] animate-fade-in touch-manipulation ${isMobile ? 'min-h-[90px]' : 'min-h-[80px]'}`} style={{
-    animationDelay: `${index * 100}ms`
-  }}>
-      <CardContent className={`relative flex items-center gap-3 ${isMobile ? 'p-4' : 'p-4'}`}>
+      animationDelay: `${index * 100}ms`
+    }}>
+      <CardContent className="relative flex items-center gap-3 p-4">
         <div className={`p-3 rounded-2xl bg-gradient-to-br ${service.color} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
           <service.icon className="h-5 w-5 text-white" />
         </div>
@@ -178,4 +176,5 @@ const ServiceCard: React.FC<{
         {isMobile && <ChevronRight className="h-4 w-4 text-muted-foreground opacity-50 group-hover:opacity-100 transition-opacity" />}
       </CardContent>
     </Card>
-  </Link>;
+  </Link>
+));

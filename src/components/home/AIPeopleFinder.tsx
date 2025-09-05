@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useScheduleStore } from '@/store/scheduleStore';
 import { useToast } from '@/hooks/use-toast';
 import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X, CalendarPlus, Plane } from 'lucide-react';
+
+// Window 타입 확장
+declare global {
+  interface Window {
+    focusPeopleFinderSearch?: () => void;
+  }
+}
 
 interface Person {
   id: string;
@@ -302,8 +309,8 @@ export const AIPeopleFinder: React.FC = () => {
   const { addScheduleItem } = useScheduleStore();
   const { toast } = useToast();
 
-  // 실시간 검색 미리보기
-  const handleSearchInput = (value: string) => {
+  // 실시간 검색 미리보기 - useCallback으로 최적화
+  const handleSearchInput = useCallback((value: string) => {
     setSearchQuery(value);
     
     if (value.trim().length >= 2) {
@@ -316,9 +323,9 @@ export const AIPeopleFinder: React.FC = () => {
     } else {
       setPreviewResults([]);
     }
-  };
+  }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) return;
     
     setIsLoading(true);
@@ -334,7 +341,7 @@ export const AIPeopleFinder: React.FC = () => {
       setSearchResults(results);
       setIsLoading(false);
     }, 1000);
-  };
+  }, [searchQuery]);
 
   const getStatusColor = (status: Person['status']) => {
     switch (status) {
@@ -382,8 +389,7 @@ export const AIPeopleFinder: React.FC = () => {
     });
   };
 
-  const openMeetingModal = (person: Person, timeSlot: string) => {
-    console.log('openMeetingModal called', { person: person.name, timeSlot });
+  const openMeetingModal = useCallback((person: Person, timeSlot: string) => {
     setMeetingForm({
       person,
       timeSlot,
@@ -392,11 +398,10 @@ export const AIPeopleFinder: React.FC = () => {
       title: '',
       content: ''
     });
-    console.log('Setting modal open to true');
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleMeetingSubmit = () => {
+  const handleMeetingSubmit = useCallback(() => {
     if (!meetingForm.meetingRoom || !meetingForm.title) {
       alert('회의실과 회의 제목을 입력해주세요.');
       return;
@@ -438,7 +443,7 @@ export const AIPeopleFinder: React.FC = () => {
       title: '',
       content: ''
     });
-  };
+  }, [meetingForm, addScheduleItem, toast]);
 
   // 외부에서 검색창에 포커스를 줄 수 있도록 전역 함수 등록
   React.useEffect(() => {
@@ -450,12 +455,12 @@ export const AIPeopleFinder: React.FC = () => {
       }, 800); // 스크롤 완료 후 포커스
     };
 
-    // 전역 이벤트 리스너 등록
-    (window as any).focusPeopleFinderSearch = focusSearchInput;
+    // 전역 이벤트 리스너 등록 - 타입 안전하게 처리
+    window.focusPeopleFinderSearch = focusSearchInput;
 
     return () => {
       // 정리
-      delete (window as any).focusPeopleFinderSearch;
+      delete window.focusPeopleFinderSearch;
     };
   }, []);
 

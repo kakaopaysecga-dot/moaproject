@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -38,9 +37,6 @@ import Settings from "./routes/Settings";
 
 // Lunch Roulette route
 import LunchRoulette from "./routes/LunchRoulette";
-import Community from "./routes/Community";
-import CommunityWrite from "./routes/CommunityWrite";
-import CommunityPost from "./routes/CommunityPost";
 
 
 const queryClient = new QueryClient();
@@ -160,23 +156,6 @@ const AppRoutes = () => {
         } />
 
         {/* Admin Routes */}
-        <Route path="/community" element={
-          <ProtectedRoute>
-            <Community />
-          </ProtectedRoute>
-        } />
-        <Route path="/community/write" element={
-          <ProtectedRoute>
-            <CommunityWrite />
-          </ProtectedRoute>
-        } />
-        <Route path="/community/post/:id" element={
-          <ProtectedRoute>
-            <CommunityPost />
-          </ProtectedRoute>
-        } />
-
-        {/* Admin Routes */}
         <Route path="/admin" element={
           <ProtectedRoute>
             <AdminPage />
@@ -197,7 +176,6 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
-      <Sonner />
       <BrowserRouter
         future={{
           v7_startTransition: true,
