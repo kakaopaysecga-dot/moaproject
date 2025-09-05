@@ -1,8 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Users, MapPin, Thermometer, CalendarCheck } from 'lucide-react';
+import { useRequestsStore } from '@/store/requestsStore';
 export const StatusSummary: React.FC = () => {
+  const { loadRequests, initRealtime, cleanup, getPendingCount } = useRequestsStore();
+  const pendingCount = getPendingCount();
+  
+  useEffect(() => {
+    // 초기 데이터 로드
+    loadRequests();
+    // 실시간 업데이트 초기화
+    initRealtime();
+    
+    // 클린업
+    return () => {
+      cleanup();
+    };
+  }, []);
+  
   // 실시간 상태 정보
   const currentTime = new Date().toLocaleTimeString('ko-KR', {
     hour: '2-digit',
@@ -35,7 +51,7 @@ export const StatusSummary: React.FC = () => {
           <MapPin className="w-4 h-4 text-warning" />
           <div>
             <div className="text-xs text-muted-foreground">요청대기중</div>
-            <div className="font-medium">2건</div>
+            <div className="font-medium">{pendingCount}건</div>
           </div>
         </div>
         <div className="flex items-center gap-2">

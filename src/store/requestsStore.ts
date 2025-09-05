@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { RequestItem, BusinessCardRequest, EventsRequest } from '@/types';
 import { RequestService } from '@/services/requestService';
+import { supabase } from '@/integrations/supabase/client';
+import { useEffect } from 'react';
 
 interface RequestsState {
   requests: RequestItem[];
@@ -24,6 +26,13 @@ interface RequestsState {
   setFilter: (filter: 'all' | 'pending' | 'processing' | 'completed') => void;
   updateCooldowns: () => Promise<void>;
   clearError: () => void;
+  
+  // Realtime
+  initRealtime: () => void;
+  cleanup: () => void;
+  
+  // Computed getters
+  getPendingCount: () => number;
 }
 
 export const useRequestsStore = create<RequestsState>((set, get) => ({
@@ -176,5 +185,74 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
     set({ coldCooldown, hotCooldown });
   },
 
-  clearError: () => set({ error: null })
+  clearError: () => set({ error: null }),
+
+  initRealtime: () => {
+    const channel = supabase
+      .channel('requests_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'requests'
+        },
+        (payload) => {
+          const newRequest = payload.new as any;
+          const currentRequests = get().requests;
+          
+          // 현재 사용자의 요청인지 확인 (payload에서 user_id 확인)
+          if (newRequest.user_id) {
+            const mappedRequest: RequestItem = {
+              id: newRequest.id,
+              title: newRequest.title,
+              content: newRequest.description || '',
+              status: newRequest.status,
+              createdAt: newRequest.created_at,
+              type: newRequest.type
+            };
+            
+            // 중복 방지: 이미 존재하는 요청인지 확인
+            const exists = currentRequests.some(req => req.id === mappedRequest.id);
+            if (!exists) {
+              set({ requests: [mappedRequest, ...currentRequests] });
+            }
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'requests'
+        },
+        (payload) => {
+          const updatedRequest = payload.new as any;
+          const currentRequests = get().requests;
+          
+          const updatedRequests = currentRequests.map(req => 
+            req.id === updatedRequest.id 
+              ? { ...req, status: updatedRequest.status }
+              : req
+          );
+          set({ requests: updatedRequests });
+        }
+      )
+      .subscribe();
+      
+    // Store channel reference for cleanup
+    (get() as any).realtimeChannel = channel;
+  },
+
+  cleanup: () => {
+    const channel = (get() as any).realtimeChannel;
+    if (channel) {
+      supabase.removeChannel(channel);
+    }
+  },
+
+  getPendingCount: () => {
+    return get().requests.filter(req => req.status === 'pending').length;
+  }
 }));

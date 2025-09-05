@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,19 @@ import { ChevronLeft } from 'lucide-react';
 import { useRequestsStore } from '@/store/requestsStore';
 
 export default function RequestStatus() {
-  const { requests } = useRequestsStore();
+  const { requests, loadRequests, initRealtime, cleanup } = useRequestsStore();
+  
+  useEffect(() => {
+    // 초기 데이터 로드
+    loadRequests();
+    // 실시간 업데이트 초기화
+    initRealtime();
+    
+    // 클린업
+    return () => {
+      cleanup();
+    };
+  }, []);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
