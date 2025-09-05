@@ -35,7 +35,7 @@ export default function Environment() {
     }
   };
 
-  const handleEnvironmentSubmit = (e: React.FormEvent) => {
+  const handleEnvironmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!selectedImage) {
@@ -47,19 +47,28 @@ export default function Environment() {
       return;
     }
 
-    createEnvironmentRequest({
-      image: selectedImage,
-      note: note
-    });
+    try {
+      await createEnvironmentRequest({
+        image: selectedImage,
+        note: note
+      });
 
-    toast({
-      title: "신청이 완료되었습니다",
-      description: "사무환경 개선 요청이 성공적으로 접수되었습니다."
-    });
+      toast({
+        title: "신청이 완료되었습니다",
+        description: "사무환경 개선 요청이 성공적으로 접수되었습니다."
+      });
 
-    setSelectedImage(null);
-    setImagePreview(null);
-    setNote('');
+      setSelectedImage(null);
+      setImagePreview(null);
+      setNote('');
+    } catch (error) {
+      console.error('Environment request failed:', error);
+      toast({
+        title: "신청 실패",
+        description: error instanceof Error ? error.message : "사무환경 개선 요청 중 오류가 발생했습니다.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleTempRequest = async (type: 'cold' | 'hot') => {

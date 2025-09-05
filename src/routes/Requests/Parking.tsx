@@ -20,7 +20,7 @@ export default function Parking() {
     location: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.carNumber || !formData.location) {
@@ -32,14 +32,23 @@ export default function Parking() {
       return;
     }
 
-    createParkingRequest(formData.carNumber);
+    try {
+      await createParkingRequest(formData.carNumber);
 
-    toast({
-      title: "신청이 완료되었습니다",
-      description: "주차 등록 신청이 성공적으로 접수되었습니다."
-    });
+      toast({
+        title: "신청이 완료되었습니다",
+        description: "주차 등록 신청이 성공적으로 접수되었습니다."
+      });
 
-    setFormData({ carNumber: '', location: '' });
+      setFormData({ carNumber: '', location: '' });
+    } catch (error) {
+      console.error('Parking request failed:', error);
+      toast({
+        title: "신청 실패",
+        description: error instanceof Error ? error.message : "주차 등록 신청 중 오류가 발생했습니다.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (

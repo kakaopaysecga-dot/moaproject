@@ -46,7 +46,7 @@ export default function BusinessCard() {
     ).join(' ');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.englishName || !formData.koreanName) {
@@ -58,38 +58,47 @@ export default function BusinessCard() {
       return;
     }
 
-    createBusinessCardRequest({
-      englishName: formData.englishName,
-      koreanName: formData.koreanName,
-      dept: user.dept,
-      position: formData.position,
-      certification: formData.certification,
-      phone: user.phone,
-      email: user.email,
-      building: formData.building as '판교오피스' | '여의도오피스',
-      style: formData.design as 'character' | 'normal'
-    });
-
-    toast({
-      title: "신청이 완료되었습니다",
-      description: "명함 제작 신청이 성공적으로 접수되었습니다."
-    });
-
-    setCurrentStep(3); // 완료 단계로 이동
-    
-    setTimeout(() => {
-      setFormData({ 
-        englishName: '',
-        koreanName: user?.name || '',
-        position: '',
-        certification: '',
-        building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
-        design: 'character', 
-        quantity: '100', 
-        memo: '' 
+    try {
+      await createBusinessCardRequest({
+        englishName: formData.englishName,
+        koreanName: formData.koreanName,
+        dept: user.dept,
+        position: formData.position,
+        certification: formData.certification,
+        phone: user.phone,
+        email: user.email,
+        building: formData.building as '판교오피스' | '여의도오피스',
+        style: formData.design as 'character' | 'normal'
       });
-      setCurrentStep(0);
-    }, 3000);
+
+      toast({
+        title: "신청이 완료되었습니다",
+        description: "명함 제작 신청이 성공적으로 접수되었습니다."
+      });
+
+      setCurrentStep(3); // 완료 단계로 이동
+      
+      setTimeout(() => {
+        setFormData({ 
+          englishName: '',
+          koreanName: user?.name || '',
+          position: '',
+          certification: '',
+          building: (user?.building as '판교오피스' | '여의도오피스') || '여의도오피스',
+          design: 'character', 
+          quantity: '100', 
+          memo: '' 
+        });
+        setCurrentStep(0);
+      }, 3000);
+    } catch (error) {
+      console.error('Business card request failed:', error);
+      toast({
+        title: "신청 실패",
+        description: error instanceof Error ? error.message : "명함 제작 신청 중 오류가 발생했습니다.",
+        variant: "destructive"
+      });
+    }
   };
 
   if (!user) return null;

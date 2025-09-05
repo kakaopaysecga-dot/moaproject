@@ -36,46 +36,64 @@ export default function Events() {
     attachments: [] as File[]
   });
 
-  const handleMarriageSubmit = (e: React.FormEvent) => {
+  const handleMarriageSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    createEventsRequest({
-      type: 'marriage',
-      date: marriageForm.date,
-      time: marriageForm.time,
-      venue: marriageForm.location,
-      address: marriageForm.address,
-      memo: marriageForm.memo
-    });
+    try {
+      await createEventsRequest({
+        type: 'marriage',
+        date: marriageForm.date,
+        time: marriageForm.time,
+        venue: marriageForm.location,
+        address: marriageForm.address,
+        memo: marriageForm.memo
+      });
 
-    toast({
-      title: "신청이 완료되었습니다",
-      description: "결혼 경조사 지원 신청이 성공적으로 접수되었습니다."
-    });
+      toast({
+        title: "신청이 완료되었습니다",
+        description: "결혼 경조사 지원 신청이 성공적으로 접수되었습니다."
+      });
 
-    setMarriageForm({ date: '', time: '', location: '', address: '', memo: '', invitationLink: '', attachments: [] });
+      setMarriageForm({ date: '', time: '', location: '', address: '', memo: '', invitationLink: '', attachments: [] });
+    } catch (error) {
+      console.error('Marriage events request failed:', error);
+      toast({
+        title: "신청 실패",
+        description: error instanceof Error ? error.message : "결혼 경조사 지원 신청 중 오류가 발생했습니다.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleFuneralSubmit = (e: React.FormEvent) => {
+  const handleFuneralSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    createEventsRequest({
-      type: 'funeral',
-      relationship: funeralForm.relationship,
-      deceasedName: funeralForm.deceased,
-      deathDate: funeralForm.deathDate,
-      funeralDate: funeralForm.funeralDate,
-      funeralHall: funeralForm.location,
-      funeralAddress: funeralForm.address,
-      contact: funeralForm.contact
-    });
+    try {
+      await createEventsRequest({
+        type: 'funeral',
+        relationship: funeralForm.relationship,
+        deceasedName: funeralForm.deceased,
+        deathDate: funeralForm.deathDate,
+        funeralDate: funeralForm.funeralDate,
+        funeralHall: funeralForm.location,
+        funeralAddress: funeralForm.address,
+        contact: funeralForm.contact
+      });
 
-    toast({
-      title: "신청이 완료되었습니다",
-      description: "장례 경조사 지원 신청이 성공적으로 접수되었습니다."
-    });
+      toast({
+        title: "신청이 완료되었습니다",
+        description: "장례 경조사 지원 신청이 성공적으로 접수되었습니다."
+      });
 
-    setFuneralForm({ relationship: '', deceased: '', deathDate: '', funeralDate: '', location: '', address: '', contact: '', noticeLink: '', attachments: [] });
+      setFuneralForm({ relationship: '', deceased: '', deathDate: '', funeralDate: '', location: '', address: '', contact: '', noticeLink: '', attachments: [] });
+    } catch (error) {
+      console.error('Funeral events request failed:', error);
+      toast({
+        title: "신청 실패",
+        description: error instanceof Error ? error.message : "장례 경조사 지원 신청 중 오류가 발생했습니다.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
