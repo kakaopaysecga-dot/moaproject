@@ -384,6 +384,7 @@ export const AIPeopleFinder: React.FC = () => {
   };
 
   const openMeetingModal = (person: Person, timeSlot: string) => {
+    console.log('openMeetingModal called', { person: person.name, timeSlot });
     setMeetingForm({
       person,
       timeSlot,
@@ -392,6 +393,7 @@ export const AIPeopleFinder: React.FC = () => {
       title: '',
       content: ''
     });
+    console.log('Setting modal open to true');
     setIsModalOpen(true);
   };
 
