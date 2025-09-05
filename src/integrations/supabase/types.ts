@@ -261,6 +261,42 @@ export type Database = {
         }
         Relationships: []
       }
+      smart_office_bookings: {
+        Row: {
+          building: string
+          created_at: string
+          end_time: string
+          id: string
+          seat_number: number
+          start_time: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          building: string
+          created_at?: string
+          end_time?: string
+          id?: string
+          seat_number: number
+          start_time?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          building?: string
+          created_at?: string
+          end_time?: string
+          id?: string
+          seat_number?: number
+          start_time?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -311,6 +347,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_end_bookings: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_current_user_role: {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]

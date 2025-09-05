@@ -5,56 +5,159 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Monitor, Wifi, Coffee, Zap, CheckCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SmartOffice {
   id: string;
   seatNumber: number;
   building: '판교오피스' | '여의도오피스';
   status: 'available' | 'occupied';
+  booking?: {
+    id: string;
+    user_id: string;
+    start_time: string;
+    end_time: string;
+  };
 }
-
-// 판교오피스 1-10번, 여의도오피스 1-10번 총 20석
-const mockOffices: SmartOffice[] = [
-  // 판교오피스 (1-10번)
-  ...Array.from({ length: 10 }, (_, i) => ({
-    id: `pangyo-${i + 1}`,
-    seatNumber: i + 1,
-    building: '판교오피스' as const,
-    status: Math.random() > 0.3 ? 'available' as const : 'occupied' as const
-  })),
-  // 여의도오피스 (1-10번)
-  ...Array.from({ length: 10 }, (_, i) => ({
-    id: `yeouido-${i + 1}`,
-    seatNumber: i + 1,
-    building: '여의도오피스' as const,
-    status: Math.random() > 0.3 ? 'available' as const : 'occupied' as const
-  }))
-];
 
 export default function QuickSmartOffice() {
   const { toast } = useToast();
   const [offices, setOffices] = useState<SmartOffice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // 스마트 오피스 로딩 시뮬레이션
-    setTimeout(() => {
-      setOffices(mockOffices);
+  // 스마트 오피스 데이터 로드
+  const loadOffices = async () => {
+    try {
+      // 현재 활성 예약 조회
+      const { data: bookings, error } = await supabase
+        .from('smart_office_bookings')
+        .select('*')
+        .eq('status', 'active');
+
+      if (error) {
+        console.error('Error loading bookings:', error);
+        return;
+      }
+
+      // 각 빌딩별 1-10번 좌석 생성
+      const allOffices: SmartOffice[] = [];
+      
+      for (const building of ['판교오피스', '여의도오피스'] as const) {
+        for (let i = 1; i <= 10; i++) {
+          const booking = bookings?.find(b => 
+            b.building === building && b.seat_number === i
+          );
+          
+          allOffices.push({
+            id: `${building}-${i}`,
+            seatNumber: i,
+            building,
+            status: booking ? 'occupied' : 'available',
+            booking: booking || undefined
+          });
+        }
+      }
+
+      setOffices(allOffices);
+    } catch (error) {
+      console.error('Error in loadOffices:', error);
+      toast({
+        title: "오류 발생",
+        description: "좌석 정보를 불러오는 중 오류가 발생했습니다.",
+        variant: "destructive"
+      });
+    } finally {
       setIsLoading(false);
-    }, 800);
+    }
+  };
+
+  useEffect(() => {
+    loadOffices();
+    
+    // 실시간 업데이트 구독
+    const channel = supabase
+      .channel('smart-office-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'smart_office_bookings'
+        },
+        () => {
+          loadOffices();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
-  const useOffice = (office: SmartOffice) => {
-    const now = new Date();
-    const endTime = new Date();
-    endTime.setHours(18, 0, 0, 0); // 퇴근시간 6시로 설정
-    
-    const formatTime = (date: Date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-    
-    toast({
-      title: "이용 시작! ✨",
-      description: `${office.building} ${office.seatNumber}번석 이용 시작 (${formatTime(now)} ~ ${formatTime(endTime)})`,
-    });
+  const useOffice = async (office: SmartOffice) => {
+    if (office.status === 'occupied') return;
+
+    try {
+      setIsLoading(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "로그인 필요",
+          description: "스마트 오피스를 이용하려면 로그인이 필요합니다.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const now = new Date();
+      const endTime = new Date();
+      endTime.setHours(18, 0, 0, 0); // 퇴근시간 6시로 설정
+      
+      const { data, error } = await supabase
+        .from('smart_office_bookings')
+        .insert({
+          user_id: user.id,
+          seat_number: office.seatNumber,
+          building: office.building,
+          start_time: now.toISOString(),
+          end_time: endTime.toISOString(),
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Booking error:', error);
+        toast({
+          title: "예약 실패",
+          description: "스마트 오피스 예약 중 오류가 발생했습니다.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const formatTime = (date: Date) => date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+      
+      toast({
+        title: "이용 시작! ✨",
+        description: `${office.building} ${office.seatNumber}번석 이용 시작 (${formatTime(now)} ~ ${formatTime(endTime)})`,
+      });
+
+      // 데이터 즉시 새로고침
+      await loadOffices();
+      
+    } catch (error) {
+      console.error('Error in useOffice:', error);
+      toast({
+        title: "오류 발생",
+        description: "예약 처리 중 오류가 발생했습니다.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getAvailableCount = (building: string) => {
@@ -122,7 +225,7 @@ export default function QuickSmartOffice() {
                             : 'opacity-60'
                         }`}
                         style={{ animationDelay: `${index * 50}ms` }}
-                        onClick={() => office.status === 'available' && useOffice(office)}
+                        onClick={() => office.status === 'available' && !isLoading && useOffice(office)}
                       >
                         <div className="space-y-2">
                           <div className="text-sm font-medium">
@@ -160,7 +263,7 @@ export default function QuickSmartOffice() {
                             : 'opacity-60'
                         }`}
                         style={{ animationDelay: `${(index + 5) * 50}ms` }}
-                        onClick={() => office.status === 'available' && useOffice(office)}
+                        onClick={() => office.status === 'available' && !isLoading && useOffice(office)}
                       >
                         <div className="space-y-2">
                           <div className="text-sm font-medium">
