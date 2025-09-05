@@ -30,24 +30,32 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
     const maxSpins = 8;
     const spins = minSpins + Math.random() * (maxSpins - minSpins);
     
-    // 랜덤하게 선택될 세그먼트 결정
-    const targetIndex = Math.floor(Math.random() * options.length);
-    const targetAngle = targetIndex * segmentAngle + segmentAngle / 2;
+    // 완전히 랜덤하게 최종 각도 결정
+    const randomFinalAngle = Math.random() * 360;
+    const totalRotation = spins * 360 + randomFinalAngle;
     
-    // 포인터가 12시 방향에 고정되어 있으므로, 해당 세그먼트가 12시 방향에 오도록 회전
-    const finalRotation = spins * 360 + (360 - targetAngle);
-    
-    setRotation(prev => prev + finalRotation);
+    setRotation(prev => prev + totalRotation);
     setSpinCount(prev => prev + 1);
 
-    // 4초 후 결과 처리
+    // 4초 후 결과 처리 - 포인터가 실제로 가리키는 세그먼트 계산
     setTimeout(() => {
-      const selectedOpt = options[targetIndex];
+      // 최종 회전 각도에서 정규화
+      const finalAngle = (rotation + totalRotation) % 360;
+      
+      // 포인터는 12시 방향(0도)에 고정되어 있음
+      // 휠이 시계방향으로 회전했으므로, 포인터가 가리키는 세그먼트를 계산
+      // 첫 번째 세그먼트는 12시 방향부터 시작
+      const pointerAngle = (360 - finalAngle) % 360;
+      
+      // 어느 세그먼트를 가리키는지 계산
+      const selectedIndex = Math.floor(pointerAngle / segmentAngle) % options.length;
+      
+      const selectedOpt = options[selectedIndex];
       setSelectedOption(selectedOpt);
       setIsSpinning(false);
       onSpinComplete?.(selectedOpt);
     }, 4000);
-  }, [isSpinning, options, onSpinComplete]);
+  }, [isSpinning, options, onSpinComplete, rotation]);
 
   const reset = useCallback(() => {
     setRotation(0);

@@ -80,24 +80,6 @@ export const RouletteWheel: React.FC<RouletteWheelProps> = ({
           );
         })}
 
-        {/* 세그먼트 구분선 */}
-        {options.map((_, index) => {
-          const angle = index * segmentAngle;
-          return (
-            <div
-              key={`line-${index}`}
-              className="absolute w-0.5 bg-white/80 origin-bottom"
-              style={{
-                height: '50%',
-                left: '50%',
-                top: '50%',
-                transform: `translateX(-50%) rotate(${angle}deg)`,
-                transformOrigin: 'bottom center'
-              }}
-            />
-          );
-        })}
-
         {/* 메뉴 텍스트 */}
         {options.map((option, index) => {
           const angle = index * segmentAngle + segmentAngle / 2;
