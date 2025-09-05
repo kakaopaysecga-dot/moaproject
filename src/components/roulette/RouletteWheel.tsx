@@ -7,31 +7,14 @@ interface RouletteWheelProps {
   isSpinning: boolean;
   wheelRef: React.RefObject<HTMLDivElement>;
   size?: 'small' | 'medium' | 'large';
-  selectedOption?: RouletteOption | null;
 }
-
-const defaultColors = [
-  'hsl(var(--primary))',
-  'hsl(var(--accent))',
-  'hsl(var(--success))',
-  'hsl(var(--warning))',
-  'hsl(var(--destructive))',
-  'hsl(220, 70%, 50%)',
-  'hsl(280, 70%, 50%)',
-  'hsl(160, 70%, 50%)',
-  'hsl(40, 70%, 50%)',
-  'hsl(320, 70%, 50%)',
-  'hsl(200, 70%, 50%)',
-  'hsl(120, 70%, 50%)'
-];
 
 export const RouletteWheel: React.FC<RouletteWheelProps> = ({
   options,
   rotation,
   isSpinning,
   wheelRef,
-  size = 'medium',
-  selectedOption
+  size = 'medium'
 }) => {
   const sizeClasses = {
     small: 'w-64 h-64',
@@ -45,114 +28,108 @@ export const RouletteWheel: React.FC<RouletteWheelProps> = ({
     large: 'text-base md:text-lg'
   };
 
-  const radiusValues = {
-    small: 80,
-    medium: 120,
-    large: 140
-  };
-
-  const segmentAngle = 360 / Math.max(options.length, 1);
-  const radius = radiusValues[size];
-
   if (options.length === 0) {
     return (
-      <div className={`${sizeClasses[size]} rounded-full border-8 border-dashed border-muted-foreground/30 flex items-center justify-center`}>
+      <div className={`${sizeClasses[size]} rounded-full border-4 border-dashed border-muted-foreground/30 flex items-center justify-center`}>
         <p className="text-muted-foreground text-center">메뉴를 추가해주세요</p>
       </div>
     );
   }
 
+  const segmentAngle = 360 / options.length;
+
   return (
     <div className="relative flex justify-center items-center">
-      {/* 포인터 - 12시 방향 고정된 심플한 화살표 */}
-      <div className="absolute top-0 z-30 flex flex-col items-center">
-        <div className="w-0 h-0 border-l-[20px] border-r-[20px] border-t-[35px] border-l-transparent border-r-transparent border-t-destructive drop-shadow-lg"></div>
-      </div>
+      {/* 고정된 포인터 */}
+      <div className="absolute top-2 z-20 w-0 h-0 border-l-[15px] border-r-[15px] border-t-[30px] border-l-transparent border-r-transparent border-t-red-500 drop-shadow-lg"></div>
       
       {/* 룰렛 휠 */}
-      <div className="relative">
-        <div 
-          ref={wheelRef}
-          className={`${sizeClasses[size]} rounded-full border-4 border-white shadow-xl transition-all duration-1000 relative overflow-hidden ${
-            isSpinning 
-              ? 'transition-transform duration-[4000ms] ease-[cubic-bezier(0.25,0.1,0.1,1)]' 
-              : 'transition-transform duration-500 ease-out'
-          }`}
-          style={{ 
-            transform: `rotate(${rotation}deg)`,
-            transformOrigin: 'center center',
-            background: `conic-gradient(${options.map((option, index) => {
-              const color = option.color || defaultColors[index % defaultColors.length];
-              // 12시 방향부터 시작하도록 각도 조정
-              const startAngle = (index * segmentAngle - 90) % 360;
-              const endAngle = ((index + 1) * segmentAngle - 90) % 360;
-              return `${color} ${startAngle}deg ${endAngle}deg`;
-            }).join(', ')})`,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.15)'
-          }}
-        >
-          {/* 세그먼트 구분선 */}
-          {options.map((_, index) => {
-            const angle = index * segmentAngle - 90; // 12시 방향부터 시작하도록 -90도 조정
-            return (
-              <div
-                key={`line-${index}`}
-                className="absolute w-0.5 bg-white/70 origin-bottom"
-                style={{
-                  height: '50%',
-                  left: '50%',
-                  bottom: '50%',
-                  transform: `translateX(-50%) rotate(${angle}deg)`,
-                  transformOrigin: 'bottom center'
-                }}
-              />
-            );
-          })}
-
-          {/* 메뉴 텍스트 - 칸에 맞게 정렬 */}
-          {options.map((option, index) => {
-            // 12시 방향부터 시작하도록 각도 조정
-            const angle = (index * segmentAngle) + (segmentAngle / 2) - 90;
-            const radian = (angle * Math.PI) / 180;
-            const textRadius = radius * 0.65; // 텍스트를 원의 중심에서 65% 지점에 배치
-            const x = Math.cos(radian) * textRadius;
-            const y = Math.sin(radian) * textRadius;
-            
-            // 텍스트 회전 각도 계산 - 항상 읽기 쉽게
-            let textRotation = angle;
-            if (angle > 90 || angle < -90) {
-              textRotation = angle + 180;
-            }
-            
-            return (
-              <div
-                key={option.id}
-                className={`absolute text-white font-semibold ${textSizeClasses[size]} flex items-center justify-center text-center`}
-                style={{
-                  left: `calc(50% + ${x}px)`,
-                  top: `calc(50% + ${y}px)`,
-                  transform: `translate(-50%, -50%) rotate(${textRotation}deg)`,
-                  textShadow: '1px 1px 3px rgba(0,0,0,0.8)',
-                  width: `${Math.min(80, (segmentAngle / 360) * 200)}px`,
-                  height: 'auto',
-                  lineHeight: '1.2',
-                  wordBreak: 'keep-all',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis'
-                }}
-              >
-                {option.label}
-              </div>
-            );
-          })}
+      <div 
+        ref={wheelRef}
+        className={`${sizeClasses[size]} rounded-full border-4 border-white shadow-xl relative overflow-hidden transition-transform duration-1000 ${
+          isSpinning ? 'ease-out' : 'ease-in-out'
+        }`}
+        style={{
+          transform: `rotate(${rotation}deg)`,
+          transition: isSpinning ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'transform 0.5s ease'
+        }}
+      >
+        {/* 세그먼트들 */}
+        {options.map((option, index) => {
+          const startAngle = index * segmentAngle;
+          const endAngle = (index + 1) * segmentAngle;
           
-          {/* 중앙 원 - 심플한 디자인 */}
-          <div className="absolute top-1/2 left-1/2 w-16 h-16 bg-white border-4 border-gray-200 rounded-full transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-lg">
-            <div className={`text-2xl transition-all duration-300 ${isSpinning ? 'animate-spin' : ''}`}>
-              {isSpinning ? '🎲' : '🎯'}
+          // 세그먼트 색상
+          const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+            '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+            '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7DBDD',
+            '#AED6F1', '#A9DFBF', '#F9E79F', '#D2B4DE', '#A3E4D7'
+          ];
+          const color = option.color || colors[index % colors.length];
+
+          return (
+            <div
+              key={option.id}
+              className="absolute inset-0"
+              style={{
+                background: `conic-gradient(from ${startAngle}deg, ${color} 0deg, ${color} ${segmentAngle}deg, transparent ${segmentAngle}deg)`,
+                clipPath: `polygon(50% 50%, ${50 + 50 * Math.cos((startAngle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((startAngle - 90) * Math.PI / 180)}%, ${50 + 50 * Math.cos((endAngle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((endAngle - 90) * Math.PI / 180)}%)`
+              }}
+            />
+          );
+        })}
+
+        {/* 세그먼트 구분선 */}
+        {options.map((_, index) => {
+          const angle = index * segmentAngle;
+          return (
+            <div
+              key={`line-${index}`}
+              className="absolute w-0.5 bg-white/80 origin-bottom"
+              style={{
+                height: '50%',
+                left: '50%',
+                top: '50%',
+                transform: `translateX(-50%) rotate(${angle}deg)`,
+                transformOrigin: 'bottom center'
+              }}
+            />
+          );
+        })}
+
+        {/* 메뉴 텍스트 */}
+        {options.map((option, index) => {
+          const angle = index * segmentAngle + segmentAngle / 2;
+          const radian = (angle - 90) * Math.PI / 180; // -90도로 12시 방향 시작
+          const radius = size === 'small' ? 80 : size === 'medium' ? 120 : 140;
+          const x = Math.cos(radian) * radius * 0.7;
+          const y = Math.sin(radian) * radius * 0.7;
+
+          return (
+            <div
+              key={option.id}
+              className={`absolute ${textSizeClasses[size]} font-semibold text-white`}
+              style={{
+                left: `calc(50% + ${x}px)`,
+                top: `calc(50% + ${y}px)`,
+                transform: `translate(-50%, -50%) rotate(${angle - 90}deg)`,
+                textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                maxWidth: '100px',
+                textAlign: 'center',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {option.label}
             </div>
-          </div>
+          );
+        })}
+
+        {/* 중앙 원 */}
+        <div className="absolute top-1/2 left-1/2 w-12 h-12 bg-white border-2 border-gray-200 rounded-full transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center shadow-md">
+          <span className="text-lg">{isSpinning ? '🎲' : '🎯'}</span>
         </div>
       </div>
     </div>

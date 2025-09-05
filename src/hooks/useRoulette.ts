@@ -21,57 +21,33 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
   const spin = useCallback(() => {
     if (isSpinning || options.length === 0) return;
 
-    // 스크롤 위치 고정하여 스핀 중 페이지 이동 방지
-    const currentScrollY = window.scrollY;
-    
     setIsSpinning(true);
     setSelectedOption(null);
 
-    // 극적인 회전 설정
-    const minSpins = 5; // 최소 회전 수 증가
-    const maxSpins = 8; // 최대 회전 수 증가
-    const randomSpins = minSpins + Math.random() * (maxSpins - minSpins);
-    
-    // 더 정교한 랜덤 각도 계산
+    // 회전 계산
     const segmentAngle = 360 / options.length;
-    const targetSegment = Math.floor(Math.random() * options.length);
-    const segmentCenter = (targetSegment * segmentAngle) + (segmentAngle / 2);
-    const randomOffset = (Math.random() - 0.5) * segmentAngle * 0.8; // 세그먼트 내에서 랜덤 위치
-    const finalAngle = segmentCenter + randomOffset;
+    const minSpins = 5;
+    const maxSpins = 8;
+    const spins = minSpins + Math.random() * (maxSpins - minSpins);
     
-    const totalRotation = randomSpins * 360 + finalAngle;
-    const finalRotation = rotation + totalRotation;
-
-    setRotation(finalRotation);
+    // 랜덤하게 선택될 세그먼트 결정
+    const targetIndex = Math.floor(Math.random() * options.length);
+    const targetAngle = targetIndex * segmentAngle + segmentAngle / 2;
+    
+    // 포인터가 12시 방향에 고정되어 있으므로, 해당 세그먼트가 12시 방향에 오도록 회전
+    const finalRotation = spins * 360 + (360 - targetAngle);
+    
+    setRotation(prev => prev + finalRotation);
     setSpinCount(prev => prev + 1);
 
-    // 애니메이션 완료 후 결과 계산
-    const duration = 3000 + Math.random() * 1000; // 3-4초 지속시간
-    
+    // 4초 후 결과 처리
     setTimeout(() => {
-      // 최종 회전 각도에서 포인터(12시 방향)가 가리키는 세그먼트 계산
-      const normalizedAngle = (360 - (finalRotation % 360) + 360) % 360; // 시계 반대방향으로 회전하므로 반전
-      const segmentAngle = 360 / options.length;
-      
-      // 포인터가 12시 방향에 있으므로 어떤 세그먼트를 가리키는지 계산
-      // 각 세그먼트의 중심점을 기준으로 계산
-      let selectedIndex = Math.floor((normalizedAngle + segmentAngle / 2) / segmentAngle) % options.length;
-      
-      // 인덱스가 음수가 되지 않도록 보정
-      if (selectedIndex < 0) {
-        selectedIndex = options.length + selectedIndex;
-      }
-      
-      const selectedOpt = options[selectedIndex];
+      const selectedOpt = options[targetIndex];
       setSelectedOption(selectedOpt);
       setIsSpinning(false);
-      
-      // 스크롤 위치 복원
-      window.scrollTo(0, currentScrollY);
-      
       onSpinComplete?.(selectedOpt);
-    }, duration);
-  }, [isSpinning, options, onSpinComplete, rotation]);
+    }, 4000);
+  }, [isSpinning, options, onSpinComplete]);
 
   const reset = useCallback(() => {
     setRotation(0);

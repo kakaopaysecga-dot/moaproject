@@ -9,30 +9,18 @@ import { MenuCustomizer } from '@/components/roulette/MenuCustomizer';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 const defaultMenuOptions: RouletteOption[] = [
-  { id: '1', label: '삼겹살', color: 'hsl(var(--primary))' },
-  { id: '2', label: '갈비', color: 'hsl(var(--accent))' },
-  { id: '3', label: '불고기', color: 'hsl(var(--success))' },
-  { id: '4', label: '비빔밥', color: 'hsl(var(--warning))' },
-  { id: '5', label: '냉면', color: 'hsl(var(--destructive))' },
-  { id: '6', label: '김치찌개', color: 'hsl(220, 70%, 50%)' },
-  { id: '7', label: '된장찌개', color: 'hsl(280, 70%, 50%)' },
-  { id: '8', label: '순두부찌개', color: 'hsl(160, 70%, 50%)' },
-  { id: '9', label: '부대찌개', color: 'hsl(40, 70%, 50%)' },
-  { id: '10', label: '닭갈비', color: 'hsl(320, 70%, 50%)' },
-  { id: '11', label: '치킨', color: 'hsl(200, 70%, 50%)' },
-  { id: '12', label: '피자', color: 'hsl(120, 70%, 50%)' },
-  { id: '13', label: '햄버거', color: 'hsl(60, 70%, 50%)' },
-  { id: '14', label: '파스타', color: 'hsl(300, 70%, 50%)' },
-  { id: '15', label: '돈까스', color: 'hsl(180, 70%, 50%)' },
-  { id: '16', label: '회', color: 'hsl(240, 70%, 50%)' },
-  { id: '17', label: '초밥', color: 'hsl(20, 70%, 50%)' },
-  { id: '18', label: '짜장면', color: 'hsl(340, 70%, 50%)' },
-  { id: '19', label: '짬뽕', color: 'hsl(100, 70%, 50%)' },
-  { id: '20', label: '탕수육', color: 'hsl(260, 70%, 50%)' },
-  { id: '21', label: '마라탕', color: 'hsl(80, 70%, 50%)' },
-  { id: '22', label: '쌀국수', color: 'hsl(140, 70%, 50%)' },
-  { id: '23', label: '팟타이', color: 'hsl(190, 70%, 50%)' },
-  { id: '24', label: '카레', color: 'hsl(350, 70%, 50%)' }
+  { id: '1', label: '삼겹살', color: '#FF6B6B' },
+  { id: '2', label: '갈비', color: '#4ECDC4' },
+  { id: '3', label: '불고기', color: '#45B7D1' },
+  { id: '4', label: '비빔밥', color: '#96CEB4' },
+  { id: '5', label: '냉면', color: '#FFEAA7' },
+  { id: '6', label: '김치찌개', color: '#DDA0DD' },
+  { id: '7', label: '된장찌개', color: '#98D8C8' },
+  { id: '8', label: '순두부찌개', color: '#F7DC6F' },
+  { id: '9', label: '부대찌개', color: '#BB8FCE' },
+  { id: '10', label: '닭갈비', color: '#85C1E9' },
+  { id: '11', label: '치킨', color: '#F8C471' },
+  { id: '12', label: '피자', color: '#82E0AA' }
 ];
 
 export default function LunchRoulette() {
@@ -51,7 +39,7 @@ export default function LunchRoulette() {
   } = useRoulette({
     options: menuOptions,
     onSpinComplete: (option) => {
-      // 결과 표시만 처리, 별도 모달 없음
+      console.log('Selected:', option.label);
     }
   });
 
@@ -81,34 +69,28 @@ export default function LunchRoulette() {
       <div className="text-center spacing-group">
         {/* 헤더 */}
         <div className="spacing-tight">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             🍽️ 점심 메뉴 룰렛
           </h1>
-          <p className="text-lg text-muted-foreground animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-lg text-muted-foreground">
             오늘 점심 뭘 먹을지 고민이세요? 룰렛을 돌려보세요!
           </p>
-          <div className="flex justify-center gap-2 mt-4">
-            <Star className="w-4 h-4 text-yellow-500 animate-pulse" />
-            <Star className="w-4 h-4 text-yellow-500 animate-pulse" style={{ animationDelay: '0.5s' }} />
-            <Star className="w-4 h-4 text-yellow-500 animate-pulse" style={{ animationDelay: '1s' }} />
-          </div>
         </div>
 
         {/* 룰렛 휠 */}
-        <div className="spacing-group animate-scale-in" style={{ animationDelay: '0.4s' }}>
+        <div className="spacing-group">
           <RouletteWheel
             options={menuOptions}
             rotation={rotation}
             isSpinning={isSpinning}
             wheelRef={wheelRef}
             size={wheelSize}
-            selectedOption={selectedOption}
           />
         </div>
 
-        {/* 결과 표시 - 인라인 */}
+        {/* 결과 표시 */}
         {selectedOption && (
-          <Card className="max-w-md mx-auto animate-scale-in border-primary/50 bg-gradient-to-r from-primary/10 to-accent/10">
+          <Card className="max-w-md mx-auto border-primary/50 bg-gradient-to-r from-primary/10 to-accent/10">
             <CardContent className="p-6 text-center space-y-3">
               <div className="text-lg font-medium text-muted-foreground">
                 🎯 선택된 메뉴
@@ -125,7 +107,7 @@ export default function LunchRoulette() {
         )}
 
         {/* 컨트롤 버튼들 */}
-        <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
+        <div>
           <RouletteControls
             onSpin={spin}
             onReset={reset}
@@ -137,7 +119,7 @@ export default function LunchRoulette() {
         </div>
 
         {/* 통계 정보 */}
-        <Card className="max-w-md mx-auto animate-fade-in" style={{ animationDelay: '0.8s' }}>
+        <Card className="max-w-md mx-auto">
           <CardContent className="p-4 text-center">
             <div className="text-sm text-muted-foreground space-y-2">
               <div className="flex justify-between items-center">
