@@ -14,6 +14,86 @@ export type Database = {
   }
   public: {
     Tables: {
+      anonymous_comments: {
+        Row: {
+          author_nickname: string | null
+          content: string
+          created_at: string
+          id: string
+          is_deleted: boolean | null
+          password_hash: string
+          post_id: string
+        }
+        Insert: {
+          author_nickname?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          password_hash: string
+          post_id: string
+        }
+        Update: {
+          author_nickname?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          password_hash?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "anonymous_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "anonymous_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      anonymous_posts: {
+        Row: {
+          author_nickname: string | null
+          comment_count: number | null
+          content: string
+          created_at: string
+          id: string
+          is_deleted: boolean | null
+          like_count: number | null
+          password_hash: string
+          title: string
+          updated_at: string
+          view_count: number | null
+        }
+        Insert: {
+          author_nickname?: string | null
+          comment_count?: number | null
+          content: string
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          like_count?: number | null
+          password_hash: string
+          title: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Update: {
+          author_nickname?: string | null
+          comment_count?: number | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          like_count?: number | null
+          password_hash?: string
+          title?: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Relationships: []
+      }
       conversations: {
         Row: {
           created_at: string
