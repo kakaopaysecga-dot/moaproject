@@ -38,7 +38,7 @@ class AnonymousPostService {
   async getPosts(sortBy: 'latest' | 'popular' | 'views' = 'latest'): Promise<AnonymousPost[]> {
     let query = supabase
       .from('anonymous_posts')
-      .select('id, title, content, author_nickname, view_count, like_count, comment_count, created_at, updated_at, is_deleted')
+      .select('*')
       .eq('is_deleted', false);
 
     switch (sortBy) {
@@ -64,7 +64,7 @@ class AnonymousPostService {
   async getPost(id: string): Promise<AnonymousPost | null> {
     const { data, error } = await supabase
       .from('anonymous_posts')
-      .select('id, title, content, author_nickname, view_count, like_count, comment_count, created_at, updated_at, is_deleted')
+      .select('*')
       .eq('id', id)
       .eq('is_deleted', false)
       .single();
@@ -116,7 +116,7 @@ class AnonymousPostService {
   async getComments(postId: string): Promise<AnonymousComment[]> {
     const { data, error } = await supabase
       .from('anonymous_comments')
-      .select('id, post_id, content, author_nickname, created_at, is_deleted')
+      .select('*')
       .eq('post_id', postId)
       .eq('is_deleted', false)
       .order('created_at', { ascending: true });

@@ -8,8 +8,8 @@ import { Layout } from "@/components/layout/Layout";
 import { useAuthStore } from "@/store/authStore";
 
 // Route imports
-import { AuthPage } from "./routes/auth/AuthPage";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import Login from "./routes/auth/Login";
+import Signup from "./routes/auth/Signup";
 import GoogleCallback from "./routes/auth/GoogleCallback";
 import Home from "./routes/Home";
 import NotFound from "./pages/NotFound";
@@ -45,6 +45,12 @@ import CommunityPost from "./routes/CommunityPost";
 
 const queryClient = new QueryClient();
 
+// Protected Route Component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuthStore();
+  return user ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
 // Auth Route Component (redirect if already logged in)
 const AuthRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuthStore();
@@ -62,15 +68,20 @@ const AppRoutes = () => {
     <Layout>
       <Routes>
         {/* Auth Routes */}
-        <Route path="/auth" element={
+        <Route path="/login" element={
           <AuthRoute>
-            <AuthPage />
+            <Login />
+          </AuthRoute>
+        } />
+        <Route path="/signup" element={
+          <AuthRoute>
+            <Signup />
           </AuthRoute>
         } />
 
         {/* Protected Routes */}
         <Route path="/" element={
-          <ProtectedRoute requireAuth={true}>
+          <ProtectedRoute>
             <Home />
           </ProtectedRoute>
         } />

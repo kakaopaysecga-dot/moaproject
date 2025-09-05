@@ -24,8 +24,8 @@ export const GoogleCalendar: React.FC<GoogleCalendarProps> = ({
     }
     setIsConnecting(true);
     try {
-      // Create OAuth URL - using standardized client ID
-      const clientId = '759409896984-a43f1m1d98aht31rmcmogud1ev7lvk6l.apps.googleusercontent.com';
+      // Create OAuth URL
+      const clientId = '1051442977730-v89g77dk2fh98t9t41rnj8b9q2u8emep.apps.googleusercontent.com';
       const redirectUri = `${window.location.origin}/auth/google/callback`;
       const scope = 'https://www.googleapis.com/auth/calendar.events';
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` + `client_id=${clientId}&` + `redirect_uri=${encodeURIComponent(redirectUri)}&` + `scope=${encodeURIComponent(scope)}&` + `response_type=code&` + `access_type=offline&` + `prompt=consent`;
