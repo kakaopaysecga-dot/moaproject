@@ -3,7 +3,6 @@ import { Header } from './Header';
 import { FooterNav } from './FooterNav';
 import { FloatingActionButton } from '@/components/ui/FloatingActionButton';
 import { OfflineIndicator } from '@/components/ui/OfflineIndicator';
-import { BackToTop } from '@/components/ui/BackToTop';
 import { MobileKeyboardHandler } from '@/components/ui/MobileKeyboardHandler';
 import { useAuthStore } from '@/store/authStore';
 import { cn } from '@/lib/utils';
@@ -30,7 +29,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         {user && <FloatingActionButton />}
         {user && <FooterNav />}
-        <BackToTop />
       </div>
     </MobileKeyboardHandler>
   );
