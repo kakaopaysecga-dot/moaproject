@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { anonymousPostService } from '@/services/anonymousPostService';
 
 interface PostCreateModalProps {
   isOpen: boolean;
@@ -36,19 +36,13 @@ export function PostCreateModal({ isOpen, onClose, onPostCreated }: PostCreateMo
     setLoading(true);
     
     try {
-      // 간단한 해시 함수 (실제로는 더 강력한 해시를 사용해야 함)
-      const passwordHash = btoa(password);
-      
-      const { error } = await supabase
-        .from('anonymous_posts')
-        .insert({
-          title: title.trim(),
-          content: content.trim(),
-          author_nickname: nickname.trim() || '익명',
-          password_hash: passwordHash
-        });
-
-      if (error) throw error;
+      // Use secure database function for post creation
+      await anonymousPostService.createPost({
+        title: title.trim(),
+        content: content.trim(),
+        author_nickname: nickname.trim() || '익명',
+        password: password
+      });
 
       toast.success('글이 성공적으로 작성되었습니다.');
       setTitle('');
