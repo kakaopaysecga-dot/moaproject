@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,11 @@ import { ChevronLeft } from 'lucide-react';
 import { useRequestsStore } from '@/store/requestsStore';
 
 export default function RequestStatus() {
-  const { requests } = useRequestsStore();
+  const { requests, isLoading, loadRequests } = useRequestsStore();
+
+  useEffect(() => {
+    loadRequests();
+  }, [loadRequests]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
