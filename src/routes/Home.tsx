@@ -10,18 +10,16 @@ import { TodaySchedule } from '@/components/home/TodaySchedule';
 import { StatusSummary } from '@/components/home/StatusSummary';
 import { QuickStats } from '@/components/home/QuickStats';
 import { PullToRefresh } from '@/components/ui/PullToRefresh';
+import { SkeletonCard } from '@/components/ui/SkeletonCard';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 
 // Lazy load admin components for better performance
 const AdminPanel = React.lazy(() => import('@/components/home/AdminPanel').then(module => ({ default: module.AdminPanel })));
 const RecentActivity = React.lazy(() => import('@/components/home/RecentActivity').then(module => ({ default: module.RecentActivity })));
 
-// Loading component for better UX
+// Enhanced loading component for better UX
 const LoadingCard = memo(() => (
-  <div className="animate-pulse bg-card rounded-lg p-4 h-32">
-    <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-    <div className="h-3 bg-muted rounded w-1/2"></div>
-  </div>
+  <SkeletonCard className="h-32" showAvatar={true} lines={2} />
 ));
 
 export default function Home() {

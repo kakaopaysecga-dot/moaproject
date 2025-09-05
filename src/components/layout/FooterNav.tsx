@@ -2,11 +2,14 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, FileText, Calendar, Settings, Shield, MessageCircle } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { TouchTarget } from '@/components/ui/TouchTarget';
 import { cn } from '@/lib/utils';
 
 export const FooterNav: React.FC = () => {
   const location = useLocation();
   const { user } = useAuthStore();
+  const { triggerHaptic } = useHapticFeedback();
 
   if (!user) return null;
 
@@ -54,16 +57,17 @@ export const FooterNav: React.FC = () => {
               (path !== '/' && location.pathname.startsWith(path));
             
             return (
-              <Link
-                key={path}
-                to={path}
-                className={cn(
-                  'flex flex-col items-center justify-center rounded-xl mx-1 transition-all duration-200 active:scale-95 relative group',
-                  isActive 
-                    ? 'bg-gradient-to-br from-primary to-accent text-white shadow-lg' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
-                )}
-              >
+              <TouchTarget key={path} size="lg" asChild>
+                <Link
+                  to={path}
+                  onClick={() => triggerHaptic('light')}
+                  className={cn(
+                    'flex flex-col items-center justify-center rounded-xl mx-1 transition-all duration-200 active:scale-95 relative group touch-manipulation',
+                    isActive 
+                      ? 'bg-gradient-to-br from-primary to-accent text-white shadow-lg' 
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
+                  )}
+                >
                 <div className="flex flex-col items-center space-y-1 py-2">
                   <Icon 
                     className={cn(
@@ -87,7 +91,8 @@ export const FooterNav: React.FC = () => {
                 {isActive && (
                   <div className="absolute -top-0.5 left-1/2 transform -translate-x-1/2 w-2 h-0.5 bg-white rounded-full"></div>
                 )}
-              </Link>
+                </Link>
+              </TouchTarget>
             );
           })}
         </div>

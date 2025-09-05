@@ -294,19 +294,20 @@ All colors MUST be HSL.
     
     /* Touch-friendly tap highlights */
     * {
-      -webkit-tap-highlight-color: rgba(45, 90, 58, 0.1);
+      -webkit-tap-highlight-color: hsl(var(--primary) / 0.1);
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       user-select: none;
     }
     
     /* Enhanced touch feedback for interactive elements */
-    button, a, [role="button"] {
-      -webkit-tap-highlight-color: rgba(45, 90, 58, 0.2);
-      transition: transform 0.1s ease;
+    button, a, [role="button"], .touch-manipulation {
+      -webkit-tap-highlight-color: hsl(var(--primary) / 0.2);
+      transition: transform 0.1s ease, background-color 0.1s ease;
+      touch-action: manipulation;
     }
     
-    button:active, a:active, [role="button"]:active {
+    button:active, a:active, [role="button"]:active, .touch-manipulation:active {
       transform: scale(0.98);
     }
     
@@ -314,6 +315,18 @@ All colors MUST be HSL.
     input, textarea, [contenteditable="true"] {
       -webkit-user-select: text;
       user-select: text;
+    }
+    
+    /* Improved focus handling for accessibility */
+    *:focus {
+      outline: 2px solid hsl(var(--ring));
+      outline-offset: 2px;
+    }
+    
+    /* Better handling for system UI overlays */
+    body {
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
   }
   
@@ -325,6 +338,34 @@ All colors MUST be HSL.
     
     .safe-bottom {
       padding-bottom: max(env(safe-area-inset-bottom), 0px);
+    }
+    
+    .safe-left {
+      padding-left: max(env(safe-area-inset-left), 0px);
+    }
+    
+    .safe-right {
+      padding-right: max(env(safe-area-inset-right), 0px);
+    }
+  }
+
+  /* Mobile-optimized focus styles */
+  @media (max-width: 768px) {
+    .focus-visible {
+      outline: 3px solid hsl(var(--ring));
+      outline-offset: 2px;
+    }
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent zoom on input focus for iOS */
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px; /* Prevents zoom on iOS */
     }
   }
 }

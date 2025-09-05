@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { TouchTarget } from '@/components/ui/TouchTarget';
 import { Calendar, Building2, Zap } from 'lucide-react';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 
 const quickActions = [
   {
@@ -25,6 +27,12 @@ const quickActions = [
 ];
 
 export const QuickActions: React.FC = () => {
+  const { triggerHaptic } = useHapticFeedback();
+
+  const handleActionClick = (actionTitle: string) => {
+    triggerHaptic('light');
+  };
+
   return (
     <section id="quick-actions" className="spacing-items animate-fade-in transition-all duration-300">
       <div className="flex items-center gap-2">
@@ -36,12 +44,17 @@ export const QuickActions: React.FC = () => {
         {quickActions.map((action, index) => {
           const Icon = action.icon;
           return (
-            <Card 
-              key={action.title}
-              className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 min-h-[100px]"
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
-              <Link to={action.link} className="block h-full">
+            <TouchTarget size="lg" asChild>
+              <Card 
+                key={action.title}
+                className="relative overflow-hidden group hover:shadow-lg transition-all duration-300 min-h-[100px] touch-manipulation"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                <Link 
+                  to={action.link} 
+                  className="block h-full"
+                  onClick={() => handleActionClick(action.title)}
+                >
                 <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient}`} />
                 
                 <div className="relative p-5 md:p-6 h-full flex items-center text-white">
@@ -70,8 +83,9 @@ export const QuickActions: React.FC = () => {
 
                 {/* Hover effect shimmer */}
                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-              </Link>
-            </Card>
+                </Link>
+              </Card>
+            </TouchTarget>
           );
         })}
       </div>
