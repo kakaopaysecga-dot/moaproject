@@ -62,8 +62,8 @@ export const RouletteWheel: React.FC<RouletteWheelProps> = ({
 
   return (
     <div className="relative flex justify-center items-center">
-      {/* 포인터 - 위에서 아래로 향하는 화살표 */}
-      <div className="absolute top-0 z-20 w-0 h-0 border-l-[15px] border-r-[15px] border-t-[30px] border-l-transparent border-r-transparent border-t-destructive drop-shadow-lg transform translate-y-2"></div>
+      {/* 포인터 - 12시 방향 고정된 화살표 */}
+      <div className="absolute top-0 z-20 w-0 h-0 border-l-[20px] border-r-[20px] border-t-[40px] border-l-transparent border-r-transparent border-t-destructive drop-shadow-lg transform translate-y-1 animate-pulse"></div>
       
       {/* 룰렛 휠 */}
       <div className="relative">
@@ -76,20 +76,24 @@ export const RouletteWheel: React.FC<RouletteWheelProps> = ({
           }`}
           style={{ 
             transform: `rotate(${rotation}deg)`,
+            transformOrigin: 'center center',
             background: `conic-gradient(${options.map((option, index) => {
               const color = option.color || defaultColors[index % defaultColors.length];
-              return `${color} ${index * segmentAngle}deg ${(index + 1) * segmentAngle}deg`;
+              // 12시 방향부터 시작하도록 각도 조정
+              const startAngle = (index * segmentAngle - 90) % 360;
+              const endAngle = ((index + 1) * segmentAngle - 90) % 360;
+              return `${color} ${startAngle}deg ${endAngle}deg`;
             }).join(', ')})`,
             boxShadow: '0 0 40px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.1)'
           }}
         >
           {/* 세그먼트 구분선 */}
           {options.map((_, index) => {
-            const angle = index * segmentAngle;
+            const angle = index * segmentAngle - 90; // 12시 방향부터 시작하도록 -90도 조정
             return (
               <div
                 key={`line-${index}`}
-                className="absolute w-0.5 bg-background/30 origin-bottom"
+                className="absolute w-0.5 bg-background/40 origin-bottom"
                 style={{
                   height: '50%',
                   left: '50%',
@@ -103,10 +107,12 @@ export const RouletteWheel: React.FC<RouletteWheelProps> = ({
 
           {/* 메뉴 텍스트 */}
           {options.map((option, index) => {
-            const angle = (index * segmentAngle) + (segmentAngle / 2);
+            // 12시 방향부터 시작하도록 각도 조정
+            const angle = (index * segmentAngle) + (segmentAngle / 2) - 90;
             const radian = (angle * Math.PI) / 180;
-            const x = Math.cos(radian) * radius;
-            const y = Math.sin(radian) * radius;
+            const textRadius = radius * 0.7; // 텍스트를 원의 중심에서 70% 지점에 배치
+            const x = Math.cos(radian) * textRadius;
+            const y = Math.sin(radian) * textRadius;
             
             return (
               <div
@@ -115,7 +121,7 @@ export const RouletteWheel: React.FC<RouletteWheelProps> = ({
                 style={{
                   left: `calc(50% + ${x}px)`,
                   top: `calc(50% + ${y}px)`,
-                  transform: `translate(-50%, -50%) rotate(${angle}deg)`,
+                  transform: `translate(-50%, -50%) rotate(${angle >= -90 && angle <= 90 ? angle : angle + 180}deg)`,
                   textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
                   maxWidth: '80px',
                   textAlign: 'center',

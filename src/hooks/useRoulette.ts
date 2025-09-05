@@ -40,15 +40,20 @@ export const useRoulette = ({ options, onSpinComplete }: UseRouletteProps) => {
     setSpinCount(prev => prev + 1);
 
     // 애니메이션 완료 후 결과 계산
-    const duration = 3000 + Math.random() * 2000; // 3-5초 랜덤 지속시간
+    const duration = 3000 + Math.random() * 1000; // 3-4초 지속시간
     setTimeout(() => {
       // 최종 회전 각도에서 포인터(12시 방향)가 가리키는 세그먼트 계산
-      const normalizedAngle = (finalRotation % 360 + 360) % 360; // 항상 양수로 만들기
+      const normalizedAngle = (360 - (finalRotation % 360) + 360) % 360; // 시계 반대방향으로 회전하므로 반전
       const segmentAngle = 360 / options.length;
       
-      // 포인터는 12시 방향(0도)에 있음
-      // 첫 번째 세그먼트는 0도에서 시작하므로 직접 계산
-      const selectedIndex = Math.floor(normalizedAngle / segmentAngle) % options.length;
+      // 포인터가 12시 방향에 있으므로 어떤 세그먼트를 가리키는지 계산
+      // 각 세그먼트의 중심점을 기준으로 계산
+      let selectedIndex = Math.floor((normalizedAngle + segmentAngle / 2) / segmentAngle) % options.length;
+      
+      // 인덱스가 음수가 되지 않도록 보정
+      if (selectedIndex < 0) {
+        selectedIndex = options.length + selectedIndex;
+      }
       
       const selectedOpt = options[selectedIndex];
       setSelectedOption(selectedOpt);
