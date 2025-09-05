@@ -126,7 +126,7 @@ export default function QuickSmartOffice() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">판교오피스</h2>
-          <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
+          <Badge variant="outline" className="border-primary/20 text-primary bg-primary/5">
             {getAvailableCount('판교오피스')}/10 사용가능
           </Badge>
         </div>
@@ -142,10 +142,10 @@ export default function QuickSmartOffice() {
                 variant="outline"
                 className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
                   office.status === 'available' 
-                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
                     : office.status === 'my-booking'
-                    ? 'border-blue-500 bg-blue-500 text-white hover:bg-blue-600'
-                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
+                    ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90'
+                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -180,10 +180,10 @@ export default function QuickSmartOffice() {
                 variant="outline"
                 className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
                   office.status === 'available' 
-                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
                     : office.status === 'my-booking'
-                    ? 'border-blue-500 bg-blue-500 text-white hover:bg-blue-600'
-                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
+                    ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90'
+                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -212,7 +212,7 @@ export default function QuickSmartOffice() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">여의도오피스</h2>
-          <Badge variant="outline" className="border-purple-200 text-purple-700 bg-purple-50">
+          <Badge variant="outline" className="border-accent/20 text-accent-foreground bg-accent/5">
             {getAvailableCount('여의도오피스')}/10 사용가능
           </Badge>
         </div>
@@ -228,10 +228,10 @@ export default function QuickSmartOffice() {
                 variant="outline"
                 className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
                   office.status === 'available' 
-                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
                     : office.status === 'my-booking'
-                    ? 'border-purple-500 bg-purple-500 text-white hover:bg-purple-600'
-                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
+                    ? 'border-accent bg-accent text-accent-foreground hover:bg-accent/90'
+                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -266,10 +266,10 @@ export default function QuickSmartOffice() {
                 variant="outline"
                 className={`h-16 flex flex-col gap-1 transition-all duration-200 ${
                   office.status === 'available' 
-                    ? 'border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 text-green-700' 
+                    ? 'border-success/30 bg-success/10 hover:bg-success/20 hover:border-success/50 text-success-foreground' 
                     : office.status === 'my-booking'
-                    ? 'border-purple-500 bg-purple-500 text-white hover:bg-purple-600'
-                    : 'border-gray-200 bg-gray-100 text-gray-500 opacity-60 cursor-not-allowed'
+                    ? 'border-accent bg-accent text-accent-foreground hover:bg-accent/90'
+                    : 'border-muted bg-muted text-muted-foreground opacity-60 cursor-not-allowed'
                 }`}
                 disabled={office.status === 'occupied'}
                 onClick={() => {
@@ -295,12 +295,12 @@ export default function QuickSmartOffice() {
       </div>
 
       {/* 안내 */}
-      <Card className="p-4 mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border-0">
+      <Card className="p-4 mb-6 bg-muted/50">
         <div className="text-sm space-y-2">
-          <p className="font-medium text-gray-800">💡 사용 방법</p>
-          <ul className="text-gray-600 space-y-1">
-            <li>• <span className="text-green-600 font-medium">초록색 버튼</span>을 클릭하면 즉시 예약됩니다</li>
-            <li>• <span className="text-blue-600 font-medium">파란색/보라색 버튼</span>을 다시 클릭하면 취소됩니다</li>
+          <p className="font-medium text-foreground">💡 사용 방법</p>
+          <ul className="text-muted-foreground space-y-1">
+            <li>• <span className="text-success font-medium">초록색 버튼</span>을 클릭하면 즉시 예약됩니다</li>
+            <li>• <span className="text-primary font-medium">파란색</span>/<span className="text-accent font-medium">보라색 버튼</span>을 다시 클릭하면 취소됩니다</li>
             <li>• 예약 시간: 지금 ~ 오후 6시까지</li>
           </ul>
         </div>
@@ -308,7 +308,7 @@ export default function QuickSmartOffice() {
 
       {/* 전체 예약 버튼 */}
       <Link to="/booking/smart-office">
-        <Button variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-50">
+        <Button variant="outline" className="w-full">
           전체 스마트 오피스 예약
         </Button>
       </Link>
