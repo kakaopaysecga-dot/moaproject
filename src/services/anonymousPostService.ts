@@ -1,5 +1,4 @@
 import { supabase } from '@/integrations/supabase/client';
-import bcrypt from 'bcryptjs';
 
 export interface AnonymousPost {
   id: string;
@@ -36,14 +35,6 @@ export interface CreateCommentData {
 }
 
 class AnonymousPostService {
-  async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 10);
-  }
-
-  async verifyPassword(password: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(password, hash);
-  }
-
   async getPosts(sortBy: 'latest' | 'popular' | 'views' = 'latest'): Promise<AnonymousPost[]> {
     let query = supabase
       .from('anonymous_posts')
@@ -92,24 +83,18 @@ class AnonymousPostService {
   }
 
   async createPost(postData: CreatePostData): Promise<string> {
-    const passwordHash = await this.hashPassword(postData.password);
-
-    const { data, error } = await supabase
-      .from('anonymous_posts')
-      .insert({
-        title: postData.title,
-        content: postData.content,
-        author_nickname: postData.author_nickname || '익명',
-        password_hash: passwordHash,
-      })
-      .select('id')
-      .single();
+    const { data, error } = await supabase.rpc('create_anonymous_post', {
+      post_title: postData.title,
+      post_content: postData.content,
+      author_nickname: postData.author_nickname || '익명',
+      password_plain: postData.password,
+    });
 
     if (error) {
       throw new Error(`게시글 작성에 실패했습니다: ${error.message}`);
     }
 
-    return data.id;
+    return data;
   }
 
   async incrementViewCount(postId: string): Promise<void> {
@@ -144,77 +129,47 @@ class AnonymousPostService {
   }
 
   async createComment(commentData: CreateCommentData): Promise<string> {
-    const passwordHash = await this.hashPassword(commentData.password);
-
-    const { data, error } = await supabase
-      .from('anonymous_comments')
-      .insert({
-        post_id: commentData.post_id,
-        content: commentData.content,
-        author_nickname: commentData.author_nickname || '익명',
-        password_hash: passwordHash,
-      })
-      .select('id')
-      .single();
+    const { data, error } = await supabase.rpc('create_anonymous_comment', {
+      post_id_param: commentData.post_id,
+      comment_content: commentData.content,
+      author_nickname: commentData.author_nickname || '익명',
+      password_plain: commentData.password,
+    });
 
     if (error) {
       throw new Error(`댓글 작성에 실패했습니다: ${error.message}`);
     }
 
-    return data.id;
+    return data;
   }
 
   async deletePost(postId: string, password: string): Promise<void> {
-    // First get the post to verify password
-    const { data: post, error: fetchError } = await supabase
-      .from('anonymous_posts')
-      .select('password_hash')
-      .eq('id', postId)
-      .single();
-
-    if (fetchError) {
-      throw new Error('게시글을 찾을 수 없습니다.');
-    }
-
-    const isValidPassword = await this.verifyPassword(password, post.password_hash);
-    if (!isValidPassword) {
-      throw new Error('비밀번호가 일치하지 않습니다.');
-    }
-
-    const { error } = await supabase
-      .from('anonymous_posts')
-      .update({ is_deleted: true })
-      .eq('id', postId);
+    const { data, error } = await supabase.rpc('delete_anonymous_post', {
+      post_id_param: postId,
+      password_plain: password,
+    });
 
     if (error) {
       throw new Error(`게시글 삭제에 실패했습니다: ${error.message}`);
     }
+
+    if (!data) {
+      throw new Error('비밀번호가 일치하지 않습니다.');
+    }
   }
 
   async deleteComment(commentId: string, password: string): Promise<void> {
-    // First get the comment to verify password
-    const { data: comment, error: fetchError } = await supabase
-      .from('anonymous_comments')
-      .select('password_hash')
-      .eq('id', commentId)
-      .single();
-
-    if (fetchError) {
-      throw new Error('댓글을 찾을 수 없습니다.');
-    }
-
-    const isValidPassword = await this.verifyPassword(password, comment.password_hash);
-    if (!isValidPassword) {
-      throw new Error('비밀번호가 일치하지 않습니다.');
-    }
-
-    const { error } = await supabase
-      .from('anonymous_comments')
-      .update({ is_deleted: true })
-      .eq('id', commentId);
+    const { data, error } = await supabase.rpc('delete_anonymous_comment', {
+      comment_id_param: commentId,
+      password_plain: password,
+    });
 
     if (error) {
       throw new Error(`댓글 삭제에 실패했습니다: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error('비밀번호가 일치하지 않습니다.');
     }
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, FileText, CreditCard, Car, Heart, Thermometer, Settings, Search, X, ChevronRight, LucideIcon, Utensils, MessageCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -77,9 +77,26 @@ const allServices: ServiceCard[] = [{
 export const ServiceCards: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showSearch, setShowSearch] = useState(false);
-  const filteredFrequentServices = frequentServices.filter(service => service.title.toLowerCase().includes(searchTerm.toLowerCase()) || service.description.toLowerCase().includes(searchTerm.toLowerCase()));
-  const filteredAllServices = allServices.filter(service => service.title.toLowerCase().includes(searchTerm.toLowerCase()) || service.description.toLowerCase().includes(searchTerm.toLowerCase()));
-  const hasSearchResults = filteredFrequentServices.length > 0 || filteredAllServices.length > 0;
+
+  // 메모이제이션으로 불필요한 재계산 방지
+  const filteredFrequentServices = useMemo(() => 
+    frequentServices.filter(service => 
+      service.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      service.description.toLowerCase().includes(searchTerm.toLowerCase())
+    ), [searchTerm]
+  );
+
+  const filteredAllServices = useMemo(() => 
+    allServices.filter(service => 
+      service.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      service.description.toLowerCase().includes(searchTerm.toLowerCase())
+    ), [searchTerm]
+  );
+
+  const hasSearchResults = useMemo(() => 
+    filteredFrequentServices.length > 0 || filteredAllServices.length > 0, 
+    [filteredFrequentServices.length, filteredAllServices.length]
+  );
   return <div id="service-cards" className="spacing-content">
       {/* 검색 기능 */}
       

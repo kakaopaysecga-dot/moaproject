@@ -44,14 +44,11 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
   hotCooldown: 0,
 
   loadRequests: async (filter = 'all') => {
-    console.log('🔍 Loading requests with filter:', filter);
     set({ isLoading: true, error: null });
     try {
       const requests = await RequestService.listRequests(filter);
-      console.log('📋 Loaded requests:', requests.length, 'items');
       set({ requests, isLoading: false });
     } catch (error) {
-      console.error('❌ Error loading requests:', error);
       set({ 
         error: error instanceof Error ? error.message : '요청 목록을 불러올 수 없습니다.',
         isLoading: false 
@@ -191,8 +188,6 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
   clearError: () => set({ error: null }),
 
   initRealtime: () => {
-    console.log('🔄 Initializing realtime connection for requests...');
-    
     const channel = supabase
       .channel('requests_changes')
       .on(
@@ -203,14 +198,11 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
           table: 'requests'
         },
         (payload) => {
-          console.log('🔥 New request inserted:', payload);
           const newRequest = payload.new as any;
           const currentRequests = get().requests;
           
           // 현재 사용자의 요청인지 확인
           supabase.auth.getUser().then(({ data: { user } }) => {
-            console.log('👤 Current user:', user?.id, 'Request user:', newRequest.user_id);
-            
             if (newRequest.user_id === user?.id) {
               const mappedRequest: RequestItem = {
                 id: newRequest.id,
@@ -221,18 +213,11 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
                 type: newRequest.type
               };
               
-              console.log('✅ Adding new request to store:', mappedRequest);
-              
               // 중복 방지: 이미 존재하는 요청인지 확인
               const exists = currentRequests.some(req => req.id === mappedRequest.id);
               if (!exists) {
                 set({ requests: [mappedRequest, ...currentRequests] });
-                console.log('🚀 Request added to store successfully');
-              } else {
-                console.log('⚠️ Request already exists in store');
               }
-            } else {
-              console.log('❌ Request is not for current user, ignoring');
             }
           });
         }
@@ -245,7 +230,6 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
           table: 'requests'
         },
         (payload) => {
-          console.log('🔄 Request updated:', payload);
           const updatedRequest = payload.new as any;
           const currentRequests = get().requests;
           
@@ -255,24 +239,18 @@ export const useRequestsStore = create<RequestsState>((set, get) => ({
               : req
           );
           set({ requests: updatedRequests });
-          console.log('✅ Request status updated in store');
         }
       )
-      .subscribe((status) => {
-        console.log('📡 Realtime subscription status:', status);
-      });
+      .subscribe();
       
     // Store channel reference for cleanup
     (get() as any).realtimeChannel = channel;
-    console.log('🎯 Realtime channel initialized');
   },
 
   cleanup: () => {
-    console.log('🧹 Cleaning up realtime connection...');
     const channel = (get() as any).realtimeChannel;
     if (channel) {
       supabase.removeChannel(channel);
-      console.log('✅ Realtime channel removed');
     }
   },
 
