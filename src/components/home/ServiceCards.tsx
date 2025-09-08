@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, CreditCard, Car, Heart, Thermometer, Settings, ChevronRight, LucideIcon, Utensils } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+
 interface ServiceCard {
   title: string;
   description: string;
@@ -109,18 +109,10 @@ export const ServiceCards: React.FC = () => {
             </div>
           </div>
           
-          <div className="sm:hidden">
-            <Carousel opts={{
-          align: "start",
-          dragFree: true,
-          containScroll: "trimSnaps"
-        }} className="w-full">
-              <CarouselContent className="-ml-3">
-                {filteredFrequentServices.map((service, index) => <CarouselItem key={service.path} className="pl-3 basis-4/5">
-                    <ServiceCard service={service} index={index} isMobile />
-                  </CarouselItem>)}
-              </CarouselContent>
-            </Carousel>
+          <div className="sm:hidden grid grid-cols-1 gap-3">
+            {filteredFrequentServices.map((service, index) => (
+              <ServiceCard key={service.path} service={service} index={index} isMobile />
+            ))}
           </div>
         </section>}
 
