@@ -340,12 +340,6 @@ export const AIPeopleFinder: React.FC = () => {
     title: '',
     content: ''
   });
-  const [isQuickBookingModalOpen, setIsQuickBookingModalOpen] = useState(false);
-  const [quickBookingData, setQuickBookingData] = useState({
-    location: '',
-    room: null as any,
-    timeSlot: ''
-  });
 
   const { addScheduleItem } = useScheduleStore();
   const { toast } = useToast();
@@ -366,57 +360,13 @@ export const AIPeopleFinder: React.FC = () => {
     }
   }, []);
 
-  // 자연어 처리 함수
-  const processNaturalLanguage = useCallback((query: string) => {
-    const lowerQuery = query.toLowerCase();
-    
-    // 패턴 1: "이름 비어있는 시간 예약넣어줘"
-    const nameBookingPattern = /(.+?)\s*(비어있는|빈|가능한|여유있는)\s*시간\s*(예약|미팅|회의)/;
-    const nameMatch = lowerQuery.match(nameBookingPattern);
-    
-    if (nameMatch) {
-      const name = nameMatch[1].trim();
-      const person = mockPeople.find(p => 
-        p.name.includes(name) || 
-        p.englishName.toLowerCase().includes(name)
-      );
-      
-      if (person && person.availableSlots.length > 0) {
-        openMeetingModal(person, person.availableSlots[0]);
-        return true;
-      }
-    }
-    
-    // 패턴 2: "지금가능한 판교회의실 예약해줘"
-    const quickRoomPattern = /(지금|현재|바로)\s*(가능한|빈|사용가능한)?\s*(판교|여의도)?\s*(회의실|룸)\s*(예약|book)/;
-    const roomMatch = lowerQuery.match(quickRoomPattern);
-    
-    if (roomMatch) {
-      const location = roomMatch[3] ? (roomMatch[3].includes('판교') ? '판교아지트' : '여의도오피스') : '판교아지트';
-      const availableRooms = getAvailableRoomsForQuickBooking(location);
-      
-      if (availableRooms.length > 0) {
-        openQuickRoomBooking(location, availableRooms[0]);
-        return true;
-      }
-    }
-    
-    return false;
-  }, []);
-
   const handleSearch = useCallback(async () => {
     if (!searchQuery.trim()) return;
     
     setIsLoading(true);
     setPreviewResults([]); // 미리보기 숨기기
     
-    // 먼저 자연어 처리 시도
-    if (processNaturalLanguage(searchQuery)) {
-      setIsLoading(false);
-      return;
-    }
-    
-    // 일반 검색
+    // 실제로는 AI API 호출 + 데이터베이스 조회
     setTimeout(() => {
       const results = mockPeople.filter(person => 
         person.name.includes(searchQuery) || 
@@ -426,7 +376,7 @@ export const AIPeopleFinder: React.FC = () => {
       setSearchResults(results);
       setIsLoading(false);
     }, 1000);
-  }, [searchQuery, processNaturalLanguage]);
+  }, [searchQuery]);
 
   const getStatusColor = (status: Person['status']) => {
     switch (status) {
@@ -473,29 +423,6 @@ export const AIPeopleFinder: React.FC = () => {
       return !isOccupied;
     });
   };
-
-  // 지금 사용 가능한 회의실 조회
-  const getAvailableRoomsForQuickBooking = useCallback((location: string) => {
-    const currentTime = new Date().getHours();
-    const currentTimeSlot = `${currentTime}:00-${currentTime + 1}:00`;
-    
-    return getAvailableRooms(currentTimeSlot).filter(room => 
-      room.location === location
-    );
-  }, []);
-
-  // 퀵 회의실 예약 모달 열기
-  const openQuickRoomBooking = useCallback((location: string, room: any) => {
-    const currentTime = new Date().getHours();
-    const timeSlot = `${currentTime}:00-${currentTime + 1}:00`;
-    
-    setQuickBookingData({
-      location,
-      room,
-      timeSlot
-    });
-    setIsQuickBookingModalOpen(true);
-  }, []);
 
   const openMeetingModal = useCallback((person: Person, timeSlot: string) => {
     setMeetingForm({
@@ -553,34 +480,6 @@ export const AIPeopleFinder: React.FC = () => {
     });
   }, [meetingForm, addScheduleItem, toast]);
 
-  // 퀵 예약 처리
-  const handleQuickBookingSubmit = useCallback((title: string) => {
-    if (!title.trim()) {
-      alert('회의 제목을 입력해주세요.');
-      return;
-    }
-
-    const [startTime] = quickBookingData.timeSlot.split('-');
-    const newScheduleItem = {
-      id: `quick_meeting_${Date.now()}`,
-      title: title,
-      time: startTime,
-      type: 'meeting' as const,
-      location: `${quickBookingData.location} ${quickBookingData.room.name}`,
-      priority: 'high' as const,
-      completed: false
-    };
-    
-    addScheduleItem(newScheduleItem);
-    setIsQuickBookingModalOpen(false);
-    
-    toast({
-      title: "회의실 예약 완료!",
-      description: `${quickBookingData.timeSlot}에 ${quickBookingData.room.name}이 예약되었습니다.`,
-      duration: 3000,
-    });
-  }, [quickBookingData, addScheduleItem, toast]);
-
   // 외부에서 검색창에 포커스를 줄 수 있도록 전역 함수 등록
   React.useEffect(() => {
     const focusSearchInput = () => {
@@ -613,7 +512,7 @@ export const AIPeopleFinder: React.FC = () => {
           <div className="flex gap-2">
             <Input
               ref={searchInputRef}
-              placeholder="자연어로 검색하세요 (예: '김민석 비어있는 시간 예약넣어줘', '지금가능한 판교회의실 예약해줘')"
+              placeholder="이름이나 부서를 입력하세요... (한글/영어 가능)"
               value={searchQuery}
               onChange={(e) => handleSearchInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -622,12 +521,6 @@ export const AIPeopleFinder: React.FC = () => {
             <Button onClick={handleSearch} disabled={isLoading}>
               <Search className="h-4 w-4" />
             </Button>
-          </div>
-          
-          {/* AI 검색 힌트 */}
-          <div className="text-xs text-muted-foreground flex items-center gap-1">
-            <span className="bg-primary/10 text-primary px-1.5 py-0.5 rounded text-[10px] font-medium">AI</span>
-            <span>예시: "김민석 비어있는 시간 예약넣어줘" 또는 "지금가능한 판교회의실 예약해줘"</span>
           </div>
 
           {/* 실시간 미리보기 */}
@@ -901,67 +794,6 @@ export const AIPeopleFinder: React.FC = () => {
                 className="flex-1"
               >
                 회의 예약
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* 퀵 회의실 예약 모달 */}
-      <Dialog open={isQuickBookingModalOpen} onOpenChange={setIsQuickBookingModalOpen}>
-        <DialogContent className="sm:max-w-[400px]">
-          <DialogHeader>
-            <DialogTitle>빠른 회의실 예약</DialogTitle>
-            <DialogDescription>
-              지금 바로 사용 가능한 회의실을 예약하세요.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            {/* 회의실 정보 */}
-            <div className="bg-muted/50 p-3 rounded-lg">
-              <div className="flex items-center gap-2 text-sm">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span className="font-medium">{quickBookingData.room?.name}</span>
-                <Badge variant="secondary" className="text-xs">
-                  {quickBookingData.room?.capacity}인실
-                </Badge>
-              </div>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {quickBookingData.location} • {quickBookingData.timeSlot}
-              </p>
-            </div>
-
-            {/* 회의 제목 */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium">회의 제목</label>
-              <Input
-                placeholder="회의 제목을 입력하세요"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleQuickBookingSubmit(e.currentTarget.value);
-                  }
-                }}
-              />
-            </div>
-
-            {/* 버튼 */}
-            <div className="flex gap-2 pt-2">
-              <Button
-                variant="outline"
-                onClick={() => setIsQuickBookingModalOpen(false)}
-                className="flex-1"
-              >
-                취소
-              </Button>
-              <Button
-                onClick={() => {
-                  const input = document.querySelector('input[placeholder="회의 제목을 입력하세요"]') as HTMLInputElement;
-                  handleQuickBookingSubmit(input?.value || '');
-                }}
-                className="flex-1"
-              >
-                즉시 예약
               </Button>
             </div>
           </div>
