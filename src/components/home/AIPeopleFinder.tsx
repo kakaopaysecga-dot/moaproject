@@ -576,22 +576,22 @@ export const AIPeopleFinder: React.FC = () => {
           {/* 실시간 미리보기 - 업무 담당자 결과 */}
           {workAssignmentResult && !isLoading && (
             <div className="border border-border rounded-lg bg-primary/5 backdrop-blur-sm">
-              <div className="p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-primary/10 text-primary border-primary/20">
+              <div className="p-2 space-y-2">
+                <div className="flex items-center gap-1">
+                  <Badge className="bg-primary/10 text-primary border-primary/20 text-xs px-1 py-0">
                     업무 담당자
                   </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    "{workAssignmentResult.keyword}" 관련 담당자를 찾았습니다
+                  <span className="text-xs text-muted-foreground">
+                    "{workAssignmentResult.keyword}" 관련
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium flex items-center gap-2">
+                    <div className="font-medium text-xs flex items-center gap-1">
                       <span>{workAssignmentResult.person.englishName}</span>
                       <span className="text-muted-foreground">({workAssignmentResult.person.name})</span>
                     </div>
-                    <div className="text-sm text-muted-foreground">{workAssignmentResult.person.dept}</div>
+                    <div className="text-xs text-muted-foreground">{workAssignmentResult.person.dept}</div>
                   </div>
                   <Button
                     size="sm"
@@ -603,7 +603,7 @@ export const AIPeopleFinder: React.FC = () => {
                         duration: 2000,
                       });
                     }}
-                    className="flex items-center gap-1"
+                    className="h-6 px-2 text-xs flex items-center gap-1"
                   >
                     <Slack className="h-3 w-3" />
                     Slack DM
