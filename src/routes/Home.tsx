@@ -1,4 +1,4 @@
-import React, { Suspense, memo } from 'react';
+import React, { Suspense, memo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/authStore';
@@ -12,6 +12,8 @@ import { QuickStats } from '@/components/home/QuickStats';
 import { PullToRefresh } from '@/components/ui/PullToRefresh';
 import { SkeletonCard } from '@/components/ui/SkeletonCard';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
+import { DemoModeToggle } from '@/components/demo/DemoModeToggle';
+import { LiveMetrics } from '@/components/demo/LiveMetrics';
 
 // Lazy load admin components for better performance
 const AdminPanel = React.lazy(() => import('@/components/home/AdminPanel').then(module => ({ default: module.AdminPanel })));
@@ -24,6 +26,7 @@ const LoadingCard = memo(() => (
 
 export default function Home() {
   const { user } = useAuthStore();
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   const handleRefresh = async () => {
     // 실제 데이터 새로고침 로직
@@ -46,8 +49,12 @@ export default function Home() {
   }
 
   return (
-    <PullToRefresh onRefresh={handleRefresh}>
-      <div className="container-padding spacing-content pb-safe-bottom">
+    <>
+      <DemoModeToggle onDemoModeChange={setIsDemoMode} />
+      <LiveMetrics isDemo={isDemoMode} />
+      
+      <PullToRefresh onRefresh={handleRefresh}>
+        <div className="container-padding spacing-content pb-safe-bottom">
         <WelcomeSection 
           userEnglishName={user.englishName}
           userDept={user.dept}
@@ -92,9 +99,10 @@ export default function Home() {
         </section>
       )}
       
-      {/* Footer Space for Mobile Navigation */}
-      <div className="h-safe-bottom" />
-    </div>
-    </PullToRefresh>
+        {/* Footer Space for Mobile Navigation */}
+        <div className="h-safe-bottom" />
+      </div>
+      </PullToRefresh>
+    </>
   );
 }
