@@ -46,6 +46,41 @@ const mockPeople: Person[] = [
     status: 'meeting'
   },
   {
+    id: '21',
+    name: '조원웅',
+    englishName: 'Andrew.88',
+    dept: '총무팀',
+    currentLocation: '판교아지트 산토리니회의실',
+    currentActivity: '개발미팅중(MOA앱 개발 논의)',
+    availableSlots: ['16:00-17:00', '17:30-18:30'],
+    status: 'meeting'
+  },
+  {
+    id: '22',
+    name: '허명은',
+    englishName: 'Arron.bless',
+    dept: '총무팀',
+    currentLocation: '휴가중',
+    currentActivity: '휴가중',
+    availableSlots: [],
+    status: 'vacation',
+    vacationInfo: {
+      startDate: '2024-09-15',
+      endDate: '2024-09-22',
+      reason: '연차휴가'
+    }
+  },
+  {
+    id: '23',
+    name: '김현재',
+    englishName: 'Harry.2024',
+    dept: '총무팀',
+    currentLocation: '판교아지트 산토리니회의실',
+    currentActivity: '개발미팅중(MOA앱 개발 논의)',
+    availableSlots: ['16:00-17:00', '17:30-18:30'],
+    status: 'meeting'
+  },
+  {
     id: '2',
     name: '박서영',
     englishName: 'Luna.design',
