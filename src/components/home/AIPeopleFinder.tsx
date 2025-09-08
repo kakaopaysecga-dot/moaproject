@@ -325,11 +325,25 @@ interface MeetingFormData {
   content: string;
 }
 
+// 업무 담당자 매핑 데이터
+const workAssignments = {
+  'figma': { name: 'Andrew.88', person: mockPeople.find(p => p.englishName === 'Andrew.88') },
+  '라이센스': { name: 'Andrew.88', person: mockPeople.find(p => p.englishName === 'Andrew.88') },
+  '명함': { name: 'Maison.sun', person: mockPeople.find(p => p.englishName === 'Maison.sun') },
+  '소모품': { name: 'Maison.sun', person: mockPeople.find(p => p.englishName === 'Maison.sun') },
+  '행사': { name: 'Arron.bless', person: mockPeople.find(p => p.englishName === 'Arron.bless') },
+  '이벤트': { name: 'Arron.bless', person: mockPeople.find(p => p.englishName === 'Arron.bless') },
+  '아지트': { name: 'Harry.2024', person: mockPeople.find(p => p.englishName === 'Harry.2024') },
+  '슬랙': { name: 'Harry.2024', person: mockPeople.find(p => p.englishName === 'Harry.2024') },
+  '계정': { name: 'Harry.2024', person: mockPeople.find(p => p.englishName === 'Harry.2024') }
+};
+
 export const AIPeopleFinder: React.FC = () => {
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Person[]>([]);
   const [previewResults, setPreviewResults] = useState<Person[]>([]);
+  const [workAssignmentResult, setWorkAssignmentResult] = useState<{person: Person, keyword: string} | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [meetingForm, setMeetingForm] = useState<MeetingFormData>({
@@ -347,8 +361,25 @@ export const AIPeopleFinder: React.FC = () => {
   // 실시간 검색 미리보기 - useCallback으로 최적화
   const handleSearchInput = useCallback((value: string) => {
     setSearchQuery(value);
+    setWorkAssignmentResult(null); // 기존 업무 담당자 결과 초기화
     
     if (value.trim().length >= 2) {
+      // 업무 담당자 검색 우선 처리
+      const lowerQuery = value.toLowerCase();
+      const foundAssignment = Object.entries(workAssignments).find(([keyword, assignment]) => 
+        lowerQuery.includes(keyword.toLowerCase())
+      );
+      
+      if (foundAssignment && foundAssignment[1].person) {
+        setWorkAssignmentResult({
+          person: foundAssignment[1].person,
+          keyword: foundAssignment[0]
+        });
+        setPreviewResults([]);
+        return;
+      }
+      
+      // 일반 사람 검색
       const results = mockPeople.filter(person => 
         person.name.includes(value) || 
         person.englishName.toLowerCase().includes(value.toLowerCase()) ||
@@ -365,8 +396,27 @@ export const AIPeopleFinder: React.FC = () => {
     
     setIsLoading(true);
     setPreviewResults([]); // 미리보기 숨기기
+    setWorkAssignmentResult(null); // 업무 담당자 결과 초기화
     
-    // 실제로는 AI API 호출 + 데이터베이스 조회
+    // 업무 담당자 검색 우선 처리
+    const lowerQuery = searchQuery.toLowerCase();
+    const foundAssignment = Object.entries(workAssignments).find(([keyword, assignment]) => 
+      lowerQuery.includes(keyword.toLowerCase())
+    );
+    
+    if (foundAssignment && foundAssignment[1].person) {
+      setTimeout(() => {
+        setWorkAssignmentResult({
+          person: foundAssignment[1].person!,
+          keyword: foundAssignment[0]
+        });
+        setSearchResults([]);
+        setIsLoading(false);
+      }, 500);
+      return;
+    }
+    
+    // 일반 사람 검색
     setTimeout(() => {
       const results = mockPeople.filter(person => 
         person.name.includes(searchQuery) || 
@@ -523,8 +573,48 @@ export const AIPeopleFinder: React.FC = () => {
             </Button>
           </div>
 
-          {/* 실시간 미리보기 */}
-          {previewResults.length > 0 && !isLoading && (
+          {/* 실시간 미리보기 - 업무 담당자 결과 */}
+          {workAssignmentResult && !isLoading && (
+            <div className="border border-border rounded-lg bg-primary/5 backdrop-blur-sm">
+              <div className="p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-primary/10 text-primary border-primary/20">
+                    업무 담당자
+                  </Badge>
+                  <span className="text-sm text-muted-foreground">
+                    "{workAssignmentResult.keyword}" 관련 담당자를 찾았습니다
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium flex items-center gap-2">
+                      <span>{workAssignmentResult.person.englishName}</span>
+                      <span className="text-muted-foreground">({workAssignmentResult.person.name})</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground">{workAssignmentResult.person.dept}</div>
+                  </div>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      window.open(`slack://user?team=T07V0U17TGV&id=U${workAssignmentResult.person.englishName.replace('.', '').toLowerCase()}`, '_blank');
+                      toast({
+                        title: "슬랙 DM 열기",
+                        description: `${workAssignmentResult.person.name}님과의 대화창이 열렸습니다.`,
+                        duration: 2000,
+                      });
+                    }}
+                    className="flex items-center gap-1"
+                  >
+                    <MessageSquare className="h-3 w-3" />
+                    슬랙 DM
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 실시간 미리보기 - 일반 검색 */}
+          {previewResults.length > 0 && !isLoading && !workAssignmentResult && (
             <div className="border border-border rounded-lg bg-background/95 backdrop-blur-sm">
               {previewResults.map((person) => (
                 <div
@@ -570,8 +660,77 @@ export const AIPeopleFinder: React.FC = () => {
         </Card>
       )}
 
+      {/* 업무 담당자 검색 결과 */}
+      {workAssignmentResult && !isLoading && (
+        <Card className="p-4 bg-primary/5 border-primary/20">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-primary/10 text-primary border-primary/20">
+                업무 담당자
+              </Badge>
+              <span className="text-sm text-muted-foreground">
+                "{workAssignmentResult.keyword}" 관련 담당자입니다
+              </span>
+            </div>
+            
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-foreground">{workAssignmentResult.person.englishName}</h3>
+                  <span className="text-sm text-muted-foreground">({workAssignmentResult.person.name})</span>
+                </div>
+                <p className="text-sm text-muted-foreground">{workAssignmentResult.person.dept}</p>
+              </div>
+              <Badge className={getStatusColor(workAssignmentResult.person.status)}>
+                {getStatusText(workAssignmentResult.person.status)}
+              </Badge>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">위치:</span>
+                <span className="font-medium">{workAssignmentResult.person.currentLocation || '알 수 없음'}</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">현재:</span>
+                <span className="font-medium">{workAssignmentResult.person.currentActivity}</span>
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={() => {
+                  window.open(`slack://user?team=T07V0U17TGV&id=U${workAssignmentResult.person.englishName.replace('.', '').toLowerCase()}`, '_blank');
+                  toast({
+                    title: "슬랙 DM 열기",
+                    description: `${workAssignmentResult.person.name}님과의 대화창이 열렸습니다.`,
+                    duration: 3000,
+                  });
+                }}
+                className="flex items-center gap-2"
+              >
+                <MessageSquare className="h-4 w-4" />
+                슬랙 DM 보내기
+              </Button>
+              {workAssignmentResult.person.availableSlots.length > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={() => openMeetingModal(workAssignmentResult.person, workAssignmentResult.person.availableSlots[0])}
+                  className="flex items-center gap-2"
+                >
+                  <CalendarPlus className="h-4 w-4" />
+                  회의 예약
+                </Button>
+              )}
+            </div>
+          </div>
+        </Card>
+      )}
+
       {/* 검색 결과 */}
-      {searchResults.length > 0 && (
+      {searchResults.length > 0 && !workAssignmentResult && (
         <div className="space-y-3">
           {searchResults.map((person, index) => (
             <Card 
@@ -672,7 +831,7 @@ export const AIPeopleFinder: React.FC = () => {
       )}
 
       {/* 검색 결과 없음 */}
-      {searchQuery && !isLoading && searchResults.length === 0 && (
+      {searchQuery && !isLoading && searchResults.length === 0 && !workAssignmentResult && (
         <Card className="p-6 text-center">
           <p className="text-muted-foreground">검색 결과가 없습니다.</p>
         </Card>
