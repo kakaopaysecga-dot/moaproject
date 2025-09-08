@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useScheduleStore } from '@/store/scheduleStore';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X, CalendarPlus, Plane } from 'lucide-react';
+import { Search, Users, Calendar, MapPin, Clock, MessageSquare, X, CalendarPlus, Plane, Slack } from 'lucide-react';
 
 // Window 타입 확장
 declare global {
@@ -605,8 +605,8 @@ export const AIPeopleFinder: React.FC = () => {
                     }}
                     className="flex items-center gap-1"
                   >
-                    <MessageSquare className="h-3 w-3" />
-                    슬랙 DM
+                    <Slack className="h-3 w-3" />
+                    Slack DM
                   </Button>
                 </div>
               </div>
@@ -711,8 +711,8 @@ export const AIPeopleFinder: React.FC = () => {
                 }}
                 className="flex items-center gap-2"
               >
-                <MessageSquare className="h-4 w-4" />
-                슬랙 DM 보내기
+                <Slack className="h-4 w-4" />
+                Slack DM
               </Button>
               {workAssignmentResult.person.availableSlots.length > 0 && (
                 <Button
