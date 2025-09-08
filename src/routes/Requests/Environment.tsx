@@ -10,18 +10,31 @@ import { useToast } from '@/hooks/use-toast';
 import { Camera, Upload, Thermometer, ChevronLeft, FileImage } from 'lucide-react';
 
 export default function Environment() {
-  const { createEnvironmentRequest, createTempRequest, coldCooldown, hotCooldown, updateCooldowns } = useRequestsStore();
+  const { createEnvironmentRequest } = useRequestsStore();
   const { toast } = useToast();
   
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [note, setNote] = useState('');
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(0);
 
-  const cooldownMinutes = Math.max(coldCooldown, hotCooldown);
-  
+  // 1시간 = 3600초
   React.useEffect(() => {
-    updateCooldowns();
-  }, [updateCooldowns]);
+    if (remainingTime > 0) {
+      const timer = setInterval(() => {
+        setRemainingTime((prev) => {
+          if (prev <= 1) {
+            setIsButtonDisabled(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [remainingTime]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,33 +84,26 @@ export default function Environment() {
     }
   };
 
-  const handleTempRequest = async (type: 'cold' | 'hot') => {
-    if (cooldownMinutes > 0) {
+  const handleTempRequest = (type: 'cold' | 'hot') => {
+    if (isButtonDisabled) {
+      const minutes = Math.floor(remainingTime / 60);
+      const seconds = remainingTime % 60;
       toast({
         title: "요청이 제한되었습니다",
-        description: `${cooldownMinutes}분 후에 다시 요청하실 수 있습니다.`,
+        description: `${minutes > 0 ? `${minutes}분 ` : ''}${seconds}초 후에 다시 요청하실 수 있습니다.`,
         variant: "destructive"
       });
       return;
     }
 
-    try {
-      await createTempRequest(type);
-      
-      // 요청 후 즉시 쿨다운 상태 업데이트
-      await updateCooldowns();
-      
-      toast({
-        title: "요청이 완료되었습니다",
-        description: `실내 온도 ${type === 'cold' ? '높이기' : '낮추기'} 요청이 성공적으로 접수되었습니다. 1시간 후에 다시 요청하실 수 있습니다.`
-      });
-    } catch (error) {
-      toast({
-        title: "요청 실패",
-        description: "온도 조절 요청에 실패했습니다. 다시 시도해주세요.",
-        variant: "destructive"
-      });
-    }
+    // 버튼 비활성화 및 1시간 타이머 시작 (3600초)
+    setIsButtonDisabled(true);
+    setRemainingTime(3600);
+    
+    toast({
+      title: "요청이 완료되었습니다",
+      description: `실내 온도 ${type === 'cold' ? '높이기' : '낮추기'} 요청이 성공적으로 접수되었습니다. 1시간 후에 다시 요청하실 수 있습니다.`
+    });
   };
 
   return (
@@ -139,10 +145,10 @@ export default function Environment() {
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
-                {cooldownMinutes > 0 && (
+                {isButtonDisabled && (
                   <div className="text-center p-3 bg-muted rounded-lg">
                     <p className="text-sm text-muted-foreground">
-                      ⏱️ {cooldownMinutes}분 후에 다시 요청할 수 있어요
+                      ⏱️ {Math.floor(remainingTime / 60)}분 {remainingTime % 60}초 후에 다시 요청할 수 있어요
                     </p>
                   </div>
                 )}
@@ -151,8 +157,8 @@ export default function Environment() {
                   <Button 
                     variant="outline" 
                     onClick={() => handleTempRequest('cold')}
-                    disabled={cooldownMinutes > 0}
-                    className="h-20 flex-col gap-2 hover:bg-blue-50 border-blue-200"
+                    disabled={isButtonDisabled}
+                    className="h-20 flex-col gap-2 hover:bg-blue-50 border-blue-200 disabled:opacity-50"
                   >
                     <span className="text-2xl">🥶</span>
                     <span className="text-sm font-medium">추워요</span>
@@ -160,8 +166,8 @@ export default function Environment() {
                   <Button 
                     variant="outline" 
                     onClick={() => handleTempRequest('hot')}
-                    disabled={cooldownMinutes > 0}
-                    className="h-20 flex-col gap-2 hover:bg-red-50 border-red-200"
+                    disabled={isButtonDisabled}
+                    className="h-20 flex-col gap-2 hover:bg-red-50 border-red-200 disabled:opacity-50"
                   >
                     <span className="text-2xl">🔥</span>
                     <span className="text-sm font-medium">더워요</span>
